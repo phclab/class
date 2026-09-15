@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Nernst–Goldman Explorer</title>
@@ -75,6 +76,9 @@ h3{font-size:15px;font-weight:600}
 p{margin:0}
 .mono,.num{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
 .lede{color:var(--dim);max-width:70ch}
+.byline{color:var(--dim);font-size:14px;margin-top:-4px}
+footer{color:var(--dim);font-size:13px;display:flex;flex-wrap:wrap;gap:6px 16px}
+footer a{color:inherit}
 .eyebrow{font:500 11px/1 "IBM Plex Mono",monospace;letter-spacing:1.4px;text-transform:uppercase;color:var(--dim)}
 header{display:grid;gap:8px}
 .bench{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:22px;align-items:start}
@@ -129,6 +133,7 @@ td.e{font:500 15px "IBM Plex Mono",monospace;text-align:right;white-space:nowrap
   <header>
     <span class="eyebrow">Nernst · Goldman–Hodgkin–Katz</span>
     <h1>Nernst–Goldman Explorer</h1>
+    <p class="byline">by Po-Han Chiang @ NYCU</p>
     <p class="lede">Change ion concentrations, temperature and permeabilities, and watch each ion's equilibrium potential (Nernst) and the membrane potential set by all of them together (Goldman–Hodgkin–Katz). Defaults are a typical mammalian neuron.</p>
   </header>
 
@@ -237,6 +242,7 @@ td.e{font:500 15px "IBM Plex Mono",monospace;text-align:right;white-space:nowrap
       </ul>
     </div>
   </section>
+  <footer><span>© 2026 Po-Han Chiang</span><span>Code licensed under <a href="https://github.com/phclab/class/blob/main/LICENSE">GPL-3.0-or-later</a></span></footer>
 </div>
 
 <script>
