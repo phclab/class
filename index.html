@@ -1,0 +1,121 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Classroom for Neuroscience</title>
+<meta name="description" content="Interactive neuroscience teaching pages used in Prof. Po-Han Chiang's courses at NYCU: electrophysiology simulators and playable brain models.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#eef1ee;
+  --panel:#fbfcfa;
+  --ink:#1b2226;
+  --dim:#5d6a6f;
+  --line:#d3dad6;
+  --tile:#ffffff;
+  --ephys:#2a64a8;
+  --model:#6b8f2a;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#111618;
+    --panel:#182024;
+    --ink:#e4eaec;
+    --dim:#93a1a6;
+    --line:#2b373c;
+    --tile:#0f1416;
+    --ephys:#6ea8f0;
+    --model:#a9cf63;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#111618;
+  --panel:#182024;
+  --ink:#e4eaec;
+  --dim:#93a1a6;
+  --line:#2b373c;
+  --tile:#0f1416;
+  --ephys:#6ea8f0;
+  --model:#a9cf63;
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);margin:0;font:15px/1.6 "IBM Plex Sans",system-ui,sans-serif;padding:0 20px}
+.wrap{max-width:980px;margin:0 auto;padding-block:40px 56px;display:grid;gap:24px}
+h1,h2,h3{text-wrap:balance;margin:0}
+h1{font-size:32px;font-weight:600;line-height:1.2}
+h2{font-size:20px;font-weight:600}
+h3{font-size:16px;font-weight:600}
+p{margin:0}
+header{display:grid;gap:10px}
+.eyebrow{font:500 11px/1 "IBM Plex Mono",ui-monospace,monospace;letter-spacing:1.4px;text-transform:uppercase;color:var(--dim)}
+.lede{color:var(--dim);max-width:68ch}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px;display:grid;gap:14px}
+.box > p{color:var(--dim);max-width:68ch}
+.boxhead{display:flex;align-items:center;gap:10px}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.ephys .dot{background:var(--ephys)}
+.model .dot{background:var(--model)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+a.tile{display:grid;gap:6px;align-content:start;text-decoration:none;color:var(--ink);background:var(--tile);border:1px solid var(--line);border-radius:8px;padding:14px 16px;transition:border-color .15s}
+a.tile:hover{border-color:var(--accent)}
+a.tile:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.ephys{--accent:var(--ephys)}
+.model{--accent:var(--model)}
+.tile p{color:var(--dim);font-size:14px}
+.go{font:500 12px "IBM Plex Mono",monospace;color:var(--accent)}
+.soon{display:grid;gap:6px;align-content:start;border:1px dashed var(--line);border-radius:8px;padding:14px 16px;color:var(--dim);font-size:14px}
+.soon h3{color:var(--dim)}
+footer{color:var(--dim);font-size:13px;display:flex;flex-wrap:wrap;gap:6px 16px}
+footer a{color:inherit}
+@media (prefers-reduced-motion: reduce){a.tile{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="eyebrow">NYCU · Teaching pages</span>
+    <h1>Classroom for Neuroscience</h1>
+    <p class="lede">Interactive pages used in Prof. Po-Han Chiang's courses at National Yang Ming Chiao Tung University (NYCU). Each page runs entirely in your browser: change the parameters and watch the physics and biology respond.</p>
+  </header>
+
+  <section class="box ephys" aria-labelledby="ephys-h">
+    <div class="boxhead"><span class="dot"></span><h2 id="ephys-h">Electrophysiology</h2></div>
+    <p>How ions, membranes and cables set the voltage of a neuron.</p>
+    <div class="tiles">
+      <a class="tile" href="Nernst_Goldman_Explorer/">
+        <h3>Nernst–Goldman Explorer</h3>
+        <p>Equilibrium potentials for K⁺, Na⁺, Cl⁻ and Ca²⁺, and how relative permeability sets the resting and peak membrane potential.</p>
+        <span class="go">Open →</span>
+      </a>
+      <a class="tile" href="Myelin_Cable_Explorer/">
+        <h3>Myelin Cable Explorer</h3>
+        <p>An axon as a chain of RC circuits: see how myelin changes how far and how fast a voltage step or pulse spreads.</p>
+        <span class="go">Open →</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="box model" aria-labelledby="model-h">
+    <div class="boxhead"><span class="dot"></span><h2 id="model-h">Play with brain models</h2></div>
+    <p>Games played by neural networks wired like real brains. The connectome gives the wiring; the synaptic strengths are trained.</p>
+    <div class="tiles">
+      <a class="tile" href="https://phclab.github.io/BeatTheFly/">
+        <h3>BeatTheFly</h3>
+        <p>Play chess or Othello against a network built on the fruit-fly mushroom body connectome.</p>
+        <span class="go">Play →</span>
+      </a>
+      <div class="soon">
+        <h3>More brain models</h3>
+        <p>Further models are in preparation.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer><span>© 2026 Po-Han Chiang</span><span>Code licensed under <a href="https://github.com/phclab/class/blob/main/LICENSE">GPL-3.0-or-later</a></span><span><a href="https://github.com/phclab/class">Source on GitHub</a></span></footer>
+</div>
+</body>
+</html>

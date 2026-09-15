@@ -2,6 +2,8 @@
 
 Interactive teaching pages by Po-Han Chiang @ NYCU.
 
+Home page: https://phclab.github.io/class/
+
 | Page | Live | Topic |
 |---|---|---|
 | [Nernst–Goldman Explorer](Nernst_Goldman_Explorer/) | https://phclab.github.io/class/Nernst_Goldman_Explorer/ | Nernst equilibrium potentials and the Goldman–Hodgkin–Katz membrane potential |
