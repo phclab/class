@@ -5,6 +5,7 @@ Interactive teaching pages by Po-Han Chiang @ NYCU.
 | Page | Live | Topic |
 |---|---|---|
 | [Nernst–Goldman Explorer](Nernst_Goldman_Explorer/) | https://phclab.github.io/class/Nernst_Goldman_Explorer/ | Nernst equilibrium potentials and the Goldman–Hodgkin–Katz membrane potential |
+| [Myelin Cable Explorer](Myelin_Cable_Explorer/) | https://phclab.github.io/class/Myelin_Cable_Explorer/ | Passive cable (RC circuit) model of why myelination speeds conduction |
 
 ## License
 

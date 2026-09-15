@@ -1,0 +1,440 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Myelin Cable Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#eef1ee;
+  --panel:#fbfcfa;
+  --ink:#1b2226;
+  --dim:#5d6a6f;
+  --line:#d3dad6;
+  --grid:#e2e8e4;
+  --field:#ffffff;
+  --bare:#c8561c;
+  --myelin:#2a64a8;
+  --sheath:#e9d9a6;
+  --thr:#b3263c;
+  --wire:#3a4448;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#111618;
+    --panel:#182024;
+    --ink:#e4eaec;
+    --dim:#93a1a6;
+    --line:#2b373c;
+    --grid:#222d31;
+    --field:#0f1416;
+    --bare:#ff9a5c;
+    --myelin:#6ea8f0;
+    --sheath:#6b5b2c;
+    --thr:#ff6b81;
+    --wire:#b9c4c8;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#111618;
+  --panel:#182024;
+  --ink:#e4eaec;
+  --dim:#93a1a6;
+  --line:#2b373c;
+  --grid:#222d31;
+  --field:#0f1416;
+  --bare:#ff9a5c;
+  --myelin:#6ea8f0;
+  --sheath:#6b5b2c;
+  --thr:#ff6b81;
+  --wire:#b9c4c8;
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);margin:0;font:15px/1.6 "IBM Plex Sans",system-ui,sans-serif;padding:0 20px}
+.wrap{max-width:1180px;margin:0 auto;padding-block:28px 56px;display:grid;gap:22px}
+h1,h2,h3{text-wrap:balance;margin:0}
+h1{font-size:30px;font-weight:600}
+h2{font-size:19px;font-weight:600}
+h3{font-size:15px;font-weight:600}
+p{margin:0}
+.mono,.num{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.eyebrow{font:500 11px/1 "IBM Plex Mono",monospace;letter-spacing:1.4px;text-transform:uppercase;color:var(--dim)}
+.lede{color:var(--dim);max-width:72ch}
+.byline{color:var(--dim);font-size:14px;margin-top:-4px}
+header{display:grid;gap:8px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 18px 20px;display:grid;gap:14px;min-width:0}
+.row{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 22px}
+.ctl{display:grid;gap:4px}
+label{color:var(--dim);font-size:13px}
+label b{color:var(--ink);font:500 13px "IBM Plex Mono",monospace;font-weight:500}
+input[type=range]{width:100%;accent-color:var(--myelin)}
+input:focus-visible,button:focus-visible{outline:2px solid var(--myelin);outline-offset:2px}
+button{font:500 13px "IBM Plex Sans",sans-serif;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer}
+button:hover{border-color:var(--dim)}
+button.go{background:var(--myelin);border-color:var(--myelin);color:#fff}
+.seg{display:inline-flex;gap:0}
+.seg button{border-radius:0}
+.seg button:first-child{border-radius:6px 0 0 6px}
+.seg button:last-child{border-radius:0 6px 6px 0;margin-left:-1px}
+.seg button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--panel)}
+.muted{color:var(--dim);font-size:13px}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px}
+@media (max-width:900px){.split{grid-template-columns:1fr}}
+.circuit svg{width:100%;height:auto;display:block}
+canvas{width:100%;display:block}
+.strip{display:grid;gap:4px}
+.strip .lab{display:flex;justify-content:space-between;font-size:13px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:14px}
+th{font:500 12px "IBM Plex Mono",monospace;color:var(--dim);text-align:left;padding:0 8px 8px}
+td{padding:7px 8px;border-top:1px solid var(--grid)}
+td.v{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;text-align:right}
+th.r{text-align:right}
+.swatch{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:7px;vertical-align:1px}
+.verdict{font-size:15px}
+.verdict b{font-family:"IBM Plex Mono",monospace;font-weight:500}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.notes p,.notes li{max-width:65ch}
+.notes ul{margin:0;padding-left:18px;display:grid;gap:6px}
+.eq{font:15px "IBM Plex Mono",monospace;background:var(--field);border:1px solid var(--line);border-radius:8px;padding:10px 12px;overflow-x:auto}
+footer{color:var(--dim);font-size:13px;display:flex;flex-wrap:wrap;gap:6px 16px}
+footer a{color:inherit}
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Passive cable · RC circuit</span>
+    <h1>Myelin Cable Explorer</h1>
+    <p class="byline">by Po-Han Chiang @ NYCU</p>
+    <p class="lede">An axon behaves like a leaky, capacitive cable: a chain of RC circuits joined by the resistance of the axoplasm. Wrapping it in myelin raises the membrane resistance and lowers its capacitance. Clamp one end at +20 mV, either held or as a brief pulse, and watch how far, and how fast, the voltage spreads with and without myelin.</p>
+  </header>
+
+  <section class="panel">
+    <h2>The cable as a chain of RC circuits</h2>
+    <div class="circuit"><svg id="circuit" viewBox="0 0 1100 250" role="img" aria-label="Equivalent circuit of an unmyelinated and a myelinated axon segment"></svg></div>
+    <p class="muted">Each segment has a membrane resistance r<sub>m</sub> in parallel with a membrane capacitance c<sub>m</sub>, and segments are joined by the axial resistance r<sub>i</sub>. With n myelin wraps the membrane stack is 2n + 1 membranes thick: r<sub>m</sub> goes up and c<sub>m</sub> goes down by that factor, while r<sub>i</sub> is unchanged.</p>
+  </section>
+
+  <section class="panel">
+    <div class="row" style="justify-content:space-between">
+      <h2>Clamp the left end and watch it spread</h2>
+      <div class="row" style="gap:8px">
+        <div class="seg" role="group" aria-label="Stimulus">
+          <button id="stimStep" type="button" aria-pressed="true">Step</button>
+          <button id="stimPulse" type="button" aria-pressed="false">Pulse</button>
+        </div>
+        <button id="play" class="go" type="button">Play</button>
+        <button id="reset" type="button">Reset</button>
+      </div>
+    </div>
+    <div class="controls">
+      <div class="ctl"><label for="wraps">Myelin wraps n <b id="wrapsOut"></b></label><input id="wraps" type="range" min="1" max="100" step="1" value="30"></div>
+      <div class="ctl"><label for="diam">Axon diameter <b id="diamOut"></b></label><input id="diam" type="range" min="0.5" max="10" step="0.5" value="2"></div>
+      <div class="ctl"><label for="probe">Probe distance <b id="probeOut"></b></label><input id="probe" type="range" min="0.2" max="5" step="0.1" value="2"></div>
+      <div class="ctl" id="widthCtl" hidden><label for="width">Pulse width <b id="widthOut"></b></label><input id="width" type="range" min="0.2" max="5" step="0.1" value="1"></div>
+      <div class="ctl"><label for="time">Time <b id="timeOut"></b></label><input id="time" type="range" min="0" max="300" step="1" value="0"></div>
+    </div>
+
+    <div class="strip">
+      <div class="lab"><span><span class="swatch" style="background:var(--bare)"></span>Unmyelinated (bare membrane)</span><span class="muted">0 → 5 mm along the axon</span></div>
+      <canvas id="stripBare" width="1100" height="46" aria-label="Voltage along the unmyelinated cable"></canvas>
+    </div>
+    <div class="strip">
+      <div class="lab"><span><span class="swatch" style="background:var(--myelin)"></span>Myelinated (<span id="wrapsLab"></span> wraps)</span><span class="muted">colour = depolarisation, 0 to 20 mV</span></div>
+      <canvas id="stripMy" width="1100" height="46" aria-label="Voltage along the myelinated cable"></canvas>
+    </div>
+
+    <div class="split">
+      <div class="ctl">
+        <h3>Voltage along the axon at this moment</h3>
+        <canvas id="plotX" width="560" height="260" aria-label="Voltage versus distance"></canvas>
+      </div>
+      <div class="ctl">
+        <h3>Voltage at the probe over time</h3>
+        <canvas id="plotT" width="560" height="260" aria-label="Voltage versus time at the probe"></canvas>
+      </div>
+    </div>
+    <p class="verdict" id="verdict"></p>
+  </section>
+
+  <section class="panel">
+    <h2>Cable constants</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Quantity</th><th class="r">Unmyelinated</th><th class="r">Myelinated</th><th class="r">Ratio</th></tr></thead>
+        <tbody id="consts"></tbody>
+      </table>
+    </div>
+    <div class="eq">λ = √(r<sub>m</sub> / r<sub>i</sub>) = √(R<sub>m</sub>·d / 4R<sub>i</sub>) &nbsp;&nbsp; τ = r<sub>m</sub>·c<sub>m</sub> = R<sub>m</sub>·C<sub>m</sub> &nbsp;&nbsp; spread speed ≈ 2λ / τ</div>
+    <p class="muted">Specific values: R<sub>m</sub> = 5,000 Ω·cm², C<sub>m</sub> = 1 µF/cm² and R<sub>i</sub> = 100 Ω·cm for the bare membrane; myelin multiplies R<sub>m</sub> and divides C<sub>m</sub> by 2n + 1. The cable is 5 mm long with sealed ends, solved with 250 compartments and an implicit time step of 0.02 ms.</p>
+  </section>
+
+  <section class="notes">
+    <div class="panel">
+      <h3>Why myelin works: less leak</h3>
+      <p>Current that flows out through the membrane is lost before it can travel further down the axon. Myelin makes the membrane resistance much larger, so less current leaks out and the voltage decays over a longer distance. The length constant λ grows with the square root of r<sub>m</sub>.</p>
+    </div>
+    <div class="panel">
+      <h3>Why myelin works: less charge to move</h3>
+      <p>Before the voltage can rise at a point, the membrane capacitance there has to be charged. Thicker insulation means a smaller capacitance, so the same axial current raises the voltage faster. Because r<sub>m</sub> rises and c<sub>m</sub> falls by the same factor, τ stays the same while λ gets longer, and the signal spreads faster.</p>
+    </div>
+    <div class="panel">
+      <h3>What this model leaves out</h3>
+      <ul>
+        <li>It is purely passive: there are no voltage-gated channels, so the signal only decays.</li>
+        <li>In a real axon, gaps in the myelin (nodes of Ranvier) regenerate the action potential. The passive spread shown here is what carries the signal from one node to the next, which is why conduction looks like it jumps (saltatory conduction).</li>
+        <li>Without myelin, a thicker axon also helps, but speed only grows with √d. Myelinated fibres get much more speed per unit of diameter.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer><span>© 2026 Po-Han Chiang</span><span>Code licensed under <a href="https://github.com/phclab/class/blob/main/LICENSE">GPL-3.0-or-later</a></span></footer>
+</div>
+
+<script>
+const RM = 5000, CM = 1e-6, RI = 100;
+const L = 0.5, N = 250, DX = L / N, DT = 2e-5, TEND = 0.03, VCLAMP = 20, THR = 10;
+const STEPS = Math.round(TEND / DT), SAVE_EVERY = 5, FRAMES = STEPS / SAVE_EVERY;
+const $ = id => document.getElementById(id);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const state = { wraps:30, d:2, probe:2, frame:0, playing:false, stim:'step', width:1 };
+let sims = null;
+
+function cable(d_um, factor){
+  const d = d_um * 1e-4;
+  const rm = RM * factor / (Math.PI * d);
+  const cm = CM / factor * Math.PI * d;
+  const ri = 4 * RI / (Math.PI * d * d);
+  return { rm, cm, ri, lambda: Math.sqrt(rm / ri), tau: rm * cm };
+}
+
+function simulate(p){
+  const g = 1 / (p.ri * DX * DX), c = p.cm / DT, l = 1 / p.rm;
+  const V = new Float64Array(N), a = new Float64Array(N), b = new Float64Array(N), cc = new Float64Array(N), rhs = new Float64Array(N);
+  const cp = new Float64Array(N), dp = new Float64Array(N);
+  const frames = [new Float32Array(N)];
+  const clampSteps = state.stim === 'pulse' ? Math.round(state.width * 1e-3 / DT) : STEPS;
+  for (let s = 1; s <= STEPS; s++){
+    for (let j = 0; j < N; j++){
+      const nb = (j === 0 || j === N - 1) ? 1 : 2;
+      a[j] = j > 0 ? -g : 0; cc[j] = j < N - 1 ? -g : 0; b[j] = c + nb * g + l; rhs[j] = c * V[j];
+    }
+    if (s <= clampSteps){ b[0] = 1; cc[0] = 0; rhs[0] = VCLAMP; }
+    cp[0] = cc[0] / b[0]; dp[0] = rhs[0] / b[0];
+    for (let j = 1; j < N; j++){
+      const m = b[j] - a[j] * cp[j - 1];
+      cp[j] = cc[j] / m; dp[j] = (rhs[j] - a[j] * dp[j - 1]) / m;
+    }
+    V[N - 1] = dp[N - 1];
+    for (let j = N - 2; j >= 0; j--) V[j] = dp[j] - cp[j] * V[j + 1];
+    if (s % SAVE_EVERY === 0) frames.push(Float32Array.from(V));
+  }
+  return frames;
+}
+
+function recompute(){
+  const bare = cable(state.d, 1), my = cable(state.d, 2 * state.wraps + 1);
+  sims = { bare, my, fb: simulate(bare), fm: simulate(my) };
+  renderAll();
+}
+
+const probeIndex = () => Math.min(N - 1, Math.round(state.probe / 10 / DX));
+const tOf = f => f * SAVE_EVERY * DT * 1000;
+function peakAt(frames){
+  const k = probeIndex(); let best = 0, fb = 0;
+  for (let f = 0; f < frames.length; f++) if (frames[f][k] > best){ best = frames[f][k]; fb = f; }
+  return { v: best, t: tOf(fb) };
+}
+function crossing(frames){
+  const k = probeIndex();
+  for (let f = 0; f < frames.length; f++) if (frames[f][k] >= THR) return tOf(f);
+  return null;
+}
+
+const STOPS = [[0,[20,30,60]],[0.25,[40,80,150]],[0.5,[40,160,160]],[0.75,[200,210,80]],[1,[250,240,180]]];
+function heat(v){
+  const x = Math.max(0, Math.min(1, v / VCLAMP));
+  for (let i = 1; i < STOPS.length; i++){
+    if (x <= STOPS[i][0]){
+      const [x0, c0] = STOPS[i - 1], [x1, c1] = STOPS[i], t = (x - x0) / (x1 - x0);
+      return `rgb(${c0.map((c, k) => Math.round(c + (c1[k] - c) * t)).join(',')})`;
+    }
+  }
+  return 'rgb(250,240,180)';
+}
+function drawStrip(id, V){
+  const cv = $(id), g = cv.getContext('2d'), W = cv.width, H = cv.height, w = W / N;
+  for (let j = 0; j < N; j++){ g.fillStyle = heat(V[j]); g.fillRect(j * w, 0, w + 1, H); }
+  const px = probeIndex() * w;
+  g.strokeStyle = '#ffffff'; g.lineWidth = 2; g.setLineDash([4, 4]);
+  g.beginPath(); g.moveTo(px, 0); g.lineTo(px, H); g.stroke(); g.setLineDash([]);
+}
+
+function axes(g, W, H, pad, xmax, xlab, ylab){
+  g.clearRect(0, 0, W, H);
+  g.fillStyle = css('--panel'); g.fillRect(0, 0, W, H);
+  g.strokeStyle = css('--grid'); g.lineWidth = 1;
+  g.fillStyle = css('--dim'); g.font = '12px IBM Plex Mono, monospace';
+  for (let v = 0; v <= 20; v += 5){
+    const y = pad.t + (1 - v / 20) * (H - pad.t - pad.b);
+    g.beginPath(); g.moveTo(pad.l, y); g.lineTo(W - pad.r, y); g.stroke();
+    g.fillText(String(v), pad.l - 22, y + 4);
+  }
+  const step = xmax <= 5 ? 1 : 5;
+  for (let x = 0; x <= xmax + 1e-9; x += step){
+    const px = pad.l + x / xmax * (W - pad.l - pad.r);
+    g.beginPath(); g.moveTo(px, pad.t); g.lineTo(px, H - pad.b); g.stroke();
+    g.fillText(String(x), px - 4, H - pad.b + 15);
+  }
+  g.fillText(xlab, pad.l + (W - pad.l - pad.r) / 2 - g.measureText(xlab).width / 2, H - 4);
+  g.fillText(ylab, pad.l, pad.t - 6);
+  const ty = pad.t + (1 - THR / 20) * (H - pad.t - pad.b);
+  g.strokeStyle = css('--thr'); g.setLineDash([6, 5]); g.beginPath(); g.moveTo(pad.l, ty); g.lineTo(W - pad.r, ty); g.stroke(); g.setLineDash([]);
+  g.fillStyle = css('--thr'); g.fillText('threshold 10 mV', pad.l + 6, ty - 5);
+}
+function line(g, pts, color, W, H, pad, xmax){
+  g.strokeStyle = color; g.lineWidth = 2.4; g.beginPath();
+  pts.forEach(([x, v], i) => {
+    const px = pad.l + x / xmax * (W - pad.l - pad.r), py = pad.t + (1 - Math.min(20, v) / 20) * (H - pad.t - pad.b);
+    i ? g.lineTo(px, py) : g.moveTo(px, py);
+  });
+  g.stroke();
+}
+function drawPlots(){
+  const pad = { l:34, r:14, t:22, b:38 };
+  let cv = $('plotX'), g = cv.getContext('2d');
+  axes(g, cv.width, cv.height, pad, 5, 'distance (mm)', 'mV');
+  const f = state.frame;
+  for (const [fr, col] of [[sims.fb, '--bare'], [sims.fm, '--myelin']]){
+    line(g, Array.from(fr[f], (v, j) => [(j + 0.5) * DX * 10, v]), css(col), cv.width, cv.height, pad, 5);
+  }
+  const px = pad.l + state.probe / 5 * (cv.width - pad.l - pad.r);
+  g.strokeStyle = css('--dim'); g.setLineDash([3, 4]); g.beginPath(); g.moveTo(px, pad.t); g.lineTo(px, cv.height - pad.b); g.stroke(); g.setLineDash([]);
+  cv = $('plotT'); g = cv.getContext('2d');
+  axes(g, cv.width, cv.height, pad, 30, 'time (ms)', 'mV');
+  const k = probeIndex();
+  for (const [fr, col] of [[sims.fb, '--bare'], [sims.fm, '--myelin']]){
+    line(g, fr.slice(0, f + 1).map((V, i) => [tOf(i), V[k]]), css(col), cv.width, cv.height, pad, 30);
+  }
+  const tx = pad.l + tOf(f) / 30 * (cv.width - pad.l - pad.r);
+  g.strokeStyle = css('--dim'); g.setLineDash([3, 4]); g.beginPath(); g.moveTo(tx, pad.t); g.lineTo(tx, cv.height - pad.b); g.stroke(); g.setLineDash([]);
+}
+
+const fmt = (x, d = 2) => Number(x).toFixed(d);
+function renderTable(){
+  const { bare, my } = sims;
+  const rows = [
+    ['Membrane resistance r<sub>m</sub>', bare.rm / 1e6, my.rm / 1e6, 'MΩ·cm'],
+    ['Membrane capacitance c<sub>m</sub>', bare.cm * 1e9, my.cm * 1e9, 'nF/cm'],
+    ['Axial resistance r<sub>i</sub>', bare.ri / 1e6, my.ri / 1e6, 'MΩ/cm'],
+    ['Length constant λ', bare.lambda * 10, my.lambda * 10, 'mm'],
+    ['Time constant τ', bare.tau * 1000, my.tau * 1000, 'ms'],
+    ['Spread speed 2λ/τ', 2 * bare.lambda / bare.tau / 100, 2 * my.lambda / my.tau / 100, 'm/s'],
+  ];
+  $('consts').innerHTML = rows.map(([name, a, b, u]) =>
+    `<tr><td>${name}</td><td class="v">${fmt(a, a < 1 ? 3 : 2)} ${u}</td><td class="v">${fmt(b, b < 1 ? 3 : 2)} ${u}</td><td class="v">×${fmt(b / a, b / a < 1 ? 3 : 1)}</td></tr>`).join('');
+}
+function renderVerdict(){
+  const tb = crossing(sims.fb), tm = crossing(sims.fm);
+  const where = `${fmt(state.probe, 1)} mm`;
+  const say = (name, t) => t === null ? `${name} never reaches 10 mV` : `${name} reaches 10 mV after <b>${fmt(t, 2)} ms</b>`;
+  if (state.stim === 'pulse'){
+    const pb = peakAt(sims.fb), pm = peakAt(sims.fm);
+    const pk = (name, p) => `${name} peaks at <b>${fmt(p.v, 1)} mV</b> after <b>${fmt(p.t, 2)} ms</b>`;
+    $('verdict').innerHTML = `At ${where}, after a ${fmt(state.width, 1)} ms pulse: ${pk('the unmyelinated axon', pb)}; ${pk('the myelinated axon', pm)}. ${say('Unmyelinated', tb)}; ${say('myelinated', tm)}.`;
+    return;
+  }
+  $('verdict').innerHTML = `At ${where}: ${say('the unmyelinated axon', tb)}; ${say('the myelinated axon', tm)}.`;
+}
+function drawCircuit(){
+  const svg = $('circuit'), f = 2 * state.wraps + 1;
+  const seg = (x0, y0, myel) => {
+    let s = '';
+    const W = 120;
+    for (let i = 0; i < 4; i++){
+      const x = x0 + i * W;
+      s += `<path d="M${x} ${y0} h20 l6 -8 l10 16 l10 -16 l10 16 l10 -16 l6 8 h48" fill="none" stroke="var(--wire)" stroke-width="2"/>`;
+      s += `<text x="${x + 58}" y="${y0 - 14}" text-anchor="middle" font-size="12" fill="var(--dim)" font-family="IBM Plex Mono,monospace">rᵢ</text>`;
+      const bx = x + W;
+      s += `<line x1="${bx}" y1="${y0}" x2="${bx}" y2="${y0 + 22}" stroke="var(--wire)" stroke-width="2"/>`;
+      s += `<line x1="${bx - 22}" y1="${y0 + 22}" x2="${bx + 22}" y2="${y0 + 22}" stroke="var(--wire)" stroke-width="2"/>`;
+      s += `<path d="M${bx - 22} ${y0 + 22} v10 l-7 5 l14 8 l-14 8 l14 8 l-7 5 v10" fill="none" stroke="var(--wire)" stroke-width="2"/>`;
+      s += `<line x1="${bx + 22}" y1="${y0 + 22}" x2="${bx + 22}" y2="${y0 + 44}" stroke="var(--wire)" stroke-width="2"/>`;
+      s += `<line x1="${bx + 12}" y1="${y0 + 44}" x2="${bx + 32}" y2="${y0 + 44}" stroke="var(--wire)" stroke-width="2.5"/>`;
+      s += `<line x1="${bx + 12}" y1="${y0 + 52}" x2="${bx + 32}" y2="${y0 + 52}" stroke="var(--wire)" stroke-width="2.5"/>`;
+      s += `<line x1="${bx + 22}" y1="${y0 + 52}" x2="${bx + 22}" y2="${y0 + 76}" stroke="var(--wire)" stroke-width="2"/>`;
+      s += `<line x1="${bx - 22}" y1="${y0 + 76}" x2="${bx + 22}" y2="${y0 + 76}" stroke="var(--wire)" stroke-width="2"/>`;
+      s += `<line x1="${bx}" y1="${y0 + 76}" x2="${bx}" y2="${y0 + 92}" stroke="var(--wire)" stroke-width="2"/>`;
+      if (i === 0){
+        s += `<text x="${bx - 30}" y="${y0 + 50}" text-anchor="end" font-size="12" fill="var(--dim)" font-family="IBM Plex Mono,monospace">${myel ? 'rₘ×' + f : 'rₘ'}</text>`;
+        s += `<text x="${bx + 38}" y="${y0 + 52}" font-size="12" fill="var(--dim)" font-family="IBM Plex Mono,monospace">${myel ? 'cₘ/' + f : 'cₘ'}</text>`;
+      }
+    }
+    s += `<line x1="${x0}" y1="${y0 + 92}" x2="${x0 + 4 * W + 40}" y2="${y0 + 92}" stroke="var(--wire)" stroke-width="2"/>`;
+    return s;
+  };
+  let s = '';
+  s += `<text x="10" y="24" font-size="14" font-weight="600" fill="var(--bare)" font-family="IBM Plex Sans,sans-serif">Unmyelinated</text>`;
+  s += `<text x="10" y="42" font-size="12" fill="var(--dim)" font-family="IBM Plex Sans,sans-serif">inside (axoplasm)</text>`;
+  s += seg(20, 70, false);
+  s += `<text x="10" y="186" font-size="12" fill="var(--dim)" font-family="IBM Plex Sans,sans-serif">outside</text>`;
+  const X = 580;
+  s += `<rect x="${X + 100}" y="${70 + 12}" width="${4 * 120 - 20 - 100 + 20}" height="${80}" rx="10" fill="var(--sheath)" opacity=".55"/>`;
+  s += `<text x="${X - 10}" y="24" font-size="14" font-weight="600" fill="var(--myelin)" font-family="IBM Plex Sans,sans-serif">Myelinated, n = ${state.wraps} wraps</text>`;
+  s += `<text x="${X - 10}" y="42" font-size="12" fill="var(--dim)" font-family="IBM Plex Sans,sans-serif">membrane stack ${f}× thicker: rₘ×${f}, cₘ/${f}</text>`;
+  s += seg(X, 70, true);
+  s += `<text x="${X + 120}" y="${70 + 118}" font-size="12" fill="var(--dim)" font-family="IBM Plex Sans,sans-serif">myelin sheath</text>`;
+  s += `<text x="10" y="236" font-size="13" fill="var(--ink)" font-family="IBM Plex Sans,sans-serif">Leak path: rₘ   ·   charge storage: cₘ   ·   current along the axon: rᵢ</text>`;
+  svg.innerHTML = s;
+}
+
+function renderAll(){
+  $('wrapsOut').textContent = state.wraps; $('wrapsLab').textContent = state.wraps;
+  $('diamOut').textContent = `${fmt(state.d, 1)} µm`;
+  $('probeOut').textContent = `${fmt(state.probe, 1)} mm`;
+  $('widthOut').textContent = `${fmt(state.width, 1)} ms`;
+  $('timeOut').textContent = `${fmt(tOf(state.frame), 1)} ms`;
+  $('time').max = FRAMES; $('time').value = state.frame;
+  drawStrip('stripBare', sims.fb[state.frame]);
+  drawStrip('stripMy', sims.fm[state.frame]);
+  drawPlots(); renderTable(); renderVerdict(); drawCircuit();
+}
+
+let raf = null;
+function play(){
+  if (state.frame >= FRAMES) state.frame = 0;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches){ state.frame = FRAMES; renderAll(); return; }
+  state.playing = true; $('play').textContent = 'Pause';
+  let last = performance.now();
+  const tick = now => {
+    if (!state.playing) return;
+    const adv = Math.max(1, Math.round((now - last) / 16));
+    last = now; state.frame = Math.min(FRAMES, state.frame + adv); renderAll();
+    if (state.frame < FRAMES) raf = requestAnimationFrame(tick); else stop();
+  };
+  raf = requestAnimationFrame(tick);
+}
+function stop(){ state.playing = false; cancelAnimationFrame(raf); $('play').textContent = 'Play'; }
+
+$('wraps').addEventListener('input', e => { state.wraps = +e.target.value; recompute(); });
+$('diam').addEventListener('input', e => { state.d = +e.target.value; recompute(); });
+function setStim(m){
+  state.stim = m;
+  $('stimStep').setAttribute('aria-pressed', m === 'step'); $('stimPulse').setAttribute('aria-pressed', m === 'pulse');
+  $('widthCtl').hidden = m !== 'pulse';
+  stop(); recompute();
+}
+$('stimStep').addEventListener('click', () => setStim('step'));
+$('stimPulse').addEventListener('click', () => setStim('pulse'));
+$('width').addEventListener('input', e => { state.width = +e.target.value; recompute(); });
+$('probe').addEventListener('input', e => { state.probe = +e.target.value; renderAll(); });
+$('time').addEventListener('input', e => { stop(); state.frame = +e.target.value; renderAll(); });
+$('play').addEventListener('click', () => state.playing ? stop() : play());
+$('reset').addEventListener('click', () => { stop(); state.frame = 0; renderAll(); });
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => renderAll());
+new MutationObserver(() => renderAll()).observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] });
+setStim(new URLSearchParams(location.search).get('stim') === 'pulse' ? 'pulse' : 'step'); state.frame = Math.round(FRAMES * 0.5);
+renderAll();
+</script>
