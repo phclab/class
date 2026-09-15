@@ -1,0 +1,442 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Nernst–Goldman Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#eef1ee;
+  --panel:#fbfcfa;
+  --ink:#1b2226;
+  --dim:#5d6a6f;
+  --line:#d3dad6;
+  --grid:#e2e8e4;
+  --vm:#b3263c;
+  --k:#2a64a8;
+  --na:#c8561c;
+  --cl:#2e8a5c;
+  --ca:#7c4fae;
+  --field:#ffffff;
+  --scope:#0f1a17;
+  --scope-grid:#1f3a31;
+  --scope-ink:#9fe7c4;
+  --scope-trace:#e8ff7a;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#111618;
+    --panel:#182024;
+    --ink:#e4eaec;
+    --dim:#93a1a6;
+    --line:#2b373c;
+    --grid:#222d31;
+    --vm:#ff6b81;
+    --k:#6ea8f0;
+    --na:#ff9a5c;
+    --cl:#5fcf95;
+    --ca:#b793ec;
+    --field:#0f1416;
+    --scope:#080d0c;
+    --scope-grid:#173027;
+    --scope-ink:#9fe7c4;
+    --scope-trace:#e8ff7a;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#111618;
+  --panel:#182024;
+  --ink:#e4eaec;
+  --dim:#93a1a6;
+  --line:#2b373c;
+  --grid:#222d31;
+  --vm:#ff6b81;
+  --k:#6ea8f0;
+  --na:#ff9a5c;
+  --cl:#5fcf95;
+  --ca:#b793ec;
+  --field:#0f1416;
+  --scope:#080d0c;
+  --scope-grid:#173027;
+  --scope-ink:#9fe7c4;
+  --scope-trace:#e8ff7a;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--ground);color:var(--ink);margin:0;
+  font:15px/1.6 "IBM Plex Sans",system-ui,sans-serif;
+  padding:0 20px;
+}
+.wrap{max-width:1180px;margin:0 auto;padding-block:28px 56px;display:grid;gap:22px}
+h1,h2,h3{font-family:"IBM Plex Sans",sans-serif;text-wrap:balance;margin:0}
+h1{font-size:30px;font-weight:600;letter-spacing:.2px}
+h2{font-size:19px;font-weight:600}
+h3{font-size:15px;font-weight:600}
+p{margin:0}
+.mono,.num{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.lede{color:var(--dim);max-width:70ch}
+.eyebrow{font:500 11px/1 "IBM Plex Mono",monospace;letter-spacing:1.4px;text-transform:uppercase;color:var(--dim)}
+header{display:grid;gap:8px}
+.bench{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:22px;align-items:start}
+@media (max-width:900px){.bench{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 18px 20px;display:grid;gap:14px;min-width:0}
+.row{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+label{color:var(--dim);font-size:13px}
+input[type=range]{accent-color:var(--vm);width:100%}
+input[type=number]{
+  width:100%;min-width:0;background:var(--field);color:var(--ink);border:1px solid var(--line);border-radius:6px;
+  padding:5px 7px;font:14px "IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;
+}
+input:focus-visible,button:focus-visible{outline:2px solid var(--vm);outline-offset:2px}
+button{
+  font:500 13px "IBM Plex Sans",sans-serif;color:var(--ink);background:var(--field);
+  border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;
+}
+button:hover{border-color:var(--dim)}
+button.on{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+button.go{background:var(--vm);color:#fff;border-color:var(--vm)}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:560px}
+th{font:500 11px/1.2 "IBM Plex Mono",monospace;letter-spacing:1px;text-transform:uppercase;color:var(--dim);text-align:left;padding:0 6px 8px}
+td{padding:6px;border-top:1px solid var(--grid);vertical-align:middle}
+td.ion{font-weight:600;white-space:nowrap}
+.swatch{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:7px;vertical-align:1px}
+td.e{font:500 15px "IBM Plex Mono",monospace;text-align:right;white-space:nowrap}
+.permcell{display:grid;grid-template-columns:1fr 46px;gap:8px;align-items:center}
+.muted{color:var(--dim);font-size:13px}
+.readout{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.readout .big{font:500 40px/1 "IBM Plex Mono",monospace;color:var(--vm);font-variant-numeric:tabular-nums}
+.readout .unit{color:var(--dim)}
+.ruler svg{width:100%;height:auto;display:block}
+.scope canvas{width:100%;height:210px;display:block;border-radius:8px;background:var(--scope)}
+.eq{
+  display:flex;align-items:center;flex-wrap:wrap;gap:6px;font:16px "IBM Plex Mono",monospace;
+  padding:12px 14px;background:var(--field);border:1px solid var(--line);border-radius:8px;overflow-x:auto
+}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;padding:0 3px}
+.frac>span:first-child{border-bottom:1px solid currentColor;padding:0 4px 2px}
+.frac>span:last-child{padding:2px 4px 0}
+.eq .filled{color:var(--vm)}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.notes p,.notes li{max-width:65ch}
+.notes ul{margin:0;padding-left:18px;display:grid;gap:6px}
+.consts{display:flex;flex-wrap:wrap;gap:6px 20px;font-size:13px;color:var(--dim)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Nernst · Goldman–Hodgkin–Katz</span>
+    <h1>Nernst–Goldman Explorer</h1>
+    <p class="lede">Change ion concentrations, temperature and permeabilities, and watch each ion's equilibrium potential (Nernst) and the membrane potential set by all of them together (Goldman–Hodgkin–Katz). Defaults are a typical mammalian neuron.</p>
+  </header>
+
+  <section class="bench">
+    <div class="panel">
+      <div class="row" style="justify-content:space-between">
+        <h2>Ion concentrations and permeabilities</h2>
+        <div class="row" style="gap:8px">
+          <span class="muted">Cell:</span>
+          <button id="presetMammal" class="on" type="button">Mammalian neuron</button>
+          <button id="presetSquid" type="button">Squid giant axon</button>
+        </div>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Ion</th><th>Inside (mM)</th><th>Outside (mM)</th><th>Relative permeability P</th><th style="text-align:right">E<sub>ion</sub></th></tr></thead>
+          <tbody id="ionRows"></tbody>
+        </table>
+      </div>
+      <div class="row">
+        <div style="flex:1 1 260px;display:grid;gap:4px">
+          <label for="temp">Temperature <span id="tempOut" class="num"></span></label>
+          <input id="temp" type="range" min="0" max="45" step="0.5" value="37">
+        </div>
+        <div style="display:grid;gap:4px">
+          <span class="muted">Permeability set</span>
+          <div class="row" style="gap:8px">
+            <button id="permRest" type="button" class="on">Rest</button>
+            <button id="permPeak" type="button">Action potential peak</button>
+          </div>
+        </div>
+      </div>
+      <p class="muted">Ca²⁺ gets a Nernst potential only. The GHK voltage equation in this form covers monovalent ions, so Ca²⁺ is left out of V<sub>m</sub>.</p>
+    </div>
+
+    <div class="panel">
+      <div class="readout">
+        <span class="eyebrow" style="flex-basis:100%">Goldman membrane potential V<sub>m</sub></span>
+        <span id="vmBig" class="big"></span><span class="unit">mV</span>
+      </div>
+      <div class="ruler" aria-label="Voltage scale marking each equilibrium potential and the membrane potential">
+        <svg id="ruler" viewBox="0 0 360 420" role="img"></svg>
+      </div>
+      <div class="legend" id="legend"></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="row" style="justify-content:space-between">
+      <h2>Put permeability in motion</h2>
+      <button id="fire" class="go" type="button">Fire an action potential</button>
+    </div>
+    <p class="muted" style="max-width:80ch">Na⁺ permeability spikes briefly, then a rise in K⁺ permeability pulls the voltage back down. Every point of the trace is computed from the GHK equation at that instant, to show how permeability changes set the membrane potential. It is an illustration, not a full Hodgkin–Huxley model.</p>
+    <div class="scope"><canvas id="scope" width="1100" height="210" aria-label="Oscilloscope trace of membrane potential over time"></canvas></div>
+    <div class="row muted"><span>Time 0–8 ms</span><span>Voltage −100 to +70 mV</span><span id="scopeRead" class="num"></span></div>
+  </section>
+
+  <section class="panel">
+    <h2>The equations, with your numbers</h2>
+    <div style="display:grid;gap:6px">
+      <h3>Nernst equation: equilibrium potential of one ion</h3>
+      <div class="eq">
+        <span>E<sub>ion</sub> =</span>
+        <span class="frac"><span>RT</span><span>zF</span></span>
+        <span>ln</span>
+        <span class="frac"><span>[ion]<sub>o</sub></span><span>[ion]<sub>i</sub></span></span>
+      </div>
+      <div class="eq" id="nernstFilled"></div>
+    </div>
+    <div style="display:grid;gap:6px">
+      <h3>Goldman–Hodgkin–Katz voltage equation: membrane potential from several ions</h3>
+      <div class="eq">
+        <span>V<sub>m</sub> =</span>
+        <span class="frac"><span>RT</span><span>F</span></span>
+        <span>ln</span>
+        <span class="frac">
+          <span>P<sub>K</sub>[K⁺]<sub>o</sub> + P<sub>Na</sub>[Na⁺]<sub>o</sub> + P<sub>Cl</sub>[Cl⁻]<sub>i</sub></span>
+          <span>P<sub>K</sub>[K⁺]<sub>i</sub> + P<sub>Na</sub>[Na⁺]<sub>i</sub> + P<sub>Cl</sub>[Cl⁻]<sub>o</sub></span>
+        </span>
+      </div>
+      <div class="eq" id="ghkFilled"></div>
+    </div>
+    <div class="consts">
+      <span>R = 8.314 J·mol⁻¹·K⁻¹</span><span>F = 96485 C·mol⁻¹</span><span id="tK"></span><span id="rtf"></span>
+    </div>
+  </section>
+
+  <section class="notes">
+    <div class="panel">
+      <h3>Nernst: one ion's balance point</h3>
+      <p>A concentration gradient drives an ion toward the side where it is scarcer, and the membrane voltage pushes back on its charge. The voltage at which the two forces cancel is that ion's equilibrium potential. At 37 °C for a monovalent ion, <span class="mono">RT/F ≈ 26.7 mV</span>, or about 61.5 mV per tenfold concentration ratio in base-10 logs.</p>
+      <p>Cl⁻ carries a negative charge (z = −1), so its ratio points the opposite way to a cation's. Ca²⁺ is divalent (z = +2), so the same concentration ratio gives half the voltage.</p>
+    </div>
+    <div class="panel">
+      <h3>Goldman: the most permeable ion wins</h3>
+      <p>The membrane lets several ions through at once, so V<sub>m</sub> lands between their equilibrium potentials, weighted toward the most permeable one. At rest K⁺ channels dominate and V<sub>m</sub> sits near E<sub>K</sub>. At the peak of an action potential Na⁺ permeability jumps twentyfold or more and V<sub>m</sub> swings toward E<sub>Na</sub>.</p>
+      <p>Cl⁻ appears with inside and outside swapped because its charge is opposite to that of the cations.</p>
+    </div>
+    <div class="panel">
+      <h3>Assumptions</h3>
+      <ul>
+        <li>Passive diffusion only, with zero net current (steady state).</li>
+        <li>A uniform electric field across the membrane (constant-field assumption); ions cross independently.</li>
+        <li>Permeabilities are relative; only their ratios matter, so P<sub>K</sub> = 1 is the usual reference.</li>
+        <li>The Na⁺/K⁺ pump maintains the gradients, but its small direct electrogenic contribution is not included.</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<script>
+const ions = [
+  {key:'K',  name:'K⁺',  z:1,  color:'--k',  perm:true},
+  {key:'Na', name:'Na⁺', z:1,  color:'--na', perm:true},
+  {key:'Cl', name:'Cl⁻', z:-1, color:'--cl', perm:true},
+  {key:'Ca', name:'Ca²⁺',z:2,  color:'--ca', perm:false},
+];
+const cellPresets = {
+  mammal:{K:[140,5],Na:[15,145],Cl:[10,110],Ca:[0.0001,2]},
+  squid: {K:[400,20],Na:[50,440],Cl:[52,560],Ca:[0.0001,10]},
+};
+const permPresets = { rest:{K:1,Na:0.05,Cl:0.45}, peak:{K:1,Na:20,Cl:0.45} };
+const R = 8.314462618, F = 96485.33212;
+const state = { temp:37, conc:structuredClone(cellPresets.mammal), perm:{...permPresets.rest} };
+const $ = id => document.getElementById(id);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const rtf = () => R * (273.15 + state.temp) / F * 1000;
+const nernst = ion => rtf() / ion.z * Math.log(state.conc[ion.key][1] / state.conc[ion.key][0]);
+function ghk(perm = state.perm){
+  const c = state.conc;
+  const num = perm.K*c.K[1] + perm.Na*c.Na[1] + perm.Cl*c.Cl[0];
+  const den = perm.K*c.K[0] + perm.Na*c.Na[0] + perm.Cl*c.Cl[1];
+  return rtf() * Math.log(num / den);
+}
+const fmt = (v, d = 1) => (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v).toFixed(d);
+const fmtC = v => v < 0.01 ? v.toExponential(1).replace('e-', '×10⁻').replace(/⁻(\d)/, (m, d) => '⁻' + '⁰¹²³⁴⁵⁶⁷⁸⁹'[d]) : String(+v.toPrecision(4));
+
+function buildRows(){
+  const tb = $('ionRows'); tb.innerHTML = '';
+  for (const ion of ions){
+    const tr = document.createElement('tr');
+    const permCell = ion.perm
+      ? `<div class="permcell"><input id="p_${ion.key}" type="range" min="0" max="3" step="0.01" aria-label="${ion.name} permeability (log scale)"><span id="pv_${ion.key}" class="num"></span></div>`
+      : `<span class="muted">not in V<sub>m</sub></span>`;
+    tr.innerHTML = `
+      <td class="ion"><span class="swatch" style="background:var(${ion.color})"></span>${ion.name}<span class="muted"> z=${ion.z > 0 ? '+' : ''}${ion.z}</span></td>
+      <td><input id="in_${ion.key}" type="number" min="0.00001" step="any" aria-label="${ion.name} inside concentration, mM"></td>
+      <td><input id="out_${ion.key}" type="number" min="0.00001" step="any" aria-label="${ion.name} outside concentration, mM"></td>
+      <td>${permCell}</td>
+      <td class="e" id="e_${ion.key}" style="color:var(${ion.color})"></td>`;
+    tb.appendChild(tr);
+    for (const [side, idx] of [['in', 0], ['out', 1]]){
+      $(`${side}_${ion.key}`).addEventListener('input', e => {
+        const v = parseFloat(e.target.value);
+        if (v > 0){ state.conc[ion.key][idx] = v; clearCellPreset(); update(false); }
+      });
+    }
+    if (ion.perm){
+      $(`p_${ion.key}`).addEventListener('input', e => {
+        state.perm[ion.key] = permFromSlider(+e.target.value); setPermButtons(null); update(false);
+      });
+    }
+  }
+}
+const permFromSlider = s => s <= 0 ? 0 : +(Math.pow(10, s * 2 - 3)).toPrecision(3);
+const sliderFromPerm = p => p <= 0 ? 0 : Math.min(3, Math.max(0, (Math.log10(p) + 3) / 2));
+
+function syncInputs(){
+  for (const ion of ions){
+    $(`in_${ion.key}`).value = state.conc[ion.key][0];
+    $(`out_${ion.key}`).value = state.conc[ion.key][1];
+    if (ion.perm) $(`p_${ion.key}`).value = sliderFromPerm(state.perm[ion.key]);
+  }
+  $('temp').value = state.temp;
+}
+function clearCellPreset(){ $('presetMammal').classList.remove('on'); $('presetSquid').classList.remove('on'); }
+function setPermButtons(which){
+  $('permRest').classList.toggle('on', which === 'rest');
+  $('permPeak').classList.toggle('on', which === 'peak');
+}
+
+const VMIN = -120, VMAX = 150;
+function drawRuler(vm){
+  const svg = $('ruler'), W = 360, H = 420, top = 20, bot = 400, x0 = 150;
+  const y = v => top + (VMAX - Math.max(VMIN, Math.min(VMAX, v))) / (VMAX - VMIN) * (bot - top);
+  let s = '';
+  for (let v = VMIN; v <= VMAX; v += 10){
+    const major = v % 50 === 0;
+    s += `<line x1="${x0 - (major ? 12 : 6)}" x2="${x0}" y1="${y(v)}" y2="${y(v)}" stroke="var(--dim)" stroke-width="${major ? 1.2 : .7}"/>`;
+    if (major) s += `<text x="${x0 - 18}" y="${y(v) + 4}" text-anchor="end" font-size="11" font-family="IBM Plex Mono,monospace" fill="var(--dim)">${v > 0 ? '+' + v : v === 0 ? '0' : '−' + Math.abs(v)}</text>`;
+  }
+  s += `<line x1="${x0}" x2="${x0}" y1="${top}" y2="${bot}" stroke="var(--ink)" stroke-width="1.5"/>`;
+  s += `<line x1="${x0}" x2="${W - 10}" y1="${y(0)}" y2="${y(0)}" stroke="var(--grid)" stroke-width="1" stroke-dasharray="3 4"/>`;
+  s += `<text x="12" y="${top + 4}" font-size="11" fill="var(--dim)" font-family="IBM Plex Mono,monospace">mV</text>`;
+  const marks = ions.map(ion => ({label:`E${ion.key === 'Ca' ? 'Ca' : ion.key}`, name:ion.name, v:nernst(ion), color:`var(${ion.color})`}));
+  marks.sort((a, b) => b.v - a.v);
+  let lastY = -99;
+  for (const m of marks){
+    const yy = y(m.v); let ly = Math.max(yy, lastY + 18); lastY = ly;
+    const out = m.v > VMAX || m.v < VMIN;
+    s += `<line x1="${x0}" x2="${x0 + 40}" y1="${yy}" y2="${yy}" stroke="${m.color}" stroke-width="3"/>`;
+    s += `<path d="M${x0 + 40} ${yy} L${x0 + 52} ${ly}" stroke="${m.color}" stroke-width="1" fill="none"/>`;
+    s += `<text x="${x0 + 58}" y="${ly + 4}" font-size="13" fill="${m.color}" font-family="IBM Plex Mono,monospace" font-weight="500">E<tspan font-size="10" dy="3">${m.label.slice(1)}</tspan><tspan dy="-3"> ${fmt(m.v)}${out ? ' (off scale)' : ''}</tspan></text>`;
+  }
+  const vy = y(vm);
+  s += `<polygon points="${x0 - 2},${vy} ${x0 - 16},${vy - 8} ${x0 - 16},${vy + 8}" fill="var(--vm)"/>`;
+  s += `<line x1="${x0 - 48}" x2="${x0}" y1="${vy}" y2="${vy}" stroke="var(--vm)" stroke-width="2"/>`;
+  s += `<text x="${x0 - 52}" y="${vy - 7}" text-anchor="end" font-size="13" font-weight="600" fill="var(--vm)" font-family="IBM Plex Sans,sans-serif">V<tspan font-size="10" dy="3">m</tspan></text>`;
+  svg.innerHTML = s;
+}
+
+function update(){
+  const vm = ghk();
+  for (const ion of ions){
+    $(`e_${ion.key}`).textContent = `${fmt(nernst(ion))} mV`;
+    if (ion.perm) $(`pv_${ion.key}`).textContent = String(state.perm[ion.key]);
+  }
+  $('vmBig').textContent = fmt(vm);
+  $('tempOut').textContent = `${state.temp.toFixed(1)} °C`;
+  $('tK').textContent = `T = ${(273.15 + state.temp).toFixed(2)} K`;
+  $('rtf').textContent = `RT/F = ${rtf().toFixed(2)} mV`;
+  drawRuler(vm);
+  const k = ions[0], c = state.conc.K;
+  $('nernstFilled').innerHTML = `<span>E<sub>K</sub> =</span><span class="frac"><span>${rtf().toFixed(2)} mV</span><span>${k.z}</span></span><span>ln</span><span class="frac"><span>${fmtC(c[1])}</span><span>${fmtC(c[0])}</span></span><span>=</span><span class="filled">${fmt(nernst(k))} mV</span>`;
+  const p = state.perm, C = state.conc;
+  const num = p.K*C.K[1] + p.Na*C.Na[1] + p.Cl*C.Cl[0];
+  const den = p.K*C.K[0] + p.Na*C.Na[0] + p.Cl*C.Cl[1];
+  $('ghkFilled').innerHTML = `<span>V<sub>m</sub> = ${rtf().toFixed(2)} mV × ln</span><span class="frac"><span>${p.K}·${fmtC(C.K[1])} + ${p.Na}·${fmtC(C.Na[1])} + ${p.Cl}·${fmtC(C.Cl[0])}</span><span>${p.K}·${fmtC(C.K[0])} + ${p.Na}·${fmtC(C.Na[0])} + ${p.Cl}·${fmtC(C.Cl[1])}</span></span><span>= ${rtf().toFixed(2)} × ln(${(num / den).toFixed(4)}) =</span><span class="filled">${fmt(vm)} mV</span>`;
+  $('legend').innerHTML = ions.map(i => `<span><span class="swatch" style="background:var(${i.color})"></span>E<sub>${i.key}</sub> ${i.name} equilibrium potential</span>`).join('') + `<span><span class="swatch" style="background:var(--vm)"></span>V<sub>m</sub> GHK membrane potential</span>`;
+  lastTrace = apTrace();
+  drawScope(lastTrace, lastTrace.length);
+}
+
+const T_END = 8, NPT = 400;
+let lastTrace = [];
+function alpha(t, t0, tau){ const x = (t - t0) / tau; return x <= 0 ? 0 : x * Math.exp(1 - x); }
+function apTrace(){
+  const base = {...state.perm};
+  const pts = [];
+  for (let i = 0; i < NPT; i++){
+    const t = i / (NPT - 1) * T_END;
+    const perm = {
+      K: base.K * (1 + 3.2 * alpha(t, 1.25, 1.3)),
+      Na: base.Na + (Math.max(permPresets.peak.Na, base.Na) - base.Na) * alpha(t, 1.0, 0.32),
+      Cl: base.Cl,
+    };
+    pts.push([t, ghk(perm)]);
+  }
+  return pts;
+}
+function drawScope(pts, n){
+  const cv = $('scope'), g = cv.getContext('2d'), W = cv.width, H = cv.height;
+  const vMin = -100, vMax = 70, px = t => t / T_END * W, py = v => (vMax - v) / (vMax - vMin) * H;
+  g.fillStyle = css('--scope'); g.fillRect(0, 0, W, H);
+  g.strokeStyle = css('--scope-grid'); g.lineWidth = 1;
+  for (let t = 0; t <= T_END; t++){ g.beginPath(); g.moveTo(px(t), 0); g.lineTo(px(t), H); g.stroke(); }
+  for (let v = vMin; v <= vMax; v += 20){ g.beginPath(); g.moveTo(0, py(v)); g.lineTo(W, py(v)); g.stroke(); }
+  g.fillStyle = css('--scope-ink'); g.font = '12px IBM Plex Mono, monospace';
+  for (let v = -80; v <= 40; v += 40) g.fillText(`${v} mV`, 6, py(v) - 4);
+  g.setLineDash([6, 6]); g.lineWidth = 1.2;
+  for (const ion of ions.slice(0, 2)){
+    const e = nernst(ion); if (e < vMin || e > vMax) continue;
+    g.strokeStyle = css(ion.color); g.beginPath(); g.moveTo(0, py(e)); g.lineTo(W, py(e)); g.stroke();
+    g.fillStyle = css(ion.color); g.fillText(`E${ion.key} ${fmt(e)}`, W - 118, py(e) - 5);
+  }
+  g.setLineDash([]);
+  const rest = ghk();
+  g.strokeStyle = css('--scope-trace'); g.lineWidth = 2.4; g.beginPath();
+  if (!pts.length){ g.moveTo(0, py(rest)); g.lineTo(W, py(rest)); }
+  else { pts.slice(0, n).forEach(([t, v], i) => i ? g.lineTo(px(t), py(v)) : g.moveTo(px(t), py(v))); }
+  g.stroke();
+  $('scopeRead').textContent = pts.length ? `Peak ${fmt(Math.max(...pts.map(p => p[1])))} mV, trough ${fmt(Math.min(...pts.map(p => p[1])))} mV` : `Current V_m ${fmt(rest)} mV`;
+}
+let anim = null;
+function fire(){
+  const pts = apTrace(); lastTrace = pts;
+  cancelAnimationFrame(anim);
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches){ drawScope(pts, pts.length); return; }
+  const t0 = performance.now(), dur = 2200;
+  const step = now => {
+    const f = Math.min(1, (now - t0) / dur), n = Math.max(2, Math.round(f * pts.length));
+    drawScope(pts, n);
+    drawRuler(pts[n - 1][1]);
+    $('vmBig').textContent = fmt(pts[n - 1][1]);
+    if (f < 1) anim = requestAnimationFrame(step);
+    else { drawRuler(ghk()); $('vmBig').textContent = fmt(ghk()); }
+  };
+  anim = requestAnimationFrame(step);
+}
+
+function applyCell(name){
+  state.conc = structuredClone(cellPresets[name]);
+  $('presetMammal').classList.toggle('on', name === 'mammal');
+  $('presetSquid').classList.toggle('on', name === 'squid');
+  state.temp = name === 'squid' ? 6.3 : 37;
+  lastTrace = []; syncInputs(); update();
+}
+function applyPerm(name){ state.perm = {...permPresets[name]}; setPermButtons(name); syncInputs(); update(); }
+
+buildRows();
+$('temp').addEventListener('input', e => { state.temp = +e.target.value; update(); });
+$('presetMammal').addEventListener('click', () => applyCell('mammal'));
+$('presetSquid').addEventListener('click', () => applyCell('squid'));
+$('permRest').addEventListener('click', () => applyPerm('rest'));
+$('permPeak').addEventListener('click', () => applyPerm('peak'));
+$('fire').addEventListener('click', fire);
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => update());
+new MutationObserver(() => update()).observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
+syncInputs(); update();
+lastTrace = apTrace(); drawScope(lastTrace, lastTrace.length);
+</script>
