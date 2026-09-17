@@ -58,6 +58,9 @@ h3{font-size:16px;font-weight:600}
 p{margin:0}
 header{display:grid;gap:10px}
 .eyebrow{font:500 11px/1 "IBM Plex Mono",ui-monospace,monospace;letter-spacing:1.4px;text-transform:uppercase;color:var(--dim)}
+.toprow{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 16px}
+.toprow a{color:var(--dim);font-size:13px;text-decoration:none;border-bottom:1px solid var(--line)}
+.toprow a:hover{color:var(--ink);border-color:var(--ink)}
 .lede{color:var(--dim);max-width:68ch}
 .box{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px;display:grid;gap:14px}
 .box > p{color:var(--dim);max-width:68ch}
@@ -83,7 +86,7 @@ footer a{color:inherit}
 <body>
 <div class="wrap">
   <header>
-    <span class="eyebrow">NYCU · Teaching pages</span>
+    <div class="toprow"><span class="eyebrow">NYCU · Teaching pages</span><a href="https://tw.linkedin.com/in/pohanc" rel="me">LinkedIn</a></div>
     <h1>Classroom for Neuroscience</h1>
     <p class="lede">Interactive pages used in Prof. Po-Han Chiang's courses at National Yang Ming Chiao Tung University (NYCU). Each page runs entirely in your browser: change the parameters and watch the physics and biology respond.</p>
   </header>
