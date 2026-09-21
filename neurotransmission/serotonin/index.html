@@ -1,0 +1,133 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="google-site-verification" content="KViT-tN7lhzIxqualHoKOShjRrce-UIVY56-z95f7JE">
+<link rel="canonical" href="https://phclab.github.io/class/neurotransmission/serotonin/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Serotonin">
+<meta property="og:description" content="Serotonin: fourteen receptors, one transporter, and why raising it in an hour does not lift mood for weeks.">
+<meta property="og:url" content="https://phclab.github.io/class/neurotransmission/serotonin/">
+<title>Serotonin</title>
+<meta name="description" content="Serotonin: fourteen receptors, one transporter, and why raising it in an hour does not lift mood for weeks.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../nt.css">
+</head>
+<body class="mod">
+<div class="wrap">
+  <header>
+    <div class="toprow"><span class="eyebrow"><a href="../">Neurotransmission</a></span><a href="https://tw.linkedin.com/in/pohanc" rel="me">LinkedIn</a></div>
+    <h1>Serotonin</h1>
+    <p class="byline">by Po-Han Chiang @ NYCU</p>
+    <p><span class="tag">Slow · Modulatory</span></p>
+    <p class="lede">A couple of hundred thousand neurons in the raphe nuclei supply the entire human brain with serotonin, and they act through fourteen different receptors — one of which is an ion channel and the rest G-protein coupled. That is why a single drug that raises serotonin can calm, nauseate, and shift mood on three different timescales.</p>
+  </header>
+
+  <section class="box">
+    <h2>At a glance</h2>
+    <div class="facts">
+      <div class="fact"><span class="lab">Class</span><span class="val">Monoamine (indoleamine)</span></div>
+      <div class="fact"><span class="lab">Made from</span><span class="val">Tryptophan</span></div>
+      <div class="fact"><span class="lab">Rate-limiting</span><span class="val">TPH2 in brain</span></div>
+      <div class="fact"><span class="lab">Vesicle loader</span><span class="val">VMAT2</span></div>
+      <div class="fact"><span class="lab">Cleared by</span><span class="val">SERT, then MAO-A</span></div>
+      <div class="fact"><span class="lab">Cell bodies</span><span class="val">Raphe nuclei</span></div>
+    </div>
+    <p class="muted">Tryptophan is an essential amino acid and TPH2 is not saturated at normal levels, so brain serotonin genuinely depends on what arrives from the diet — the basis of tryptophan depletion experiments.</p>
+  </section>
+
+  <section class="box">
+    <h2>The five steps at a serotonergic synapse</h2>
+    <div class="synapse">
+      <canvas id="syn" aria-label="Animated serotonergic synapse: volume release, 5-HT1A and 5-HT2A receptors, an ionotropic 5-HT3 receptor and SERT reuptake"></canvas>
+      <div class="synbar"><button id="synplay" type="button">Pause</button><button id="synreplay" type="button">Replay</button><button id="synslow" type="button" aria-pressed="false">Slow motion</button><span class="cap" id="syncap"></span></div>
+    </div>
+    <ol class="steps">
+      <li><span><b>Synthesis.</b> Tryptophan hydroxylase 2 makes 5-hydroxytryptophan; the same decarboxylase that finishes dopamine then finishes serotonin. TPH1, the peripheral form, supplies the gut, which holds most of the body's serotonin.</span></li>
+      <li><span><b>Loading.</b> VMAT2, shared with the other monoamines, packs serotonin into vesicles.</span></li>
+      <li><span><b>Release.</b> Raphe axons are thin, enormously branched and studded with varicosities, so release is diffuse: one neuron can influence a whole cortical area at once.</span></li>
+      <li><span><b>Receptor binding.</b> Thirteen of the fourteen receptors are G-protein coupled; only 5-HT3 is an ion channel. Somatodendritic 5-HT1A autoreceptors in the raphe slow the cell down as soon as serotonin rises.</span></li>
+      <li><span><b>Clearance.</b> SERT takes serotonin back; MAO-A converts what is not reused into 5-HIAA, the metabolite measured in cerebrospinal fluid.</span></li>
+    </ol>
+  </section>
+
+  <section class="box">
+    <h2>Why antidepressants take weeks</h2>
+    <div class="grid2">
+      <div>
+        <h3>The first dose</h3>
+        <p>An SSRI blocks SERT within hours, and serotonin rises everywhere — including on the 5-HT1A autoreceptors of the raphe neurons themselves. Those receptors hyperpolarise the cell and cut firing, so more transmitter in the cleft is offset by fewer spikes arriving. Net output barely changes, while the side effects, mediated by 5-HT3 in the gut and 5-HT2A elsewhere, appear immediately.</p>
+      </div>
+      <div>
+        <h3>After a few weeks</h3>
+        <p>Sustained stimulation desensitises those autoreceptors. Firing recovers while the transporter stays blocked, so forebrain serotonin finally rises. Downstream changes — altered plasticity and, in animal work, hippocampal neurogenesis — follow on the same timescale as the clinical response. On this account the delay is a property of the circuit rather than of the drug reaching its target, though the improvement many patients report within a fortnight keeps the argument open.</p>
+      </div>
+    </div>
+    <p class="muted">This also explains why pindolol, a β-blocker that acts as a weak partial agonist and so functionally blocks the 5-HT1A autoreceptor, was tested as a way to speed antidepressant onset: it shortened the delay in some trials without raising the final response rate.</p>
+  </section>
+
+  <section class="box">
+    <h2>Receptors</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Receptor</th><th>Type</th><th>Coupling</th><th>Where</th><th>Effect</th></tr></thead>
+        <tbody>
+          <tr><td class="k">5-HT1A</td><td>Metabotropic</td><td>G<sub>i/o</sub> → opens K⁺</td><td>Raphe somata, hippocampus, cortex</td><td>Autoreceptor that slows raphe firing; postsynaptically inhibitory. Target of buspirone.</td></tr>
+          <tr><td class="k">5-HT1B/1D</td><td>Metabotropic</td><td>G<sub>i/o</sub></td><td>Axon terminals, cranial vessels</td><td>Terminal autoreceptor; constricts meningeal vessels and blocks CGRP release — the triptan target.</td></tr>
+          <tr><td class="k">5-HT2A</td><td>Metabotropic</td><td>G<sub>q</sub> → PLC</td><td>Cortical layer V pyramidal cells</td><td>Excitatory. The psychedelic receptor, and the one atypical antipsychotics block.</td></tr>
+          <tr><td class="k">5-HT2C</td><td>Metabotropic</td><td>G<sub>q</sub></td><td>Choroid plexus, hypothalamus</td><td>Appetite and mood; lorcaserin acted here, and the receptor is heavily RNA-edited.</td></tr>
+          <tr><td class="k">5-HT3</td><td>Ionotropic</td><td>Cation channel</td><td>Area postrema, vagal afferents, gut</td><td>The only serotonin ion channel: fast depolarisation, and the trigger for vomiting.</td></tr>
+          <tr><td class="k">5-HT4, 5-HT6, 5-HT7</td><td>Metabotropic</td><td>G<sub>s</sub> → cAMP</td><td>Gut, hippocampus, thalamus</td><td>5-HT4 drives gut motility (prucalopride); 5-HT7 is involved in circadian timing and sleep.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="box">
+    <h2>Pharmacology</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Drug</th><th>Target</th><th>Action</th><th>Use or effect</th></tr></thead>
+        <tbody>
+          <tr><td class="k">Fluoxetine, sertraline</td><td>SERT</td><td>Reuptake inhibition</td><td>Depression, anxiety, OCD. Onset over weeks; early nausea and sexual side effects come first.</td></tr>
+          <tr><td class="k">Venlafaxine, duloxetine</td><td>SERT and NET</td><td>Reuptake inhibition</td><td>Depression and neuropathic pain; the noradrenaline component matters for the analgesia.</td></tr>
+          <tr><td class="k">Tricyclics</td><td>SERT, NET, plus muscarinic, H1, α1</td><td>Broad blockade</td><td>Effective but poorly tolerated, and dangerous in overdose through Na⁺ channel block in the heart.</td></tr>
+          <tr><td class="k">MAO inhibitors</td><td>MAO-A; the older agents are non-selective</td><td>Block breakdown</td><td>Effective in atypical depression; the tyramine reaction with aged foods is the reason they are rarely used.</td></tr>
+          <tr><td class="k">Sumatriptan</td><td>5-HT1B/1D</td><td>Agonist</td><td>Acute migraine.</td></tr>
+          <tr><td class="k">Ondansetron</td><td>5-HT3</td><td>Antagonist</td><td>Chemotherapy-induced nausea.</td></tr>
+          <tr><td class="k">Psilocybin, LSD</td><td>5-HT2A</td><td>Agonist</td><td>Psychedelic effects; under trial for depression, where the response outlasts the drug.</td></tr>
+          <tr><td class="k">Buspirone</td><td>5-HT1A</td><td>Partial agonist</td><td>Anxiety, without sedation or dependence, but again over weeks.</td></tr>
+          <tr><td class="k">MDMA</td><td>SERT, VMAT2</td><td>Reverses the transporter, releasing serotonin</td><td>Massive release followed by depletion; being trialled under supervision for PTSD.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="box">
+    <h2>When it goes wrong</h2>
+    <ul class="plain">
+      <li><b>Serotonin syndrome.</b> Two serotonergic drugs together — classically an SSRI with an MAO inhibitor, tramadol or linezolid — produce agitation, clonus, hyperreflexia and fever. Hyperreflexia and clonus, worse in the legs and building over hours, distinguish it from the lead-pipe rigidity and hyporeflexia of neuroleptic malignant syndrome, which builds over days.</li>
+      <li><b>Depression.</b> Not a simple serotonin deficiency: depleting tryptophan does not make healthy people depressed, and the delay to response shows the transmitter is a lever on the system, not the fault itself.</li>
+      <li><b>Migraine.</b> Serotonin falls between attacks and rises during them; triptans work at the 5-HT1B/1D receptors on vessels and trigeminal terminals.</li>
+      <li><b>Gut symptoms.</b> Most of the body's serotonin is made by enterochromaffin cells, which is why SSRIs so often cause nausea and altered bowel habit at the start.</li>
+    </ul>
+  </section>
+
+  <section class="box">
+    <h2>Related pages</h2>
+    <p class="nav"><a href="../noradrenaline/">Noradrenaline, its partner in the antidepressants →</a><a href="../dopamine/">Dopamine, the other monoamine →</a></p>
+  </section>
+
+  <footer><span>© 2026 Po-Han Chiang</span><span>Code licensed under <a href="https://github.com/phclab/class/blob/main/LICENSE">GPL-3.0-or-later</a></span><span><a href="../">Back to neurotransmission</a></span></footer>
+</div>
+<script type="module">
+import { synapse } from '../nt.js';
+synapse(document.getElementById('syn'), {"pre": "Raphe varicosity", "post": "Cortical neuron", "loader": "VMAT2", "synth": "tryptophan → 5-HTP → 5-HT", "uptake": {"label": "SERT", "where": "pre"}, "receptors": [{"label": "5-HT1A", "type": "metab", "effect": "K⁺ out"}, {"label": "5-HT2A", "type": "metab", "effect": "PLC"}, {"label": "5-HT3", "type": "iono", "ion": "Na⁺, K⁺"}], "volume": true, "astro": null, "pump": null, "capId": "syncap", "playId": "synplay", "replayId": "synreplay", "slowId": "synslow"});
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "ed90c191314a4bd1b54a671616598fbd"}'></script>
+</body>
+</html>

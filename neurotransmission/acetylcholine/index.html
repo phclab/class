@@ -1,0 +1,133 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="google-site-verification" content="KViT-tN7lhzIxqualHoKOShjRrce-UIVY56-z95f7JE">
+<link rel="canonical" href="https://phclab.github.io/class/neurotransmission/acetylcholine/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Acetylcholine">
+<meta property="og:description" content="Acetylcholine: fast at the neuromuscular junction, modulatory in the brain, and the only classical transmitter hydrolysed by an enzyme inside the cleft.">
+<meta property="og:url" content="https://phclab.github.io/class/neurotransmission/acetylcholine/">
+<title>Acetylcholine</title>
+<meta name="description" content="Acetylcholine: fast at the neuromuscular junction, modulatory in the brain, and the only classical transmitter hydrolysed by an enzyme inside the cleft.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../nt.css">
+</head>
+<body class="exc">
+<div class="wrap">
+  <header>
+    <div class="toprow"><span class="eyebrow"><a href="../">Neurotransmission</a></span><a href="https://tw.linkedin.com/in/pohanc" rel="me">LinkedIn</a></div>
+    <h1>Acetylcholine</h1>
+    <p class="byline">by Po-Han Chiang @ NYCU</p>
+    <p><span class="tag">Fast at muscle · Modulatory in brain</span></p>
+    <p class="lede">Acetylcholine was the first transmitter ever identified, and it is the one that breaks the usual rules. It is not taken back up intact: an enzyme sitting in the cleft cuts it apart within a millisecond, and only the choline is recycled. The same molecule drives muscle with millisecond precision and sets attention and arousal over minutes.</p>
+  </header>
+
+  <section class="box">
+    <h2>At a glance</h2>
+    <div class="facts">
+      <div class="fact"><span class="lab">Class</span><span class="val">Ester of choline</span></div>
+      <div class="fact"><span class="lab">Made from</span><span class="val">Choline + acetyl-CoA</span></div>
+      <div class="fact"><span class="lab">Key enzyme</span><span class="val">ChAT</span></div>
+      <div class="fact"><span class="lab">Vesicle loader</span><span class="val">VAChT</span></div>
+      <div class="fact"><span class="lab">Cleared by</span><span class="val">AChE in the cleft</span></div>
+      <div class="fact"><span class="lab">Rate-limiting</span><span class="val">Choline uptake (CHT1)</span></div>
+    </div>
+    <p class="muted">Acetylcholinesterase is among the fastest enzymes known, turning over close to the limit set by diffusion. That speed is what lets a motor nerve fire at 50 hertz without the endplate saturating.</p>
+  </section>
+
+  <section class="box">
+    <h2>The five steps at a cholinergic synapse</h2>
+    <div class="synapse">
+      <canvas id="syn" aria-label="Animated cholinergic synapse: vesicle fusion, nicotinic and muscarinic receptors, and breakdown by acetylcholinesterase in the cleft"></canvas>
+      <div class="synbar"><button id="synplay" type="button">Pause</button><button id="synreplay" type="button">Replay</button><button id="synslow" type="button" aria-pressed="false">Slow motion</button><span class="cap" id="syncap"></span></div>
+    </div>
+    <ol class="steps">
+      <li><span><b>Synthesis.</b> Choline acetyltransferase joins choline to acetyl-CoA in the cytoplasm. The neuron cannot make choline, so the high-affinity transporter CHT1 that recaptures it sets the ceiling on how much transmitter exists.</span></li>
+      <li><span><b>Loading.</b> VAChT exchanges two protons for each acetylcholine molecule, filling vesicles that hold a few thousand molecules each.</span></li>
+      <li><span><b>Release.</b> At the human neuromuscular junction one action potential releases some twenty to thirty vesicles into an elaborately folded cleft; the folds concentrate Na⁺ channels, and the resulting safety factor is large enough that transmission never normally fails.</span></li>
+      <li><span><b>Receptor binding.</b> Nicotinic receptors are cation channels that open in well under a millisecond. Muscarinic receptors are G-protein coupled and act over hundreds of milliseconds, which is why the same molecule can be a command or a mood.</span></li>
+      <li><span><b>Clearance.</b> Acetylcholinesterase, anchored in the basal lamina of the cleft, hydrolyses acetylcholine into choline and acetate. CHT1 then pulls the choline back into the terminal to be used again.</span></li>
+    </ol>
+  </section>
+
+  <section class="box">
+    <h2>Where it acts</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Site</th><th>Receptor</th><th>Function</th><th>What happens when it changes</th></tr></thead>
+        <tbody>
+          <tr><td class="k">Neuromuscular junction</td><td>Muscle nicotinic</td><td>Every voluntary movement</td><td>Myasthenia gravis destroys these receptors; curare-like drugs block them; organophosphates flood them.</td></tr>
+          <tr><td class="k">Autonomic ganglia</td><td>Neuronal nicotinic</td><td>Relay for both sympathetic and parasympathetic outflow</td><td>Ganglion blockers were the first antihypertensives, and were abandoned because they blocked everything at once.</td></tr>
+          <tr><td class="k">Parasympathetic targets</td><td>Muscarinic M2, M3</td><td>Slows the heart, contracts gut and bladder, constricts the pupil</td><td>Atropine removes the brake on the heart; antimuscarinics cause dry mouth, blurred vision and urinary retention.</td></tr>
+          <tr><td class="k">Basal forebrain → cortex</td><td>M1, α4β2, α7</td><td>Attention, encoding of new memories</td><td>These neurons degenerate early in Alzheimer's disease, which is the basis for cholinesterase inhibitors.</td></tr>
+          <tr><td class="k">Striatal interneurons</td><td>M1, M4, nicotinic</td><td>Balances dopamine in action selection</td><td>Antimuscarinics such as trihexyphenidyl help tremor in Parkinson's disease by restoring that balance.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="box">
+    <h2>Receptors</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Receptor</th><th>Type</th><th>Subunits / coupling</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td class="k">Muscle nicotinic</td><td>Ionotropic</td><td>(α1)₂β1δε in adult muscle</td><td>Large, brief cation current that reliably triggers a muscle action potential.</td></tr>
+          <tr><td class="k">α4β2 nicotinic</td><td>Ionotropic</td><td>Neuronal, often presynaptic</td><td>High affinity for nicotine; upregulates with smoking and carries most of the dependence.</td></tr>
+          <tr><td class="k">α7 nicotinic</td><td>Ionotropic</td><td>Homopentamer</td><td>Unusually Ca²⁺ permeable and fast to desensitise; also found on immune cells.</td></tr>
+          <tr><td class="k">M1, M3, M5</td><td>Metabotropic</td><td>G<sub>q</sub> → PLC</td><td>Excitatory: closes K⁺ channels in cortex (M1) and contracts smooth muscle and glands (M3).</td></tr>
+          <tr><td class="k">M2, M4</td><td>Metabotropic</td><td>G<sub>i/o</sub></td><td>Inhibitory: slows the heart through M2, and damps striatal output through M4. Both also act as autoreceptors.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="box">
+    <h2>Pharmacology</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Drug or toxin</th><th>Target</th><th>Action</th><th>Use or effect</th></tr></thead>
+        <tbody>
+          <tr><td class="k">Nicotine</td><td>α4β2 and other nAChR</td><td>Agonist</td><td>Dependence, partly by raising dopamine in the accumbens.</td></tr>
+          <tr><td class="k">Varenicline</td><td>α4β2</td><td>Partial agonist</td><td>Smoking cessation: enough signal to blunt craving, not enough to reward.</td></tr>
+          <tr><td class="k">Rocuronium, vecuronium</td><td>Muscle nAChR</td><td>Competitive antagonist</td><td>Surgical paralysis, reversible with neostigmine or sugammadex.</td></tr>
+          <tr><td class="k">Succinylcholine</td><td>Muscle nAChR</td><td>Depolarising blocker</td><td>Rapid intubation; the fasciculations are the receptors being opened, and the block that follows is the sustained depolarisation holding the muscle's Na⁺ channels inactivated.</td></tr>
+          <tr><td class="k">Neostigmine, pyridostigmine</td><td>AChE</td><td>Reversible inhibition</td><td>Myasthenia gravis and reversal of muscle relaxants; poor brain penetration keeps the effects peripheral.</td></tr>
+          <tr><td class="k">Donepezil, rivastigmine, galantamine</td><td>AChE</td><td>Donepezil is AChE-selective, rivastigmine also inhibits BuChE, and galantamine additionally enhances nicotinic receptors</td><td>Alzheimer's disease: symptomatic benefit, no change in the underlying loss of neurons.</td></tr>
+          <tr><td class="k">Organophosphates</td><td>AChE</td><td>Irreversible inhibition, then ageing of the enzyme</td><td>Insecticides and nerve agents: a cholinergic crisis treated with atropine, an oxime such as pralidoxime, and a benzodiazepine.</td></tr>
+          <tr><td class="k">Atropine, scopolamine</td><td>Muscarinic</td><td>Antagonist</td><td>Treats bradycardia and prevents motion sickness; central antimuscarinic effects cause the classic confusion and hallucinations.</td></tr>
+          <tr><td class="k">Botulinum toxin</td><td>SNAP-25</td><td>Cleaves it, blocking release</td><td>Flaccid paralysis; used therapeutically for dystonia and spasticity.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="box">
+    <h2>When it goes wrong</h2>
+    <ul class="plain">
+      <li><b>Myasthenia gravis.</b> Antibodies against the muscle nicotinic receptor, or against MuSK, remove the safety factor; weakness worsens with use and, in the receptor-antibody form, improves with cholinesterase inhibitors — the MuSK form often does not.</li>
+      <li><b>Lambert–Eaton syndrome.</b> Antibodies against presynaptic Ca²⁺ channels cut release instead, so strength briefly improves with repeated effort — the mirror image of myasthenia.</li>
+      <li><b>Alzheimer's disease.</b> Early loss of basal forebrain cholinergic neurons; cholinesterase inhibitors partly compensate for what remains.</li>
+      <li><b>Botulism and organophosphate poisoning.</b> Too little release, or too much transmitter left in the cleft — the two ends of the same axis.</li>
+    </ul>
+  </section>
+
+  <section class="box">
+    <h2>Related pages</h2>
+    <p class="nav"><a href="../dopamine/">Dopamine, its partner in the striatum →</a><a href="../glutamate/">Glutamate, cleared by transport rather than by an enzyme →</a></p>
+  </section>
+
+  <footer><span>© 2026 Po-Han Chiang</span><span>Code licensed under <a href="https://github.com/phclab/class/blob/main/LICENSE">GPL-3.0-or-later</a></span><span><a href="../">Back to neurotransmission</a></span></footer>
+</div>
+<script type="module">
+import { synapse } from '../nt.js';
+synapse(document.getElementById('syn'), {"pre": "Cholinergic terminal", "post": "Postsynaptic cell", "loader": "VAChT", "synth": "choline + acetyl-CoA (ChAT)", "uptake": {"label": "AChE breaks it down", "where": "cleft"}, "receptors": [{"label": "nAChR", "type": "iono", "ion": "Na⁺, Ca²⁺"}, {"label": "M1", "type": "metab", "effect": "PLC"}, {"label": "M2", "type": "metab", "effect": "cAMP ↓"}], "volume": false, "astro": null, "pump": null, "capId": "syncap", "playId": "synplay", "replayId": "synreplay", "slowId": "synslow"});
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "ed90c191314a4bd1b54a671616598fbd"}'></script>
+</body>
+</html>

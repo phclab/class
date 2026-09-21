@@ -1,0 +1,486 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="google-site-verification" content="KViT-tN7lhzIxqualHoKOShjRrce-UIVY56-z95f7JE">
+<link rel="canonical" href="https://phclab.github.io/class/HH_Model_Explorer/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hodgkin–Huxley Model Explorer">
+<meta property="og:description" content="Run the Hodgkin-Huxley equations in your browser: inject current, watch m, h and n move, and see where threshold, the refractory period and repetitive firing come from.">
+<meta property="og:url" content="https://phclab.github.io/class/HH_Model_Explorer/">
+<title>Hodgkin–Huxley Model Explorer</title>
+<meta name="description" content="Run the Hodgkin-Huxley equations in your browser: inject current, watch m, h and n move, and see where threshold, the refractory period and repetitive firing come from.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#eef1ee;
+  --panel:#fbfcfa;
+  --ink:#1b2226;
+  --dim:#5d6a6f;
+  --line:#d3dad6;
+  --grid:#e2e8e4;
+  --field:#ffffff;
+  --v:#0f766e;
+  --na:#c8561c;
+  --k:#2a64a8;
+  --m:#c8561c;
+  --h:#8a5a2b;
+  --n:#2a64a8;
+  --stim:#6b3fa0;
+  --thr:#b3263c;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#111618;
+    --panel:#182024;
+    --ink:#e4eaec;
+    --dim:#93a1a6;
+    --line:#2b373c;
+    --grid:#222d31;
+    --field:#0f1416;
+    --v:#5eead4;
+    --na:#ff9a5c;
+    --k:#6ea8f0;
+    --m:#ff9a5c;
+    --h:#d3a373;
+    --n:#6ea8f0;
+    --stim:#c39bf0;
+    --thr:#ff6b81;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#111618;
+  --panel:#182024;
+  --ink:#e4eaec;
+  --dim:#93a1a6;
+  --line:#2b373c;
+  --grid:#222d31;
+  --field:#0f1416;
+  --v:#5eead4;
+  --na:#ff9a5c;
+  --k:#6ea8f0;
+  --m:#ff9a5c;
+  --h:#d3a373;
+  --n:#6ea8f0;
+  --stim:#c39bf0;
+  --thr:#ff6b81;
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);margin:0;
+  font:15px/1.6 "IBM Plex Sans",system-ui,sans-serif;padding:0 20px}
+.wrap{max-width:1040px;margin:0 auto;padding-block:40px 56px;display:grid;gap:22px}
+h1,h2,h3{text-wrap:balance;margin:0}
+h1{font-size:32px;font-weight:600;line-height:1.2}
+h2{font-size:20px;font-weight:600}
+h3{font-size:15px;font-weight:600}
+p{margin:0}
+header{display:grid;gap:10px}
+.toprow{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 16px}
+.eyebrow{font:500 11px/1 "IBM Plex Mono",ui-monospace,monospace;letter-spacing:1.4px;
+  text-transform:uppercase;color:var(--dim)}
+.eyebrow a{color:inherit;text-decoration:none;border-bottom:1px solid var(--line)}
+.eyebrow a:hover{color:var(--ink)}
+.toprow > a{color:var(--dim);font-size:13px;text-decoration:none;border-bottom:1px solid var(--line)}
+.toprow > a:hover{color:var(--ink);border-color:var(--ink)}
+.byline{color:var(--dim);font-size:14px;margin-top:-4px}
+.byline a{color:inherit}
+.lede{color:var(--dim);max-width:72ch}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px;
+  display:grid;gap:14px;min-width:0}
+.box > p,.box li{max-width:74ch}
+.row{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px 22px}
+.ctl{display:grid;gap:4px}
+label{color:var(--dim);font-size:13px}
+label b{color:var(--ink);font:500 13px "IBM Plex Mono",monospace}
+input[type=range]{width:100%;accent-color:var(--v)}
+input:focus-visible,button:focus-visible{outline:2px solid var(--v);outline-offset:2px}
+button{font:500 13px "IBM Plex Sans",sans-serif;color:var(--ink);background:var(--field);
+  border:1px solid var(--line);border-radius:6px;padding:7px 13px;cursor:pointer}
+button:hover{border-color:var(--dim)}
+button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--panel)}
+.seg{display:inline-flex}
+.seg button{border-radius:0;margin-left:-1px}
+.seg button:first-child{border-radius:6px 0 0 6px;margin-left:0}
+.seg button:last-child{border-radius:0 6px 6px 0}
+canvas{width:100%;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--dim)}
+.swatch{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:1px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.fact{background:var(--field);border:1px solid var(--line);border-radius:8px;padding:12px 14px;
+  display:grid;gap:3px}
+.fact .lab{font:500 11px/1 "IBM Plex Mono",monospace;letter-spacing:.8px;text-transform:uppercase;
+  color:var(--dim)}
+.fact .val{font:600 16px "IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+.verdict{font-size:15px}
+.verdict b{font-family:"IBM Plex Mono",monospace;font-weight:500}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.eq{font:14px/1.9 "IBM Plex Mono",monospace;background:var(--field);border:1px solid var(--line);
+  border-radius:8px;padding:12px 14px;overflow-x:auto}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:14px}
+th{font:500 12px "IBM Plex Mono",monospace;color:var(--dim);text-align:left;padding:0 10px 8px}
+td{padding:8px 10px;border-top:1px solid var(--grid)}
+td.v{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;text-align:right}
+th.r{text-align:right}
+ul.plain{margin:0;padding-left:18px;display:grid;gap:7px}
+.muted{color:var(--dim);font-size:13px}
+footer{color:var(--dim);font-size:13px;display:flex;flex-wrap:wrap;gap:6px 16px}
+footer a{color:inherit}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="toprow"><span class="eyebrow"><a href="../">Classroom for Neuroscience</a></span><a href="https://tw.linkedin.com/in/pohanc" rel="me">LinkedIn</a></div>
+    <h1>Hodgkin–Huxley Model Explorer</h1>
+    <p class="byline">by Po-Han Chiang @ NYCU · <a href="https://tw.linkedin.com/in/pohanc" rel="me">LinkedIn</a></p>
+    <p class="lede">Four equations, written in 1952 from voltage-clamp measurements on the squid giant axon, are enough to produce an action potential from nothing but ions crossing a membrane. Inject a current below and watch the sodium gates open, the potassium gates follow, and the spike build and terminate itself.</p>
+  </header>
+
+  <section class="box">
+    <div class="row" style="justify-content:space-between">
+      <h2>Inject a current</h2>
+      <div class="row" style="gap:8px">
+        <div class="seg" role="group" aria-label="Stimulus type">
+          <button id="mSingle" type="button" aria-pressed="true">Single pulse</button>
+          <button id="mPair" type="button" aria-pressed="false">Two pulses</button>
+          <button id="mHold" type="button" aria-pressed="false">Sustained</button>
+        </div>
+        <button id="reset" type="button">Reset</button>
+      </div>
+    </div>
+    <div class="controls">
+      <div class="ctl"><label for="amp">Stimulus current <b id="ampOut"></b></label><input id="amp" type="range" min="0" max="40" step="0.2" value="20"></div>
+      <div class="ctl"><label for="dur">Pulse width <b id="durOut"></b></label><input id="dur" type="range" min="0.1" max="5" step="0.1" value="0.5"></div>
+      <div class="ctl" id="gapCtl" hidden><label for="gap">Interval between pulses <b id="gapOut"></b></label><input id="gap" type="range" min="1" max="30" step="0.5" value="8"></div>
+      <div class="ctl"><label for="temp">Temperature <b id="tempOut"></b></label><input id="temp" type="range" min="2" max="30" step="0.5" value="6.3"></div>
+      <div class="ctl"><label for="gna">Sodium conductance ḡ<sub>Na</sub> <b id="gnaOut"></b></label><input id="gna" type="range" min="0" max="180" step="1" value="120"></div>
+      <div class="ctl"><label for="gk">Potassium conductance ḡ<sub>K</sub> <b id="gkOut"></b></label><input id="gk" type="range" min="0" max="80" step="1" value="36"></div>
+    </div>
+    <div class="row" style="gap:8px">
+      <button id="ttx" type="button" aria-pressed="false">TTX: block Na⁺</button>
+      <button id="tea" type="button" aria-pressed="false">TEA: block K⁺</button>
+      <span class="muted" id="drugNote"></span>
+    </div>
+
+    <div>
+      <div class="legend">
+        <span><span class="swatch" style="background:var(--v)"></span>membrane potential</span>
+        <span><span class="swatch" style="background:var(--stim)"></span>injected current</span>
+        <span><span class="swatch" style="background:var(--thr)"></span>0 mV</span>
+      </div>
+      <canvas id="plotV" width="1000" height="300" aria-label="Membrane potential over time"></canvas>
+    </div>
+
+    <div class="grid2">
+      <div>
+        <h3>Gating variables</h3>
+        <div class="legend">
+          <span><span class="swatch" style="background:var(--m)"></span>m, Na⁺ activation</span>
+          <span><span class="swatch" style="background:var(--h)"></span>h, Na⁺ inactivation</span>
+          <span><span class="swatch" style="background:var(--n)"></span>n, K⁺ activation</span>
+        </div>
+        <canvas id="plotG" width="620" height="240" aria-label="Gating variables over time"></canvas>
+      </div>
+      <div>
+        <h3>Conductances</h3>
+        <div class="legend">
+          <span><span class="swatch" style="background:var(--na)"></span>g<sub>Na</sub> = ḡ<sub>Na</sub>m³h</span>
+          <span><span class="swatch" style="background:var(--k)"></span>g<sub>K</sub> = ḡ<sub>K</sub>n⁴</span>
+        </div>
+        <canvas id="plotC" width="620" height="240" aria-label="Sodium and potassium conductances over time"></canvas>
+      </div>
+    </div>
+
+    <div class="readout">
+      <div class="fact"><span class="lab">Spikes</span><span class="val" id="rSpikes">—</span></div>
+      <div class="fact"><span class="lab">Peak</span><span class="val" id="rPeak">—</span></div>
+      <div class="fact"><span class="lab">First spike at</span><span class="val" id="rLat">—</span></div>
+      <div class="fact"><span class="lab">Rate</span><span class="val" id="rRate">—</span></div>
+      <div class="fact"><span class="lab">Threshold current</span><span class="val" id="rThr">—</span></div>
+    </div>
+    <p class="verdict" id="verdict"></p>
+  </section>
+
+  <section class="box">
+    <h2>What to try</h2>
+    <ul class="plain">
+      <li><b>Find threshold.</b> Drop the current until the spike disappears. Just below it the membrane makes a small bump and returns; just above it the full spike appears. Nothing in between — that is what all-or-none means, and the readout shows the smallest current that still fires.</li>
+      <li><b>Refractory period.</b> Switch to two pulses and shorten the interval. Below about 3 ms the second pulse produces nothing at all, because h is still closed: this is the absolute refractory period. Between roughly 3 and 12 ms it fires but needs more current and the spike is smaller — relative refractoriness, set by h recovering and n still open.</li>
+      <li><b>Repetitive firing.</b> Switch to sustained current and raise the amplitude. The axon fires a train whose rate rises with current, but only over a limited range — the spike is not a rate code with unlimited bandwidth.</li>
+      <li><b>Block the channels.</b> TTX removes the sodium current and the spike with it; TEA removes the potassium current and the spike becomes long and broad, because repolarisation now depends on leak and on sodium inactivation alone.</li>
+      <li><b>Cool it down.</b> Hodgkin and Huxley worked at 6.3 °C. Raise the temperature and every rate constant speeds up by a factor of about 3 per 10 °C, so the spike gets narrower and faster; at mammalian temperature this squid model stops firing altogether, which is why warm-blooded axons need different channel kinetics.</li>
+    </ul>
+  </section>
+
+  <section class="box">
+    <h2>How the spike builds and stops itself</h2>
+    <div class="grid2">
+      <div>
+        <h3>The regenerative loop</h3>
+        <p>Depolarisation opens m gates, sodium enters, the membrane depolarises further and opens more m gates. That positive feedback is why the upstroke needs no further help once it starts, and why there is a threshold: below it, leak and potassium current win; above it, the loop runs away.</p>
+      </div>
+      <div>
+        <h3>Two brakes, on a delay</h3>
+        <p>The same depolarisation slowly closes h, which inactivates the sodium channels, and slowly opens n, which lets potassium out. Both are too slow to stop the upstroke but arrive in time to end it. The membrane then overshoots below rest, because potassium conductance is still high — the afterhyperpolarisation.</p>
+      </div>
+    </div>
+    <p class="muted">m is fast and h and n are slow: that single separation of timescales is the whole mechanism. Take it away — make h as fast as m — and the model no longer spikes.</p>
+  </section>
+
+  <section class="box">
+    <h2>The equations</h2>
+    <div class="eq">
+C<sub>m</sub> dV/dt = I<sub>stim</sub> − ḡ<sub>Na</sub>m³h(V − E<sub>Na</sub>) − ḡ<sub>K</sub>n⁴(V − E<sub>K</sub>) − ḡ<sub>L</sub>(V − E<sub>L</sub>)<br>
+dx/dt = α<sub>x</sub>(V)(1 − x) − β<sub>x</sub>(V)x &nbsp; for x = m, h, n<br>
+α<sub>m</sub> = 0.1(V + 40) / (1 − e<sup>−(V+40)/10</sup>) &nbsp;&nbsp; β<sub>m</sub> = 4 e<sup>−(V+65)/18</sup><br>
+α<sub>h</sub> = 0.07 e<sup>−(V+65)/20</sup> &nbsp;&nbsp; β<sub>h</sub> = 1 / (1 + e<sup>−(V+35)/10</sup>)<br>
+α<sub>n</sub> = 0.01(V + 55) / (1 − e<sup>−(V+55)/10</sup>) &nbsp;&nbsp; β<sub>n</sub> = 0.125 e<sup>−(V+65)/80</sup><br>
+rates × φ, with φ = 3<sup>(T − 6.3)/10</sup>
+    </div>
+    <p class="muted">The exponents are not theory. Hodgkin and Huxley chose m³h and n⁴ because those powers fitted the sigmoid onset of the measured currents; the interpretation as independent gating particles came afterwards, and the modern reading is that they approximate the sequential conformational changes of the channel protein.</p>
+  </section>
+
+  <section class="box">
+    <h2>Constants</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Quantity</th><th class="r">Value</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td>Membrane capacitance C<sub>m</sub></td><td class="v">1 µF/cm²</td><td>Almost the same in every cell: a lipid bilayer of fixed thickness.</td></tr>
+          <tr><td>Maximum ḡ<sub>Na</sub></td><td class="v">120 mS/cm²</td><td>Reached only transiently, when m³h peaks.</td></tr>
+          <tr><td>Maximum ḡ<sub>K</sub></td><td class="v">36 mS/cm²</td><td>Delayed rectifier.</td></tr>
+          <tr><td>Leak ḡ<sub>L</sub></td><td class="v">0.3 mS/cm²</td><td>Sets the resting input resistance.</td></tr>
+          <tr><td>E<sub>Na</sub></td><td class="v">+50 mV</td><td>Nernst potential for Na⁺ in squid axon.</td></tr>
+          <tr><td>E<sub>K</sub></td><td class="v">−77 mV</td><td>Nernst potential for K⁺.</td></tr>
+          <tr><td>E<sub>L</sub></td><td class="v">−54.4 mV</td><td>Chosen so the model rests near −65 mV.</td></tr>
+          <tr><td>Integration</td><td class="v">dt = 5 µs</td><td>Exponential Euler for the gates, forward Euler for V.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="nav muted">Related: <a href="../Nernst_Goldman_Explorer/">where E<sub>Na</sub> and E<sub>K</sub> come from</a> · <a href="../Myelin_Cable_Explorer/">how the spike spreads along the axon</a></p>
+  </section>
+
+  <footer><span>© 2026 Po-Han Chiang</span><span>Code licensed under <a href="https://github.com/phclab/class/blob/main/LICENSE">GPL-3.0-or-later</a></span><span><a href="../">Back to the classroom</a></span></footer>
+</div>
+
+<script>
+const CM = 1, GL = 0.3, ENA = 50, EK = -77, EL = -54.4;
+const DT = 0.005, TEND = 50, SAVE = 4;
+const $ = id => document.getElementById(id);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const fmt = (x, d = 1) => Number(x).toFixed(d);
+
+const S = { amp:20, dur:0.5, gap:8, temp:6.3, gna:120, gk:36, mode:'single', ttx:false, tea:false };
+let sim = null;
+
+const am = v => Math.abs(v + 40) < 1e-6 ? 1 : 0.1 * (v + 40) / (1 - Math.exp(-(v + 40) / 10));
+const bm = v => 4 * Math.exp(-(v + 65) / 18);
+const ah = v => 0.07 * Math.exp(-(v + 65) / 20);
+const bh = v => 1 / (1 + Math.exp(-(v + 35) / 10));
+const an = v => Math.abs(v + 55) < 1e-6 ? 0.1 : 0.01 * (v + 55) / (1 - Math.exp(-(v + 55) / 10));
+const bn = v => 0.125 * Math.exp(-(v + 65) / 80);
+
+function gate(x, a, b, phi) {
+  const tau = 1 / (phi * (a + b)), inf = a / (a + b);
+  return inf + (x - inf) * Math.exp(-DT / tau);
+}
+
+function stimAt(t, amp) {
+  if (S.mode === 'hold') return t >= 5 ? amp : 0;
+  if (t >= 5 && t < 5 + S.dur) return amp;
+  if (S.mode === 'pair' && t >= 5 + S.gap && t < 5 + S.gap + S.dur) return amp;
+  return 0;
+}
+
+function run(amp) {
+  const phi = Math.pow(3, (S.temp - 6.3) / 10);
+  const gNa = S.ttx ? 0 : S.gna, gK = S.tea ? 0 : S.gk;
+  let v = -65, m = am(-65) / (am(-65) + bm(-65)), h = ah(-65) / (ah(-65) + bh(-65)),
+      n = an(-65) / (an(-65) + bn(-65));
+  const steps = Math.round(TEND / DT);
+  const out = { t:[], v:[], m:[], h:[], n:[], gna:[], gk:[], i:[] };
+  let spikes = 0, up = false, peak = -100, latency = null, last = null, isi = [];
+  for (let s = 0; s <= steps; s++) {
+    const t = s * DT, I = stimAt(t, amp);
+    const iNa = gNa * m * m * m * h * (v - ENA);
+    const iK = gK * Math.pow(n, 4) * (v - EK);
+    const iL = GL * (v - EL);
+    v += DT * (I - iNa - iK - iL) / CM;
+    m = gate(m, am(v), bm(v), phi);
+    h = gate(h, ah(v), bh(v), phi);
+    n = gate(n, an(v), bn(v), phi);
+    if (v > peak) peak = v;
+    if (!up && v > 0) { up = true; spikes++; if (latency === null) latency = t; if (last !== null) isi.push(t - last); last = t; }
+    if (up && v < -20) up = false;
+    if (s % SAVE === 0) {
+      out.t.push(t); out.v.push(v); out.m.push(m); out.h.push(h); out.n.push(n);
+      out.gna.push(gNa * m * m * m * h); out.gk.push(gK * Math.pow(n, 4)); out.i.push(I);
+    }
+  }
+  out.spikes = spikes; out.peak = peak; out.latency = latency;
+  out.rate = isi.length ? 1000 / (isi.reduce((a, b) => a + b, 0) / isi.length) : null;
+  return out;
+}
+
+function thresholdCurrent() {
+  if (S.ttx) return null;
+  let lo = 0, hi = 60;
+  if (run(hi).spikes === 0) return null;
+  for (let k = 0; k < 22; k++) {
+    const mid = (lo + hi) / 2;
+    if (run(mid).spikes > 0) hi = mid; else lo = mid;
+  }
+  return hi;
+}
+
+function axes(g, W, H, pad, xmax, ymin, ymax, ystep, ylab) {
+  g.clearRect(0, 0, W, H);
+  g.fillStyle = css('--panel'); g.fillRect(0, 0, W, H);
+  g.strokeStyle = css('--grid'); g.lineWidth = 1;
+  g.fillStyle = css('--dim'); g.font = '12px "IBM Plex Mono", monospace';
+  for (let val = ymin; val <= ymax + 1e-9; val += ystep) {
+    const y = pad.t + (1 - (val - ymin) / (ymax - ymin)) * (H - pad.t - pad.b);
+    g.beginPath(); g.moveTo(pad.l, y); g.lineTo(W - pad.r, y); g.stroke();
+    const s = String(Math.round(val * 100) / 100);
+    g.fillText(s, pad.l - 8 - g.measureText(s).width, y + 4);
+  }
+  for (let x = 0; x <= xmax + 1e-9; x += xmax <= 20 ? 5 : 10) {
+    const px = pad.l + x / xmax * (W - pad.l - pad.r);
+    g.beginPath(); g.moveTo(px, pad.t); g.lineTo(px, H - pad.b); g.stroke();
+    g.fillText(String(x), px - 5, H - pad.b + 16);
+  }
+  g.fillText('time (ms)', (W - pad.l - pad.r) / 2 + pad.l - 28, H - 4);
+  g.fillText(ylab, pad.l, pad.t - 7);
+}
+
+function curve(g, xs, ys, color, W, H, pad, xmax, ymin, ymax, width) {
+  g.strokeStyle = color; g.lineWidth = width || 2.2; g.beginPath();
+  for (let i = 0; i < xs.length; i++) {
+    const px = pad.l + xs[i] / xmax * (W - pad.l - pad.r);
+    const py = pad.t + (1 - (Math.min(ymax, Math.max(ymin, ys[i])) - ymin) / (ymax - ymin)) * (H - pad.t - pad.b);
+    i ? g.lineTo(px, py) : g.moveTo(px, py);
+  }
+  g.stroke();
+}
+
+function drawV() {
+  const cv = $('plotV'), g = cv.getContext('2d'), W = cv.width, H = cv.height;
+  const pad = { l:44, r:16, t:24, b:34 };
+  axes(g, W, H, pad, TEND, -90, 60, 30, 'mV');
+  const zy = pad.t + (1 - (0 + 90) / 150) * (H - pad.t - pad.b);
+  g.strokeStyle = css('--thr'); g.setLineDash([6, 5]);
+  g.beginPath(); g.moveTo(pad.l, zy); g.lineTo(W - pad.r, zy); g.stroke(); g.setLineDash([]);
+  const maxI = Math.max(1, ...sim.i);
+  g.strokeStyle = css('--stim'); g.lineWidth = 2;
+  g.beginPath();
+  for (let i = 0; i < sim.t.length; i++) {
+    const px = pad.l + sim.t[i] / TEND * (W - pad.l - pad.r);
+    const py = H - pad.b - (sim.i[i] / maxI) * 26;
+    i ? g.lineTo(px, py) : g.moveTo(px, py);
+  }
+  g.stroke();
+  curve(g, sim.t, sim.v, css('--v'), W, H, pad, TEND, -90, 60, 2.6);
+}
+
+function drawGates() {
+  const cv = $('plotG'), g = cv.getContext('2d'), W = cv.width, H = cv.height;
+  const pad = { l:40, r:14, t:22, b:32 };
+  axes(g, W, H, pad, TEND, 0, 1, 0.25, 'open fraction');
+  curve(g, sim.t, sim.m, css('--m'), W, H, pad, TEND, 0, 1);
+  curve(g, sim.t, sim.h, css('--h'), W, H, pad, TEND, 0, 1);
+  curve(g, sim.t, sim.n, css('--n'), W, H, pad, TEND, 0, 1);
+}
+
+function drawCond() {
+  const cv = $('plotC'), g = cv.getContext('2d'), W = cv.width, H = cv.height;
+  const pad = { l:44, r:14, t:22, b:32 };
+  const top = Math.max(10, Math.ceil(Math.max(...sim.gna, ...sim.gk) / 10) * 10);
+  axes(g, W, H, pad, TEND, 0, top, top / 4, 'mS/cm²');
+  curve(g, sim.t, sim.gna, css('--na'), W, H, pad, TEND, 0, top);
+  curve(g, sim.t, sim.gk, css('--k'), W, H, pad, TEND, 0, top);
+}
+
+function render() {
+  $('ampOut').textContent = `${fmt(S.amp, 1)} µA/cm²`;
+  $('durOut').textContent = `${fmt(S.dur, 1)} ms`;
+  $('gapOut').textContent = `${fmt(S.gap, 1)} ms`;
+  $('tempOut').textContent = `${fmt(S.temp, 1)} °C`;
+  $('gnaOut').textContent = `${S.gna} mS/cm²`;
+  $('gkOut').textContent = `${S.gk} mS/cm²`;
+  $('gapCtl').hidden = S.mode !== 'pair';
+  $('drugNote').textContent = S.ttx && S.tea ? 'Both currents blocked: only leak remains.'
+    : S.ttx ? 'No sodium current: no regenerative upstroke.'
+    : S.tea ? 'No potassium current: repolarisation is left to leak and sodium inactivation.' : '';
+  drawV(); drawGates(); drawCond();
+
+  $('rSpikes').textContent = sim.spikes;
+  $('rPeak').textContent = `${fmt(sim.peak, 1)} mV`;
+  $('rLat').textContent = sim.latency === null ? '—' : `${fmt(sim.latency - 5, 2)} ms`;
+  $('rRate').textContent = sim.rate === null ? '—' : `${fmt(sim.rate, 0)} Hz`;
+  const thr = thresholdCurrent();
+  $('rThr').textContent = thr === null ? '—' : `${fmt(thr, 1)} µA/cm²`;
+
+  let msg;
+  if (sim.spikes === 0) {
+    msg = S.ttx ? 'With sodium channels blocked the membrane only charges passively, however much current you inject.'
+      : thr === null ? 'No current in the tested range fires this membrane.'
+      : `No spike: this stimulus is below threshold. About <b>${fmt(thr, 1)} µA/cm²</b> would be enough.`;
+  } else if (S.mode === 'pair') {
+    msg = sim.spikes === 1
+      ? `Only the first pulse fired. At an interval of <b>${fmt(S.gap, 1)} ms</b> the membrane is still refractory: h has not recovered and n is still open.`
+      : `Both pulses fired, <b>${fmt(S.gap, 1)} ms</b> apart. Shorten the interval to find where the second one fails.`;
+  } else if (S.mode === 'hold') {
+    msg = sim.rate === null
+      ? `A single spike, then nothing: this current is enough to fire once but not to fire repeatedly.`
+      : `Repetitive firing at <b>${fmt(sim.rate, 0)} Hz</b>. Raise the current and the rate climbs, but not without limit.`;
+  } else {
+    msg = `One spike, peaking at <b>${fmt(sim.peak, 1)} mV</b>, <b>${fmt(sim.latency - 5, 2)} ms</b> after the stimulus began. Threshold here is about <b>${fmt(thr, 1)} µA/cm²</b>.`;
+  }
+  $('verdict').innerHTML = msg;
+}
+
+function recompute() { sim = run(S.amp); render(); }
+
+const bind = (id, key, scale) => $(id).addEventListener('input', e => {
+  S[key] = +e.target.value * (scale || 1); recompute();
+});
+bind('amp', 'amp'); bind('dur', 'dur'); bind('gap', 'gap');
+bind('temp', 'temp'); bind('gna', 'gna'); bind('gk', 'gk');
+
+function setMode(m) {
+  S.mode = m;
+  for (const [id, key] of [['mSingle', 'single'], ['mPair', 'pair'], ['mHold', 'hold']])
+    $(id).setAttribute('aria-pressed', key === m);
+  recompute();
+}
+$('mSingle').addEventListener('click', () => setMode('single'));
+$('mPair').addEventListener('click', () => setMode('pair'));
+$('mHold').addEventListener('click', () => setMode('hold'));
+for (const [id, key] of [['ttx', 'ttx'], ['tea', 'tea']])
+  $(id).addEventListener('click', () => {
+    S[key] = !S[key];
+    $(id).setAttribute('aria-pressed', S[key]);
+    recompute();
+  });
+$('reset').addEventListener('click', () => {
+  Object.assign(S, { amp:20, dur:0.5, gap:8, temp:6.3, gna:120, gk:36, ttx:false, tea:false });
+  for (const [id, v] of [['amp', 20], ['dur', 0.5], ['gap', 8], ['temp', 6.3], ['gna', 120], ['gk', 36]])
+    $(id).value = v;
+  $('ttx').setAttribute('aria-pressed', false);
+  $('tea').setAttribute('aria-pressed', false);
+  setMode('single');
+});
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => render());
+new MutationObserver(() => render()).observe(document.documentElement,
+  { attributes:true, attributeFilter:['data-theme'] });
+recompute();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "ed90c191314a4bd1b54a671616598fbd"}'></script>
+</body>
+</html>

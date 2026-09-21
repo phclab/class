@@ -1,0 +1,131 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="google-site-verification" content="KViT-tN7lhzIxqualHoKOShjRrce-UIVY56-z95f7JE">
+<link rel="canonical" href="https://phclab.github.io/class/neurotransmission/noradrenaline/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Noradrenaline">
+<meta property="og:description" content="Noradrenaline: the last synthetic step happens inside the vesicle, and the locus coeruleus sets arousal, attention and the gain of the whole cortex.">
+<meta property="og:url" content="https://phclab.github.io/class/neurotransmission/noradrenaline/">
+<title>Noradrenaline</title>
+<meta name="description" content="Noradrenaline: the last synthetic step happens inside the vesicle, and the locus coeruleus sets arousal, attention and the gain of the whole cortex.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../nt.css">
+</head>
+<body class="mod">
+<div class="wrap">
+  <header>
+    <div class="toprow"><span class="eyebrow"><a href="../">Neurotransmission</a></span><a href="https://tw.linkedin.com/in/pohanc" rel="me">LinkedIn</a></div>
+    <h1>Noradrenaline</h1>
+    <p class="byline">by Po-Han Chiang @ NYCU</p>
+    <p><span class="tag">Slow · Modulatory</span></p>
+    <p class="lede">Noradrenaline is dopamine with one more hydroxyl group, and the enzyme that adds it sits inside the vesicle — so this is the one transmitter whose final synthetic step happens after loading. Fifteen to twenty thousand neurons per side in the locus coeruleus then broadcast it to the entire forebrain and cerebellum.</p>
+  </header>
+
+  <section class="box">
+    <h2>At a glance</h2>
+    <div class="facts">
+      <div class="fact"><span class="lab">Class</span><span class="val">Catecholamine</span></div>
+      <div class="fact"><span class="lab">Made from</span><span class="val">Dopamine</span></div>
+      <div class="fact"><span class="lab">Key enzyme</span><span class="val">Dopamine β-hydroxylase</span></div>
+      <div class="fact"><span class="lab">Vesicle loader</span><span class="val">VMAT2</span></div>
+      <div class="fact"><span class="lab">Cleared by</span><span class="val">NET, then MAO-A / COMT</span></div>
+      <div class="fact"><span class="lab">Cell bodies</span><span class="val">Locus coeruleus</span></div>
+    </div>
+    <p class="muted">Because dopamine β-hydroxylase is a vesicular enzyme, anything that empties vesicles releases a mixture, and a cell that lacks the enzyme simply releases dopamine instead — which is exactly what happens in inherited dopamine β-hydroxylase deficiency.</p>
+  </section>
+
+  <section class="box">
+    <h2>The five steps at a noradrenergic synapse</h2>
+    <div class="synapse">
+      <canvas id="syn" aria-label="Animated noradrenergic synapse: vesicle fusion, alpha and beta adrenoceptors, and NET reuptake"></canvas>
+      <div class="synbar"><button id="synplay" type="button">Pause</button><button id="synreplay" type="button">Replay</button><button id="synslow" type="button" aria-pressed="false">Slow motion</button><span class="cap" id="syncap"></span></div>
+    </div>
+    <ol class="steps">
+      <li><span><b>Synthesis.</b> Tyrosine → L-DOPA → dopamine in the cytoplasm, exactly as in a dopamine neuron. Dopamine β-hydroxylase then converts dopamine to noradrenaline <i>inside</i> the vesicle, after VMAT2 has carried it in.</span></li>
+      <li><span><b>Loading.</b> VMAT2 again. In the adrenal medulla one further enzyme, PNMT, makes adrenaline in the cytosol and it is loaded back — the same chain stopped one step later.</span></li>
+      <li><span><b>Release.</b> Locus coeruleus neurons fire tonically at one to three hertz and burst to salient events. Their axons are unmyelinated, branched across the whole cortex, and release mostly from varicosities.</span></li>
+      <li><span><b>Receptor binding.</b> All adrenoceptors are G-protein coupled: α1 excites through G<sub>q</sub>, α2 inhibits through G<sub>i</sub> and acts as the autoreceptor, β receptors raise cAMP.</span></li>
+      <li><span><b>Clearance.</b> NET recaptures most of it. MAO-A inside the terminal and COMT in neighbouring cells break down the rest; in the periphery, uptake into smooth muscle and circulating clearance matter as much.</span></li>
+    </ol>
+  </section>
+
+  <section class="box">
+    <h2>What the locus coeruleus is doing</h2>
+    <div class="grid2">
+      <div>
+        <h3>Tonic and phasic</h3>
+        <p>Low tonic firing goes with drowsiness, moderate tonic firing with focused attention, and high tonic firing with distractible, anxious scanning — an inverted U, like dopamine in prefrontal cortex. Phasic bursts are locked to task-relevant surprises and briefly sharpen the cortex that receives them.</p>
+      </div>
+      <div>
+        <h3>Gain, not content</h3>
+        <p>Noradrenaline rarely drives a cell by itself. It raises the contrast between strong and weak inputs, favours the strongest, and promotes plasticity where it lands. That is why it shows up in arousal, in memory for emotional events, and in the intrusive memories of post-traumatic stress disorder.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="box">
+    <h2>Receptors</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Receptor</th><th>Coupling</th><th>Where</th><th>Effect</th></tr></thead>
+        <tbody>
+          <tr><td class="k">α1</td><td>G<sub>q</sub> → PLC</td><td>Vascular smooth muscle, cortex, prazosin's target</td><td>Vasoconstriction; in cortex, depolarisation and increased excitability.</td></tr>
+          <tr><td class="k">α2</td><td>G<sub>i/o</sub></td><td>Presynaptic autoreceptor, brainstem, prefrontal cortex</td><td>Cuts its own release; postsynaptic α2A in prefrontal cortex strengthens working memory — the guanfacine target.</td></tr>
+          <tr><td class="k">β1</td><td>G<sub>s</sub> → cAMP</td><td>Heart</td><td>Raises rate and force; blocked by metoprolol.</td></tr>
+          <tr><td class="k">β2</td><td>G<sub>s</sub></td><td>Bronchial and vascular smooth muscle</td><td>Relaxation; salbutamol is the therapeutic use.</td></tr>
+          <tr><td class="k">β3</td><td>G<sub>s</sub></td><td>Adipose tissue, bladder detrusor</td><td>Lipolysis; mirabegron relaxes the bladder.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted">Adrenaline and noradrenaline act on the same receptors with different preferences: noradrenaline is relatively stronger at α, adrenaline at β2. That single difference is most of the pharmacology of the sympathetic system.</p>
+  </section>
+
+  <section class="box">
+    <h2>Pharmacology</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Drug</th><th>Target</th><th>Action</th><th>Use or effect</th></tr></thead>
+        <tbody>
+          <tr><td class="k">Atomoxetine, reboxetine</td><td>NET</td><td>Reuptake inhibition</td><td>ADHD and depression; no releasing action, so little abuse liability.</td></tr>
+          <tr><td class="k">Methylphenidate, amphetamine</td><td>NET and DAT</td><td>Block, and for amphetamine reverse, the transporters</td><td>ADHD; the prefrontal benefit is as much noradrenergic as dopaminergic.</td></tr>
+          <tr><td class="k">Clonidine, dexmedetomidine</td><td>α2</td><td>Agonist</td><td>Lowers sympathetic outflow: hypertension, withdrawal states, sedation that preserves arousability.</td></tr>
+          <tr><td class="k">Guanfacine</td><td>α2A</td><td>Agonist</td><td>ADHD and tics, acting on postsynaptic prefrontal receptors.</td></tr>
+          <tr><td class="k">Prazosin</td><td>α1</td><td>Antagonist</td><td>Hypertension and prostatic symptoms; also used for nightmares in PTSD.</td></tr>
+          <tr><td class="k">Propranolol</td><td>β1 and β2</td><td>Antagonist</td><td>Tremor, migraine prophylaxis, performance anxiety; blunts the consolidation of emotional memory.</td></tr>
+          <tr><td class="k">Yohimbine</td><td>α2</td><td>Antagonist</td><td>Raises release; used experimentally to provoke anxiety.</td></tr>
+          <tr><td class="k">MAO inhibitors, reserpine</td><td>MAO (non-selective), VMAT2</td><td>Block breakdown, or empty vesicles</td><td>Reserpine's depletion of monoamines, and the low mood reported in some patients who took it, is where the monoamine hypothesis began — later review of that literature found the depressogenic effect far weaker than the story requires.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="box">
+    <h2>When it goes wrong</h2>
+    <ul class="plain">
+      <li><b>Post-traumatic stress disorder.</b> Excess noradrenergic signalling during and after a threat strengthens consolidation; prazosin at night reduces nightmares in some patients.</li>
+      <li><b>ADHD.</b> On the leading account, too little catecholamine signalling in prefrontal cortex; both noradrenergic and dopaminergic drugs help, again on an inverted-U dose-response.</li>
+      <li><b>Orthostatic hypotension.</b> Loss of peripheral noradrenergic function, in pure autonomic failure or in dopamine β-hydroxylase deficiency, where the patient releases dopamine instead.</li>
+      <li><b>Locus coeruleus degeneration.</b> Among the earliest pathology in Alzheimer's and Parkinson's disease, which is one reason arousal and sleep change years before the diagnosis.</li>
+    </ul>
+  </section>
+
+  <section class="box">
+    <h2>Related pages</h2>
+    <p class="nav"><a href="../dopamine/">Dopamine, one enzyme earlier in the same chain →</a><a href="../serotonin/">Serotonin, its partner in the antidepressants →</a></p>
+  </section>
+
+  <footer><span>© 2026 Po-Han Chiang</span><span>Code licensed under <a href="https://github.com/phclab/class/blob/main/LICENSE">GPL-3.0-or-later</a></span><span><a href="../">Back to neurotransmission</a></span></footer>
+</div>
+<script type="module">
+import { synapse } from '../nt.js';
+synapse(document.getElementById('syn'), {"pre": "Locus coeruleus varicosity", "post": "Cortical neuron", "loader": "VMAT2", "synth": "dopamine → noradrenaline (DBH, inside the vesicle)", "uptake": {"label": "NET", "where": "pre"}, "receptors": [{"label": "α1", "type": "metab", "effect": "PLC"}, {"label": "α2", "type": "metab", "effect": "cAMP ↓"}, {"label": "β", "type": "metab", "effect": "cAMP ↑"}], "volume": true, "astro": null, "pump": null, "capId": "syncap", "playId": "synplay", "replayId": "synreplay", "slowId": "synslow"});
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "ed90c191314a4bd1b54a671616598fbd"}'></script>
+</body>
+</html>

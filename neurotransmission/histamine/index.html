@@ -1,0 +1,128 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="google-site-verification" content="KViT-tN7lhzIxqualHoKOShjRrce-UIVY56-z95f7JE">
+<link rel="canonical" href="https://phclab.github.io/class/neurotransmission/histamine/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Histamine">
+<meta property="og:description" content="Histamine: one small nucleus that keeps the brain awake, no reuptake transporter, and the reason an allergy tablet can put you to sleep.">
+<meta property="og:url" content="https://phclab.github.io/class/neurotransmission/histamine/">
+<title>Histamine</title>
+<meta name="description" content="Histamine: one small nucleus that keeps the brain awake, no reuptake transporter, and the reason an allergy tablet can put you to sleep.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../nt.css">
+</head>
+<body class="mod">
+<div class="wrap">
+  <header>
+    <div class="toprow"><span class="eyebrow"><a href="../">Neurotransmission</a></span><a href="https://tw.linkedin.com/in/pohanc" rel="me">LinkedIn</a></div>
+    <h1>Histamine</h1>
+    <p class="byline">by Po-Han Chiang @ NYCU</p>
+    <p><span class="tag">Slow · Modulatory</span></p>
+    <p class="lede">Every histamine neuron in the brain sits in one nucleus of the posterior hypothalamus, fires during waking and falls silent in sleep. It is also the one monoamine with no reuptake transporter: once released, a general organic cation transporter carries it into neighbouring cells, where it is methylated away.</p>
+  </header>
+
+  <section class="box">
+    <h2>At a glance</h2>
+    <div class="facts">
+      <div class="fact"><span class="lab">Class</span><span class="val">Monoamine</span></div>
+      <div class="fact"><span class="lab">Made from</span><span class="val">Histidine</span></div>
+      <div class="fact"><span class="lab">Key enzyme</span><span class="val">Histidine decarboxylase</span></div>
+      <div class="fact"><span class="lab">Vesicle loader</span><span class="val">VMAT2</span></div>
+      <div class="fact"><span class="lab">Cleared by</span><span class="val">HNMT, next door</span></div>
+      <div class="fact"><span class="lab">Cell bodies</span><span class="val">Tuberomammillary nucleus</span></div>
+    </div>
+    <p class="muted">In the brain histamine is methylated by HNMT inside neighbouring cells. Diamine oxidase, the other route, works in the gut and other peripheral tissues but not centrally — one reason drugs behave so differently either side of the blood-brain barrier.</p>
+  </section>
+
+  <section class="box">
+    <h2>The five steps at a histaminergic synapse</h2>
+    <div class="synapse">
+      <canvas id="syn" aria-label="Animated histaminergic synapse: volume release onto H1 and H2 receptors, an H3 autoreceptor, and clearance by methylation"></canvas>
+      <div class="synbar"><button id="synplay" type="button">Pause</button><button id="synreplay" type="button">Replay</button><button id="synslow" type="button" aria-pressed="false">Slow motion</button><span class="cap" id="syncap"></span></div>
+    </div>
+    <ol class="steps">
+      <li><span><b>Synthesis.</b> Histidine decarboxylase removes the carboxyl group from histidine in one step. Mast cells use the same enzyme, which is why the peripheral and central stories share a molecule but nothing else.</span></li>
+      <li><span><b>Loading.</b> VMAT2, the transporter shared with dopamine, noradrenaline and serotonin.</span></li>
+      <li><span><b>Release.</b> Tuberomammillary axons reach almost the whole brain and release from varicosities. Firing is highest in active waking, lower in quiet waking, and stops in both slow-wave and REM sleep.</span></li>
+      <li><span><b>Receptor binding.</b> All four receptors are G-protein coupled. H1 and H2 depolarise their targets and hold the cortex and thalamus in the waking state; H3 sits on the histamine terminal itself and turns release down.</span></li>
+      <li><span><b>Clearance.</b> No transporter takes histamine back into the neuron. Organic cation transporters carry it into surrounding cells, where histamine N-methyltransferase methylates it and MAO-B handles the product.</span></li>
+    </ol>
+  </section>
+
+  <section class="box">
+    <h2>Why an allergy tablet makes you sleepy</h2>
+    <div class="grid2">
+      <div>
+        <h3>The same receptor, two places</h3>
+        <p>H1 receptors in the skin and airways produce itch, wheal and bronchoconstriction. The same H1 receptors on thalamic and cortical neurons keep them depolarised and awake. A first-generation antihistamine such as diphenhydramine crosses the blood-brain barrier and blocks both, so it treats the rash and takes out the arousal system with it.</p>
+      </div>
+      <div>
+        <h3>Keeping the drug out</h3>
+        <p>Cetirizine and fexofenadine carry charge at physiological pH, and they, loratadine and desloratadine are all substrates of P-glycoprotein at the blood-brain barrier, which the sedating antihistamines are not. Either route keeps central occupancy low. The same logic runs in reverse for pitolisant, an H3 inverse agonist used in narcolepsy, which must get in to raise histamine release.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="box">
+    <h2>Receptors</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Receptor</th><th>Coupling</th><th>Where</th><th>Effect</th></tr></thead>
+        <tbody>
+          <tr><td class="k">H1</td><td>G<sub>q</sub> → PLC</td><td>Cortex, thalamus, hypothalamus; skin, airways, vessels</td><td>Wakefulness centrally; itch, oedema and bronchoconstriction peripherally.</td></tr>
+          <tr><td class="k">H2</td><td>G<sub>s</sub> → cAMP</td><td>Gastric parietal cells, heart, brain</td><td>Acid secretion; centrally it reduces the slow afterhyperpolarisation, so neurons stop adapting and keep firing.</td></tr>
+          <tr><td class="k">H3</td><td>G<sub>i/o</sub></td><td>Histamine terminals, and terminals of other transmitters</td><td>Autoreceptor and heteroreceptor: constitutively active, so an inverse agonist, not a neutral antagonist, raises release of histamine, acetylcholine and noradrenaline.</td></tr>
+          <tr><td class="k">H4</td><td>G<sub>i/o</sub></td><td>Mast cells, eosinophils, bone marrow</td><td>Chemotaxis and inflammation; a target under development for itch and asthma.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="box">
+    <h2>Pharmacology</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Drug</th><th>Target</th><th>Action</th><th>Use or effect</th></tr></thead>
+        <tbody>
+          <tr><td class="k">Diphenhydramine, chlorphenamine</td><td>H1</td><td>Inverse agonist, enters the brain</td><td>Allergy, and sedation; also antimuscarinic, which adds confusion in older patients.</td></tr>
+          <tr><td class="k">Loratadine, cetirizine, fexofenadine</td><td>H1</td><td>Inverse agonist, largely excluded from the brain</td><td>Allergy without sedation.</td></tr>
+          <tr><td class="k">Doxepin at low dose</td><td>H1</td><td>Potent block</td><td>Insomnia: a tricyclic used far below its antidepressant dose, purely for the antihistamine effect.</td></tr>
+          <tr><td class="k">Famotidine</td><td>H2</td><td>Antagonist</td><td>Reduces gastric acid; proton pump inhibitors largely replaced this class.</td></tr>
+          <tr><td class="k">Pitolisant</td><td>H3</td><td>Inverse agonist</td><td>Narcolepsy: removing the autoreceptor brake raises histamine release and promotes wakefulness.</td></tr>
+          <tr><td class="k">Olanzapine, clozapine, mirtazapine</td><td>H1 among many</td><td>Potent block</td><td>Sedation and weight gain — much of the metabolic burden of these drugs is H1 and 5-HT2C.</td></tr>
+          <tr><td class="k">Betahistine</td><td>H1 agonist, H3 antagonist</td><td>Mixed</td><td>Ménière's disease; its mechanism is still debated.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="box">
+    <h2>When it goes wrong</h2>
+    <ul class="plain">
+      <li><b>Narcolepsy.</b> The primary lesion is loss of orexin neurons, but the histamine system is one of the arousal circuits they drive, and H3 inverse agonists exploit what remains.</li>
+      <li><b>Sedation from medicines.</b> Antihistamines, many antipsychotics and several antidepressants share H1 blockade; it is the most common reason a prescribed drug makes someone sleepy.</li>
+      <li><b>Anaphylaxis.</b> A peripheral story: mast cell histamine acting on H1 in vessels and airways. Adrenaline, not an antihistamine, is the treatment.</li>
+      <li><b>Itch.</b> Histaminergic itch responds to antihistamines; the chronic itch of cholestasis or neuropathy usually does not, because it runs on different mediators.</li>
+    </ul>
+  </section>
+
+  <section class="box">
+    <h2>Related pages</h2>
+    <p class="nav"><a href="../noradrenaline/">Noradrenaline, the other arousal system →</a><a href="../other-messengers/">Messengers with no vesicle at all →</a></p>
+  </section>
+
+  <footer><span>© 2026 Po-Han Chiang</span><span>Code licensed under <a href="https://github.com/phclab/class/blob/main/LICENSE">GPL-3.0-or-later</a></span><span><a href="../">Back to neurotransmission</a></span></footer>
+</div>
+<script type="module">
+import { synapse } from '../nt.js';
+synapse(document.getElementById('syn'), {"pre": "Tuberomammillary varicosity", "post": "Cortical neuron", "loader": "VMAT2", "synth": "histidine → histamine (HDC)", "uptake": {"label": "carried next door, then HNMT", "where": "cleft"}, "receptors": [{"label": "H1", "type": "metab", "effect": "PLC"}, {"label": "H2", "type": "metab", "effect": "cAMP ↑"}, {"label": "H3", "type": "metab", "effect": "less release"}], "volume": true, "astro": null, "pump": null, "capId": "syncap", "playId": "synplay", "replayId": "synreplay", "slowId": "synslow"});
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "ed90c191314a4bd1b54a671616598fbd"}'></script>
+</body>
+</html>

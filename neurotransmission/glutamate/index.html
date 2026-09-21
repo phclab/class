@@ -1,0 +1,129 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="google-site-verification" content="KViT-tN7lhzIxqualHoKOShjRrce-UIVY56-z95f7JE">
+<link rel="canonical" href="https://phclab.github.io/class/neurotransmission/glutamate/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Glutamate">
+<meta property="og:description" content="Glutamate, the brain's main excitatory transmitter: the glutamate-glutamine cycle, AMPA and NMDA receptors, silent synapses and LTP, and excitotoxicity.">
+<meta property="og:url" content="https://phclab.github.io/class/neurotransmission/glutamate/">
+<title>Glutamate</title>
+<meta name="description" content="Glutamate, the brain's main excitatory transmitter: the glutamate-glutamine cycle, AMPA and NMDA receptors, silent synapses and LTP, and excitotoxicity.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../nt.css">
+</head>
+<body class="exc">
+<div class="wrap">
+  <header>
+    <div class="toprow"><span class="eyebrow"><a href="../">Neurotransmission</a></span><a href="https://tw.linkedin.com/in/pohanc" rel="me">LinkedIn</a></div>
+    <h1>Glutamate</h1>
+    <p class="byline">by Po-Han Chiang @ NYCU</p>
+    <p><span class="tag">Fast · Excitatory</span></p>
+    <p class="lede">Glutamate carries almost all the excitatory traffic in the central nervous system. It is also an ordinary metabolite present everywhere in the cell, so the neuron cannot mark a synapse as active by making glutamate — only by putting it in the right place at the right moment, and taking it away fast.</p>
+  </header>
+
+  <section class="box">
+    <h2>At a glance</h2>
+    <div class="facts">
+      <div class="fact"><span class="lab">Class</span><span class="val">Amino acid</span></div>
+      <div class="fact"><span class="lab">Made from</span><span class="val">Glutamine</span></div>
+      <div class="fact"><span class="lab">Key enzyme</span><span class="val">Glutaminase</span></div>
+      <div class="fact"><span class="lab">Vesicle loader</span><span class="val">VGLUT1–3</span></div>
+      <div class="fact"><span class="lab">Cleared by</span><span class="val">EAAT1/2 on glia</span></div>
+      <div class="fact"><span class="lab">Cleft lifetime</span><span class="val">0.1–1 ms</span></div>
+    </div>
+    <p class="muted">Resting glutamate in the cleft is held near 25 nanomolar. Inside a vesicle it is at least 100 millimolar — a gradient of four million-fold or more. Filling the vesicles is cheap; what the synapse really pays for is pumping back the ions its receptors let in.</p>
+  </section>
+
+  <section class="box">
+    <h2>The five steps at a glutamate synapse</h2>
+    <div class="synapse">
+        <canvas id="syn" aria-label="Animated glutamate synapse with astrocytic uptake and the glutamate-glutamine cycle"></canvas>
+        <div class="synbar"><button id="synplay" type="button">Pause</button><button id="synreplay" type="button">Replay</button><button id="synslow" type="button" aria-pressed="false">Slow motion</button><span class="cap" id="syncap"></span></div>
+      </div>
+    <ol class="steps">
+      <li><span><b>Synthesis.</b> Glutaminase converts glutamine, supplied by astrocytes, into glutamate. Glutamate cannot cross the blood-brain barrier, so its carbon has to be recycled on the spot; glutamine is the form in which the astrocyte hands it back.</span></li>
+      <li><span><b>Loading.</b> VGLUT1–3 pack a few thousand molecules into each vesicle, driven mainly by the electrical component of the proton gradient. VGLUT1 dominates cortex and hippocampus, VGLUT2 thalamus and brainstem.</span></li>
+      <li><span><b>Release.</b> Ca²⁺ entering through P/Q- and N-type channels within nanometres of the docked vesicle triggers fusion. The cleft concentration jumps to about 1 millimolar for well under a millisecond.</span></li>
+      <li><span><b>Receptor binding.</b> AMPA receptors open immediately and carry the fast excitatory current. NMDA receptors need glutamate <i>and</i> depolarisation to expel their Mg²⁺ block, so they report coincidence rather than arrival.</span></li>
+      <li><span><b>Clearance.</b> EAAT2 on astrocytes removes most of the glutamate; glutamine synthetase converts it to glutamine and returns it. No enzyme destroys glutamate in the cleft — geometry and transporters do all the work.</span></li>
+    </ol>
+  </section>
+
+  <section class="box">
+    <h2>Receptors</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Receptor</th><th>Type</th><th>Subunits</th><th>Ions / coupling</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td class="k">AMPA</td><td>Ionotropic</td><td>GluA1–4</td><td>Na⁺, K⁺; Ca²⁺ if GluA2 is absent</td><td>Fast EPSP, decays in a few milliseconds. Adding or removing AMPA receptors is how synaptic strength changes.</td></tr>
+          <tr><td class="k">NMDA</td><td>Ionotropic</td><td>GluN1 + GluN2A–D</td><td>Na⁺, K⁺, Ca²⁺; Mg²⁺ block</td><td>Coincidence detector: needs glutamate, a co-agonist (glycine or D-serine) and depolarisation. The Ca²⁺ it admits triggers plasticity.</td></tr>
+          <tr><td class="k">Kainate</td><td>Ionotropic</td><td>GluK1–5</td><td>Na⁺, K⁺</td><td>Smaller, slower currents; often presynaptic, tuning release probability.</td></tr>
+          <tr><td class="k">mGluR I</td><td>Metabotropic</td><td>mGluR1, mGluR5</td><td>G<sub>q</sub> → PLC, IP₃, Ca²⁺</td><td>Postsynaptic; raises excitability and drives some forms of long-term depression.</td></tr>
+          <tr><td class="k">mGluR II/III</td><td>Metabotropic</td><td>mGluR2–4, 6–8</td><td>G<sub>i/o</sub> → less cAMP</td><td>Mostly presynaptic autoreceptors: when glutamate spills over, they turn release down. The exception is mGluR6, which sits postsynaptically in retinal ON bipolar cells, where it closes a TRPM1 cation channel and so inverts the sign of the photoreceptor signal.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted">A synapse with NMDA receptors but no AMPA receptors is electrically silent at rest. Making it audible by inserting AMPA receptors is one of the clearest physical pictures of learning we have.</p>
+  </section>
+
+  <section class="box">
+    <h2>Coincidence detection and plasticity</h2>
+    <div class="grid2">
+      <div>
+        <h3>Why the Mg²⁺ block matters</h3>
+        <p>At rest the NMDA channel is plugged by Mg²⁺. Glutamate alone cannot clear it. Only when the postsynaptic cell is already depolarised — because other inputs fired, or because the cell spiked — does the block leave and Ca²⁺ flow in. The receptor therefore fires only when presynaptic activity and postsynaptic activity coincide, which is Hebb's rule written in protein.</p>
+      </div>
+      <div>
+        <h3>What the Ca²⁺ decides</h3>
+        <p>A large, brief Ca²⁺ rise activates CaMKII and adds AMPA receptors: long-term potentiation. A small, prolonged rise favours phosphatases such as calcineurin and removes them: long-term depression. The same receptor, the same ion, and the amplitude decides the direction.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="box">
+    <h2>Pharmacology</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Drug</th><th>Target</th><th>Action</th><th>Use or effect</th></tr></thead>
+        <tbody>
+          <tr><td class="k">Ketamine</td><td>NMDA receptor</td><td>Open-channel blocker</td><td>Anaesthetic; a single sub-anaesthetic dose has rapid antidepressant effects, probably by disinhibiting cortical glutamate release.</td></tr>
+          <tr><td class="k">Memantine</td><td>NMDA receptor</td><td>Low-affinity open-channel blocker</td><td>Alzheimer's disease. It leaves brief synaptic events intact and blocks the sustained low-level activation.</td></tr>
+          <tr><td class="k">Phencyclidine</td><td>NMDA receptor</td><td>Channel blocker</td><td>Produces positive, negative and cognitive symptoms resembling schizophrenia — a cornerstone of the glutamate hypothesis.</td></tr>
+          <tr><td class="k">Perampanel</td><td>AMPA receptor</td><td>Non-competitive antagonist</td><td>Anti-epileptic.</td></tr>
+          <tr><td class="k">Riluzole</td><td>Persistent Na⁺ current</td><td>Blocks it, so less glutamate is released</td><td>Amyotrophic lateral sclerosis; modest survival benefit.</td></tr>
+          <tr><td class="k">D-cycloserine</td><td>NMDA co-agonist site</td><td>Partial agonist</td><td>Investigated as an adjunct to exposure therapy, on the logic that extinction learning is NMDA-dependent.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="box">
+    <h2>When it goes wrong</h2>
+    <ul class="plain">
+      <li><b>Excitotoxicity.</b> In stroke or trauma, energy failure stops the transporters and reverses them. Glutamate accumulates, NMDA receptors stay open, Ca²⁺ floods in and kills the cell. This is why clearance, not release, is the rate-limiting safety step.</li>
+      <li><b>Epilepsy.</b> Runaway recurrent excitation in cortex and hippocampus; several anti-epileptics reduce glutamate release or block AMPA receptors.</li>
+      <li><b>Schizophrenia.</b> The NMDA hypofunction hypothesis holds that reduced NMDA signalling on inhibitory interneurons disinhibits pyramidal cells, matching what PCP and ketamine do.</li>
+      <li><b>Chronic pain.</b> NMDA-dependent plasticity in the dorsal horn produces central sensitisation, which is why ketamine helps some neuropathic pain.</li>
+    </ul>
+  </section>
+
+  <section class="box">
+    <h2>Try it on the other pages</h2>
+    <p class="nav"><a href="../gaba/">GABA, the opposing transmitter →</a><a href="../../Nernst_Goldman_Explorer/">See what an ion current does to membrane potential →</a></p>
+  </section>
+
+  <footer><span>© 2026 Po-Han Chiang</span><span>Code licensed under <a href="https://github.com/phclab/class/blob/main/LICENSE">GPL-3.0-or-later</a></span><span><a href="../">Back to neurotransmission</a></span></footer>
+</div>
+<script type="module">
+import { synapse } from '../nt.js';
+synapse(document.getElementById('syn'), {"pre": "Presynaptic terminal", "post": "Postsynaptic spine", "loader": "VGLUT", "synth": "glutamine → glutamate", "uptake": {"label": "EAAT2", "where": "astro"}, "receptors": [{"label": "AMPA", "type": "iono", "ion": "Na⁺"}, {"label": "NMDA", "type": "iono", "ion": "Ca²⁺"}, {"label": "mGluR", "type": "metab", "effect": "IP₃"}], "volume": false, "astro": {"label": "Astrocyte", "cycle": "glutamine returns"}, "pump": null, "capId": "syncap", "playId": "synplay", "replayId": "synreplay", "slowId": "synslow"});
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "ed90c191314a4bd1b54a671616598fbd"}'></script>
+</body>
+</html>

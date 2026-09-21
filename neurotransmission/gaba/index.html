@@ -1,0 +1,131 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="google-site-verification" content="KViT-tN7lhzIxqualHoKOShjRrce-UIVY56-z95f7JE">
+<link rel="canonical" href="https://phclab.github.io/class/neurotransmission/gaba/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="GABA">
+<meta property="og:description" content="GABA, the brain's main inhibitory transmitter: GABA-A chloride channels, why the chloride gradient decides whether inhibition works, GABA-B slow inhibition, and the drugs that bind them.">
+<meta property="og:url" content="https://phclab.github.io/class/neurotransmission/gaba/">
+<title>GABA</title>
+<meta name="description" content="GABA, the brain's main inhibitory transmitter: GABA-A chloride channels, why the chloride gradient decides whether inhibition works, GABA-B slow inhibition, and the drugs that bind them.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../nt.css">
+</head>
+<body class="inh">
+<div class="wrap">
+  <header>
+    <div class="toprow"><span class="eyebrow"><a href="../">Neurotransmission</a></span><a href="https://tw.linkedin.com/in/pohanc" rel="me">LinkedIn</a></div>
+    <h1>GABA</h1>
+    <p class="byline">by Po-Han Chiang @ NYCU</p>
+    <p><span class="tag">Fast · Inhibitory</span></p>
+    <p class="lede">GABA is made from glutamate by removing one carboxyl group — the brain builds its brake out of its accelerator. About one in five cortical neurons is GABAergic, and without them the excitatory network seizes within seconds.</p>
+  </header>
+
+  <section class="box">
+    <h2>At a glance</h2>
+    <div class="facts">
+      <div class="fact"><span class="lab">Class</span><span class="val">Amino acid</span></div>
+      <div class="fact"><span class="lab">Made from</span><span class="val">Glutamate</span></div>
+      <div class="fact"><span class="lab">Key enzyme</span><span class="val">GAD65 / GAD67</span></div>
+      <div class="fact"><span class="lab">Vesicle loader</span><span class="val">VGAT</span></div>
+      <div class="fact"><span class="lab">Cleared by</span><span class="val">GAT-1, GAT-3</span></div>
+      <div class="fact"><span class="lab">Broken down by</span><span class="val">GABA transaminase</span></div>
+    </div>
+    <p class="muted">GAD needs vitamin B6 as a cofactor. This is why severe B6 deficiency, or isoniazid poisoning which depletes it, causes seizures that need B6 itself — phenytoin does not touch them, though benzodiazepines help.</p>
+  </section>
+
+  <section class="box">
+    <h2>The five steps at a GABA synapse</h2>
+    <div class="synapse">
+        <canvas id="syn" aria-label="Animated GABA synapse with chloride entry, GAT-1 reuptake and KCC2 carrying Cl⁻ out"></canvas>
+        <div class="synbar"><button id="synplay" type="button">Pause</button><button id="synreplay" type="button">Replay</button><button id="synslow" type="button" aria-pressed="false">Slow motion</button><span class="cap" id="syncap"></span></div>
+      </div>
+    <ol class="steps">
+      <li><span><b>Synthesis.</b> Glutamic acid decarboxylase removes a carboxyl group from glutamate. GAD67 keeps the cytoplasmic pool filled; GAD65 sits on vesicles and supplies extra GABA during heavy firing.</span></li>
+      <li><span><b>Loading.</b> VGAT, the same transporter used by glycinergic neurons, concentrates GABA into vesicles using the proton gradient.</span></li>
+      <li><span><b>Release.</b> The same Ca²⁺-triggered SNARE machinery as at excitatory synapses. Many GABAergic interneurons fire fast and release at high rates, so their terminals hold large, quickly recycled vesicle pools.</span></li>
+      <li><span><b>Receptor binding.</b> GABA<sub>A</sub> receptors open a chloride channel within a millisecond. GABA<sub>B</sub> receptors act through G proteins, opening K⁺ channels and closing Ca²⁺ channels over hundreds of milliseconds.</span></li>
+      <li><span><b>Clearance.</b> GAT-1 on neurons and GAT-3 on astrocytes recover GABA; what is not reused is degraded by GABA transaminase into succinic semialdehyde and fed into the Krebs cycle.</span></li>
+    </ol>
+  </section>
+
+  <section class="box">
+    <h2>Inhibition depends on the chloride gradient</h2>
+    <div class="grid2">
+      <div>
+        <h3>Why the same channel can excite</h3>
+        <p>A GABA<sub>A</sub> receptor does not hyperpolarise the cell; it clamps the membrane towards the chloride equilibrium potential. In a mature neuron KCC2 rides the K⁺ gradient to carry Cl⁻ out, E<sub>Cl</sub> sits near −70 mV, and opening the channel pulls the cell away from threshold. Even when E<sub>Cl</sub> equals the resting potential, the extra conductance still shunts incoming excitatory current.</p>
+      </div>
+      <div>
+        <h3>When the gradient reverses</h3>
+        <p>Immature neurons express NKCC1 instead and accumulate Cl⁻, so GABA depolarises them and helps drive early network activity, at least in slices. The same reversal reappears in injured or epileptic tissue when KCC2 is downregulated. That, together with the internalisation of synaptic GABA<sub>A</sub> receptors during a long seizure, is why benzodiazepines can fail in status epilepticus.</p>
+      </div>
+    </div>
+    <p class="muted">The Nernst equation for Cl⁻ is doing the work here: change the concentration ratio and the sign of the response changes with it.</p>
+  </section>
+
+  <section class="box">
+    <h2>Receptors</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Receptor</th><th>Type</th><th>Subunits</th><th>Ions / coupling</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td class="k">GABA<sub>A</sub></td><td>Ionotropic</td><td>Usually 2α, 2β, 1γ from α1–6, β1–3, γ1–3; δ, ε, θ or π can take the γ slot</td><td>Cl⁻ (and HCO₃⁻)</td><td>Fast inhibitory postsynaptic potential, milliseconds. Subunit composition decides both location and drug sensitivity.</td></tr>
+          <tr><td class="k">GABA<sub>A</sub>, extrasynaptic</td><td>Ionotropic</td><td>α4/α6 with δ; α5 with γ2 in hippocampus</td><td>Cl⁻</td><td>High affinity and little desensitisation: carries a standing tonic current set by ambient GABA. Target of neurosteroids and of gaboxadol-like drugs.</td></tr>
+          <tr><td class="k">GABA<sub>B</sub></td><td>Metabotropic</td><td>B1 + B2 heterodimer</td><td>G<sub>i/o</sub></td><td>Postsynaptically opens GIRK K⁺ channels for slow, long inhibition; presynaptically closes Ca²⁺ channels and cuts release.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted">The γ2 subunit is required for benzodiazepine binding — the drug site sits at the interface between α and γ, which is why a receptor built from α and β alone ignores diazepam.</p>
+  </section>
+
+  <section class="box">
+    <h2>Pharmacology</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Drug</th><th>Target</th><th>Action</th><th>Use or effect</th></tr></thead>
+        <tbody>
+          <tr><td class="k">Benzodiazepines</td><td>GABA<sub>A</sub>, α/γ site</td><td>Positive allosteric modulator: more openings</td><td>Anxiolytic, anticonvulsant, sedative. Needs GABA present, which is why overdose alone is rarely fatal.</td></tr>
+          <tr><td class="k">Barbiturates</td><td>GABA<sub>A</sub>, separate site</td><td>Prolongs channel opening; opens it directly at high dose</td><td>Anaesthesia. The direct action explains the much narrower safety margin.</td></tr>
+          <tr><td class="k">Propofol, etomidate</td><td>GABA<sub>A</sub>, β subunits</td><td>Positive allosteric modulator</td><td>General anaesthesia.</td></tr>
+          <tr><td class="k">Ethanol</td><td>GABA<sub>A</sub> and others</td><td>Enhances, partly indirectly by raising GABA release and neurosteroids</td><td>Sedation and disinhibition; chronic use remodels the receptor population and upregulates NMDA receptors, so stopping abruptly leaves excitation unopposed.</td></tr>
+          <tr><td class="k">Zolpidem</td><td>GABA<sub>A</sub>, α1-preferring</td><td>Positive allosteric modulator</td><td>Hypnotic with less anxiolytic action, because α1 carries sedation while α2/α3 carry anxiolysis.</td></tr>
+          <tr><td class="k">Baclofen</td><td>GABA<sub>B</sub></td><td>Agonist</td><td>Spasticity; also studied in alcohol dependence.</td></tr>
+          <tr><td class="k">Vigabatrin</td><td>GABA transaminase</td><td>Irreversible inhibitor: raises GABA</td><td>Refractory epilepsy and infantile spasms; can damage the visual field.</td></tr>
+          <tr><td class="k">Tiagabine</td><td>GAT-1</td><td>Reuptake blocker</td><td>Anti-epileptic; prolongs the inhibitory signal.</td></tr>
+          <tr><td class="k">Brexanolone</td><td>GABA<sub>A</sub>, neurosteroid site</td><td>Positive allosteric modulator</td><td>Postpartum depression; a synthetic version of allopregnanolone.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="box">
+    <h2>When it goes wrong</h2>
+    <ul class="plain">
+      <li><b>Epilepsy.</b> Losing inhibitory interneurons, or losing KCC2, tips the local balance towards runaway excitation.</li>
+      <li><b>Stiff-person syndrome.</b> Antibodies against GAD65 are best read as a marker: the antigen is intracellular and their pathogenicity is still argued. Glycine receptor antibodies, found in some patients and in the PERM variant, target a surface protein and are far more likely to do the damage themselves.</li>
+      <li><b>Anxiety disorders.</b> Reduced GABAergic tone in amygdala circuits; benzodiazepines work fast because they amplify a signal already there.</li>
+      <li><b>Withdrawal.</b> After chronic alcohol or benzodiazepine exposure the receptor population adapts; stopping abruptly leaves excitation unopposed, causing tremor, delirium and seizures.</li>
+    </ul>
+  </section>
+
+  <section class="box">
+    <h2>Related pages</h2>
+    <p class="nav"><a href="../glutamate/">Glutamate, the opposing transmitter →</a><a href="../../Nernst_Goldman_Explorer/">Set the Cl⁻ concentrations yourself and watch E<sub>Cl</sub> move →</a></p>
+  </section>
+
+  <footer><span>© 2026 Po-Han Chiang</span><span>Code licensed under <a href="https://github.com/phclab/class/blob/main/LICENSE">GPL-3.0-or-later</a></span><span><a href="../">Back to neurotransmission</a></span></footer>
+</div>
+<script type="module">
+import { synapse } from '../nt.js';
+synapse(document.getElementById('syn'), {"pre": "GABAergic terminal", "post": "Postsynaptic cell", "loader": "VGAT", "synth": "glutamate → GABA (GAD)", "uptake": {"label": "GAT-1", "where": "pre"}, "receptors": [{"label": "GABA-A", "type": "iono", "ion": "Cl⁻"}, {"label": "GABA-B", "type": "metab", "effect": "K⁺ out"}], "volume": false, "astro": null, "pump": {"label": "KCC2", "note": "carries Cl⁻ out"}, "capId": "syncap", "playId": "synplay", "replayId": "synreplay", "slowId": "synslow"});
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "ed90c191314a4bd1b54a671616598fbd"}'></script>
+</body>
+</html>

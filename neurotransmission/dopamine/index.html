@@ -1,0 +1,147 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="google-site-verification" content="KViT-tN7lhzIxqualHoKOShjRrce-UIVY56-z95f7JE">
+<link rel="canonical" href="https://phclab.github.io/class/neurotransmission/dopamine/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Dopamine">
+<meta property="og:description" content="Dopamine as a modulator: the four pathways, D1 versus D2 signalling, reward prediction error, and the drugs that treat Parkinson's disease, psychosis and ADHD.">
+<meta property="og:url" content="https://phclab.github.io/class/neurotransmission/dopamine/">
+<title>Dopamine</title>
+<meta name="description" content="Dopamine as a modulator: the four pathways, D1 versus D2 signalling, reward prediction error, and the drugs that treat Parkinson's disease, psychosis and ADHD.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../nt.css">
+</head>
+<body class="mod">
+<div class="wrap">
+  <header>
+    <div class="toprow"><span class="eyebrow"><a href="../">Neurotransmission</a></span><a href="https://tw.linkedin.com/in/pohanc" rel="me">LinkedIn</a></div>
+    <h1>Dopamine</h1>
+    <p class="byline">by Po-Han Chiang @ NYCU</p>
+    <p><span class="tag">Slow · Modulatory</span></p>
+    <p class="lede">Only a few hundred thousand neurons in the human midbrain make dopamine, yet they reach most of the forebrain. Dopamine rarely tells a neuron to fire. It tells a circuit how much the last event mattered, and which synapses should keep the change.</p>
+  </header>
+
+  <section class="box">
+    <h2>At a glance</h2>
+    <div class="facts">
+      <div class="fact"><span class="lab">Class</span><span class="val">Catecholamine</span></div>
+      <div class="fact"><span class="lab">Made from</span><span class="val">Tyrosine</span></div>
+      <div class="fact"><span class="lab">Rate-limiting</span><span class="val">Tyrosine hydroxylase</span></div>
+      <div class="fact"><span class="lab">Vesicle loader</span><span class="val">VMAT2</span></div>
+      <div class="fact"><span class="lab">Cleared by</span><span class="val">DAT, then MAO / COMT</span></div>
+      <div class="fact"><span class="lab">Cell bodies</span><span class="val">SNc, VTA, arcuate</span></div>
+    </div>
+    <p class="muted">Tyrosine → L-DOPA → dopamine. Add one more enzyme, dopamine β-hydroxylase, and the same cell makes noradrenaline instead; add another, and adrenaline. The pathways are the same chemistry stopped at different points.</p>
+  </section>
+
+  <section class="box">
+    <h2>The five steps at a dopamine synapse</h2>
+    <div class="synapse">
+        <canvas id="syn" aria-label="Animated dopamine varicosity releasing by volume transmission onto D1 and D2 receptors"></canvas>
+        <div class="synbar"><button id="synplay" type="button">Pause</button><button id="synreplay" type="button">Replay</button><button id="synslow" type="button" aria-pressed="false">Slow motion</button><span class="cap" id="syncap"></span></div>
+      </div>
+    <ol class="steps">
+      <li><span><b>Synthesis.</b> Tyrosine hydroxylase makes L-DOPA; this step is rate-limiting and is itself inhibited by dopamine, so the terminal regulates its own supply. DOPA decarboxylase then finishes the job in one step.</span></li>
+      <li><span><b>Loading.</b> VMAT2 packs dopamine into vesicles. Amphetamine starts here, collapsing the vesicular gradient so dopamine floods the cytoplasm, and the dopamine then leaves through a reversed DAT.</span></li>
+      <li><span><b>Release.</b> Most release is from varicosities along the axon rather than classical synapses. Tonic firing at a few hertz sets a background level; brief bursts produce transients that last a second or so.</span></li>
+      <li><span><b>Receptor binding.</b> All five receptors are metabotropic. D1-like receptors raise cAMP and make the direct pathway more excitable; D2-like receptors lower it and quieten the indirect pathway.</span></li>
+      <li><span><b>Clearance.</b> DAT takes dopamine back; MAO breaks down what reaches the cytoplasm — mainly MAO-A inside the terminal, MAO-B in the surrounding glia — and COMT methylates the rest inside neighbouring cells. In prefrontal cortex DAT is sparse, so COMT matters much more there than in striatum.</span></li>
+    </ol>
+  </section>
+
+  <section class="box">
+    <h2>Four pathways, four clinical stories</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Pathway</th><th>From → to</th><th>Function</th><th>What happens when it changes</th></tr></thead>
+        <tbody>
+          <tr><td class="k">Nigrostriatal</td><td>Substantia nigra pars compacta → dorsal striatum</td><td>Action selection and vigour</td><td>Parkinson's disease appears once roughly 60–80% of striatal dopamine is gone — the terminals appear to go first and the cell bodies later, so only about a third to a half of the neurons are lost by then; blocking D2 here causes drug-induced parkinsonism.</td></tr>
+          <tr><td class="k">Mesolimbic</td><td>Ventral tegmental area → nucleus accumbens</td><td>Motivation, reinforcement learning</td><td>Excess signalling is linked to positive symptoms of psychosis, though imaging places that excess mainly in the associative, dorsal striatum rather than the accumbens; almost every addictive drug raises dopamine here.</td></tr>
+          <tr><td class="k">Mesocortical</td><td>Ventral tegmental area → prefrontal cortex</td><td>Working memory, attention</td><td>Too little is linked to negative and cognitive symptoms; the dose-response is an inverted U, so more is not better.</td></tr>
+          <tr><td class="k">Tuberoinfundibular</td><td>Arcuate nucleus → median eminence → portal blood → anterior pituitary</td><td>Tonically inhibits prolactin release</td><td>D2 blockade removes that brake, so antipsychotics raise prolactin.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="box">
+    <h2>Reward prediction error</h2>
+    <div class="grid2">
+      <div>
+        <h3>What the bursts encode</h3>
+        <p>Dopamine neurons do not fire for reward as such. They fire when the outcome is better than predicted, stay at baseline when it matches the prediction, and pause when it is worse. As an animal learns, the burst moves from the reward itself to the earliest cue that predicts it.</p>
+      </div>
+      <div>
+        <h3>Why that is useful</h3>
+        <p>This is the error term of temporal-difference learning, broadcast to wide territories, though the signal is not the same everywhere. Synapses that were recently active and receive the burst are strengthened, which is how a circuit can learn from an outcome that arrives seconds after the action.</p>
+      </div>
+    </div>
+    <p class="muted">The same logic makes the addiction story concrete: drugs that raise dopamine directly produce a prediction error that never shrinks with experience, so the learning signal keeps reinforcing the behaviour.</p>
+  </section>
+
+  <section class="box">
+    <h2>Receptors</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Receptor</th><th>Family</th><th>Coupling</th><th>Where</th><th>Effect</th></tr></thead>
+        <tbody>
+          <tr><td class="k">D1</td><td>D1-like</td><td>G<sub>s</sub> → more cAMP</td><td>Striatum, cortex; direct pathway</td><td>Increases excitability; low affinity, so it mainly reads phasic bursts.</td></tr>
+          <tr><td class="k">D5</td><td>D1-like</td><td>G<sub>s</sub></td><td>Hippocampus, thalamus</td><td>Similar signalling, much lower abundance.</td></tr>
+          <tr><td class="k">D2</td><td>D2-like</td><td>G<sub>i/o</sub> → less cAMP</td><td>Striatum indirect pathway; also autoreceptor</td><td>Reduces excitability; as an autoreceptor it cuts synthesis and release. Main antipsychotic target.</td></tr>
+          <tr><td class="k">D3</td><td>D2-like</td><td>G<sub>i/o</sub></td><td>Limbic striatum</td><td>High affinity; implicated in motivation and in impulse-control side effects of agonists.</td></tr>
+          <tr><td class="k">D4</td><td>D2-like</td><td>G<sub>i/o</sub></td><td>Prefrontal cortex, amygdala</td><td>Target of clozapine; polymorphisms studied in ADHD.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted">D2 receptors have much higher affinity for dopamine than D1. Tonic, low-level dopamine therefore acts mostly through D2, while only phasic bursts reach D1 — one receptor system listening for the background, the other for the news. It is a useful first approximation rather than a clean split.</p>
+  </section>
+
+  <section class="box">
+    <h2>Pharmacology</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Drug</th><th>Target</th><th>Action</th><th>Use or effect</th></tr></thead>
+        <tbody>
+          <tr><td class="k">Levodopa + carbidopa</td><td>Synthesis</td><td>Precursor that crosses the blood-brain barrier; carbidopa blocks peripheral conversion</td><td>Parkinson's disease. Other cells can convert it, but as the terminals that buffer it are lost the response follows each dose, giving wearing-off and dyskinesia.</td></tr>
+          <tr><td class="k">Haloperidol</td><td>D2</td><td>Antagonist</td><td>Antipsychotic. High D2 occupancy brings extrapyramidal symptoms and raised prolactin.</td></tr>
+          <tr><td class="k">Clozapine</td><td>D2 (fast off-rate), 5-HT2A, D4</td><td>Loose D2 binding, broad receptor profile</td><td>Treatment-resistant schizophrenia; few motor side effects but requires blood count monitoring.</td></tr>
+          <tr><td class="k">Aripiprazole</td><td>D2</td><td>Partial agonist</td><td>Stabiliser: damps excess signalling without shutting the system down.</td></tr>
+          <tr><td class="k">Methylphenidate</td><td>DAT, NET</td><td>Reuptake blocker</td><td>ADHD. Slower brain entry than cocaine, which matters for abuse liability.</td></tr>
+          <tr><td class="k">Amphetamine</td><td>VMAT2, DAT</td><td>Empties vesicles and reverses the transporter</td><td>ADHD, narcolepsy; releases dopamine independently of firing.</td></tr>
+          <tr><td class="k">Cocaine</td><td>DAT</td><td>Reuptake blocker</td><td>Strong reinforcement because the transient is amplified and prolonged.</td></tr>
+          <tr><td class="k">Selegiline, entacapone</td><td>MAO-B, COMT</td><td>Block breakdown</td><td>Adjuncts in Parkinson's disease. Selegiline slows the breakdown of the dopamine still being made; entacapone works in the periphery, sparing levodopa on its way to the brain so each dose lasts longer.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="box">
+    <h2>When it goes wrong</h2>
+    <ul class="plain">
+      <li><b>Parkinson's disease.</b> Loss of nigrostriatal terminals first and cell bodies later; motor symptoms begin only after most of the striatal dopamine is gone, because what survives compensates.</li>
+      <li><b>Schizophrenia.</b> Too much subcortical dopamine alongside too little in prefrontal cortex; treating one can worsen the other.</li>
+      <li><b>Addiction.</b> Drugs bypass the prediction-error logic and reinforce behaviour directly.</li>
+      <li><b>Impulse-control disorders.</b> D3-preferring agonists used in Parkinson's disease can trigger gambling or compulsive shopping — the treatment reproducing the disorder's mirror image.</li>
+    </ul>
+  </section>
+
+  <section class="box">
+    <h2>Related pages</h2>
+    <p class="nav"><a href="../glutamate/">Glutamate, the fast excitatory transmitter →</a><a href="../gaba/">GABA, the fast inhibitory transmitter →</a></p>
+  </section>
+
+  <footer><span>© 2026 Po-Han Chiang</span><span>Code licensed under <a href="https://github.com/phclab/class/blob/main/LICENSE">GPL-3.0-or-later</a></span><span><a href="../">Back to neurotransmission</a></span></footer>
+</div>
+<script type="module">
+import { synapse } from '../nt.js';
+synapse(document.getElementById('syn'), {"pre": "Dopaminergic varicosity", "post": "Striatal spiny neuron", "loader": "VMAT2", "synth": "tyrosine → L-DOPA → dopamine", "uptake": {"label": "DAT", "where": "pre"}, "receptors": [{"label": "D1", "type": "metab", "effect": "cAMP ↑"}, {"label": "D2", "type": "metab", "effect": "cAMP ↓"}], "volume": true, "astro": null, "pump": null, "capId": "syncap", "playId": "synplay", "replayId": "synreplay", "slowId": "synslow"});
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "ed90c191314a4bd1b54a671616598fbd"}'></script>
+</body>
+</html>

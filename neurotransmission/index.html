@@ -1,0 +1,135 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="google-site-verification" content="KViT-tN7lhzIxqualHoKOShjRrce-UIVY56-z95f7JE">
+<link rel="canonical" href="https://phclab.github.io/class/neurotransmission/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Neurotransmission">
+<meta property="og:description" content="How chemical synapses work, transmitter by transmitter: synthesis, vesicular loading, release, receptors, clearance, and the drugs that act on each step.">
+<meta property="og:url" content="https://phclab.github.io/class/neurotransmission/">
+<title>Neurotransmission</title>
+<meta name="description" content="How chemical synapses work, transmitter by transmitter: synthesis, vesicular loading, release, receptors, clearance, and the drugs that act on each step.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="nt.css">
+</head>
+<body class="mod">
+<div class="wrap">
+  <header>
+    <div class="toprow"><span class="eyebrow"><a href="../">Classroom for Neuroscience</a></span><a href="https://tw.linkedin.com/in/pohanc" rel="me">LinkedIn</a></div>
+    <h1>Neurotransmission</h1>
+    <p class="byline">by Po-Han Chiang @ NYCU</p>
+    <p class="lede">Almost every chemical synapse runs the same five steps: make the transmitter, load it into vesicles, release it, let it bind receptors, then clear it away. What changes from one transmitter to the next is which enzymes, which receptors, and which drugs can reach in and change the outcome.</p>
+  </header>
+
+  <section class="box">
+    <h2>The five steps, in every synapse</h2>
+    <div class="synapse">
+        <canvas id="syn" aria-label="Animated chemical synapse: vesicle fusion, diffusion, receptor opening and clearance"></canvas>
+        <div class="synbar"><button id="synplay" type="button">Pause</button><button id="synreplay" type="button">Replay</button><button id="synslow" type="button" aria-pressed="false">Slow motion</button><span class="cap" id="syncap"></span></div>
+      </div>
+    <ol class="steps">
+      <li><span><b>Synthesis.</b> Enzymes in the terminal (or in the cell body, for peptides) build the transmitter from a precursor the neuron takes up from blood or glia.</span></li>
+      <li><span><b>Vesicular loading.</b> A vesicular transporter uses the proton gradient across the vesicle membrane to concentrate the transmitter inside.</span></li>
+      <li><span><b>Release.</b> An action potential opens voltage-gated Ca²⁺ channels; Ca²⁺ triggers SNARE-mediated fusion within a fraction of a millisecond.</span></li>
+      <li><span><b>Receptor binding.</b> Ionotropic receptors open a channel in under a millisecond; metabotropic receptors start a G-protein cascade that lasts hundreds of milliseconds to minutes.</span></li>
+      <li><span><b>Clearance.</b> Reuptake transporters, enzymatic breakdown, or simple diffusion end the signal and recycle the building blocks.</span></li>
+    </ol>
+    <p class="muted">Almost every psychoactive drug, and a large share of neurological medicines, acts on one of these five steps in one transmitter system. The main exceptions are drugs that act directly on voltage-gated channels, and a few with intracellular targets such as lithium.</p>
+  </section>
+
+  <section class="box">
+    <h2>Transmitters</h2>
+    <p>Each page follows the same order: the five steps for that transmitter, a receptor table, and the drugs that act on it.</p>
+    <h3>Fast transmission</h3>
+    <div class="tiles">
+      <a class="tile exc" href="glutamate/">
+        <h3>Glutamate</h3>
+        <p>The main excitatory transmitter. AMPA and NMDA receptors, coincidence detection and excitotoxicity.</p>
+        <span class="go">Open →</span>
+      </a>
+      <a class="tile inh" href="gaba/">
+        <h3>GABA</h3>
+        <p>The main inhibitory transmitter. Chloride channels, benzodiazepines, and why the chloride gradient decides the sign.</p>
+        <span class="go">Open →</span>
+      </a>
+      <a class="tile inh" href="glycine/">
+        <h3>Glycine</h3>
+        <p>Inhibition in the spinal cord, and the co-agonist site, shared with D-serine, without which NMDA receptors cannot open.</p>
+        <span class="go">Open →</span>
+      </a>
+    </div>
+    <h3>Modulators</h3>
+    <div class="tiles">
+      <a class="tile exc" href="acetylcholine/">
+        <h3>Acetylcholine</h3>
+        <p>Fast at muscle, modulatory in cortex, and the classic case of a transmitter whose signal is ended by an enzyme in the cleft rather than by reuptake.</p>
+        <span class="go">Open →</span>
+      </a>
+      <a class="tile mod" href="dopamine/">
+        <h3>Dopamine</h3>
+        <p>Four pathways, D1 versus D2, and reward prediction error.</p>
+        <span class="go">Open →</span>
+      </a>
+      <a class="tile mod" href="noradrenaline/">
+        <h3>Noradrenaline</h3>
+        <p>Arousal and gain, and the one transmitter finished inside the vesicle.</p>
+        <span class="go">Open →</span>
+      </a>
+      <a class="tile mod" href="serotonin/">
+        <h3>Serotonin</h3>
+        <p>Fourteen receptors, one transporter, and why antidepressants take weeks.</p>
+        <span class="go">Open →</span>
+      </a>
+      <a class="tile mod" href="histamine/">
+        <h3>Histamine</h3>
+        <p>One nucleus that keeps the brain awake, and no high-affinity reuptake transporter.</p>
+        <span class="go">Open →</span>
+      </a>
+    </div>
+    <h3>Beyond the classical scheme</h3>
+    <div class="tiles">
+      <a class="tile mod" href="neuropeptides/">
+        <h3>Neuropeptides</h3>
+        <p>Made in the cell body, released only under load, never recovered.</p>
+        <span class="go">Open →</span>
+      </a>
+      <a class="tile mod" href="other-messengers/">
+        <h3>Messengers without a vesicle</h3>
+        <p>Purines, endocannabinoids travelling backwards, and nitric oxide passing straight through membranes.</p>
+        <span class="go">Open →</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="box">
+    <h2>Fast transmission versus modulation</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Feature</th><th>Fast transmission</th><th>Modulation</th></tr></thead>
+        <tbody>
+          <tr><td class="k">Transmitters</td><td>Glutamate, GABA, glycine</td><td>Dopamine, noradrenaline, serotonin, histamine, acetylcholine, peptides. Acetylcholine is the clearest exception: at the neuromuscular junction and in autonomic ganglia it is fast and ionotropic. Serotonin has one ionotropic receptor too, 5-HT3</td></tr>
+          <tr><td class="k">Receptor type</td><td>Mostly ionotropic (ligand-gated channels)</td><td>Mostly metabotropic (G-protein coupled)</td></tr>
+          <tr><td class="k">Onset</td><td>Under a millisecond</td><td>Tens of milliseconds to seconds</td></tr>
+          <tr><td class="k">Duration</td><td>Milliseconds</td><td>Hundreds of milliseconds to minutes</td></tr>
+          <tr><td class="k">Spatial reach</td><td>One synapse, tens of nanometres</td><td>Often volume transmission over micrometres</td></tr>
+          <tr><td class="k">What it does</td><td>Carries the message: drives or blocks spikes</td><td>Changes the rules: gain, threshold, plasticity, state</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted">A useful way to hold it: glutamate and GABA write the sentence, the modulators decide the tone of voice.</p>
+  </section>
+
+  <footer><span>© 2026 Po-Han Chiang</span><span>Code licensed under <a href="https://github.com/phclab/class/blob/main/LICENSE">GPL-3.0-or-later</a></span><span><a href="../">Back to the classroom</a></span></footer>
+</div>
+<script type="module">
+import { synapse } from './nt.js';
+synapse(document.getElementById('syn'), {"pre": "Presynaptic terminal", "post": "Postsynaptic cell", "loader": "vesicle loader", "synth": "precursor → transmitter", "uptake": {"label": "reuptake", "where": "pre"}, "receptors": [{"label": "ionotropic", "type": "iono", "ion": "ions"}, {"label": "metabotropic", "type": "metab", "effect": "cascade"}], "volume": false, "astro": null, "pump": null, "capId": "syncap", "playId": "synplay", "replayId": "synreplay", "slowId": "synslow"});
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "ed90c191314a4bd1b54a671616598fbd"}'></script>
+</body>
+</html>

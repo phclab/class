@@ -1,0 +1,132 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="google-site-verification" content="KViT-tN7lhzIxqualHoKOShjRrce-UIVY56-z95f7JE">
+<link rel="canonical" href="https://phclab.github.io/class/neurotransmission/neuropeptides/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Neuropeptides">
+<meta property="og:description" content="Neuropeptides: made in the cell body, released only when the neuron works hard, never taken back, and the target of opioids, triptan alternatives and orexin blockers.">
+<meta property="og:url" content="https://phclab.github.io/class/neurotransmission/neuropeptides/">
+<title>Neuropeptides</title>
+<meta name="description" content="Neuropeptides: made in the cell body, released only when the neuron works hard, never taken back, and the target of opioids, triptan alternatives and orexin blockers.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../nt.css">
+</head>
+<body class="mod">
+<div class="wrap">
+  <header>
+    <div class="toprow"><span class="eyebrow"><a href="../">Neurotransmission</a></span><a href="https://tw.linkedin.com/in/pohanc" rel="me">LinkedIn</a></div>
+    <h1>Neuropeptides</h1>
+    <p class="byline">by Po-Han Chiang @ NYCU</p>
+    <p><span class="tag">Slow · Modulatory · Co-released</span></p>
+    <p class="lede">A peptide cannot be finished in the terminal. Terminals do translate protein locally, but the cutting and tailoring a peptide needs happen only in the secretory pathway. It is transcribed, cut out of a larger precursor and packed into dense-core vesicles in the cell body, then carried down the axon — a journey of hours to days. Nothing recaptures it, so every molecule released is spent. That budget shapes everything about how peptides are used.</p>
+  </header>
+
+  <section class="box">
+    <h2>At a glance</h2>
+    <div class="facts">
+      <div class="fact"><span class="lab">Made in</span><span class="val">The cell body</span></div>
+      <div class="fact"><span class="lab">Stored in</span><span class="val">Dense-core vesicles</span></div>
+      <div class="fact"><span class="lab">Released by</span><span class="val">Bursts, high Ca²⁺</span></div>
+      <div class="fact"><span class="lab">Receptors</span><span class="val">Almost all GPCRs</span></div>
+      <div class="fact"><span class="lab">Affinity</span><span class="val">Nanomolar</span></div>
+      <div class="fact"><span class="lab">Cleared by</span><span class="val">Extracellular peptidases</span></div>
+    </div>
+    <p class="muted">Dense-core vesicles sit away from the active zone, so they need calcium to rise throughout the terminal rather than in a nanodomain next to a channel. A single spike will not do it; a burst will.</p>
+  </section>
+
+  <section class="box">
+    <h2>The five steps, rewritten for peptides</h2>
+    <div class="synapse">
+      <canvas id="syn" aria-label="Animated peptidergic terminal: dense-core vesicle release away from the active zone, distant GPCR targets, and breakdown by peptidases"></canvas>
+      <div class="synbar"><button id="synplay" type="button">Pause</button><button id="synreplay" type="button">Replay</button><button id="synslow" type="button" aria-pressed="false">Slow motion</button><span class="cap" id="syncap"></span></div>
+    </div>
+    <ol class="steps">
+      <li><span><b>Synthesis.</b> A gene is transcribed into a prepropeptide; signal peptidases cut it in the endoplasmic reticulum, and prohormone convertases finish the job in the Golgi and inside the young granule, where the acid switches them on. One precursor often yields several active peptides — proopiomelanocortin gives β-endorphin, ACTH and α-MSH.</span></li>
+      <li><span><b>Loading and transport.</b> The peptides are packed into dense-core vesicles at the Golgi and moved down the axon by kinesin. Refilling a terminal therefore takes hours, not seconds.</span></li>
+      <li><span><b>Release.</b> Only when calcium rises broadly, which in practice means high-frequency or bursting activity. Release sites are outside the active zone, so the peptide starts its journey already some distance from any receptor.</span></li>
+      <li><span><b>Receptor binding.</b> Almost every peptide receptor is a GPCR with nanomolar affinity, which is what lets a peptide work after diffusing micrometres and being diluted. Effects last seconds to minutes.</span></li>
+      <li><span><b>Clearance.</b> Extracellular peptidases such as neprilysin and aminopeptidases cut the peptide apart. There is no reuptake and no recycling: the terminal must wait for the next delivery from the cell body.</span></li>
+    </ol>
+  </section>
+
+  <section class="box">
+    <h2>Co-release: two messages from one terminal</h2>
+    <div class="grid2">
+      <div>
+        <h3>Different thresholds</h3>
+        <p>Most peptidergic neurons also release a classical transmitter. At low firing rates only the small clear vesicles at the active zone fuse, so the postsynaptic cell gets the fast message alone. As firing intensifies the dense-core vesicles join in, adding a slower, wider-reaching signal. The same axon says something different depending on how hard it is working.</p>
+      </div>
+      <div>
+        <h3>Examples worth knowing</h3>
+        <p>Substance P with glutamate in nociceptive afferents; enkephalin with GABA in the striatum; NPY with noradrenaline in sympathetic terminals; CGRP with acetylcholine at the neuromuscular junction. In each case the peptide is the part that only appears under load.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="box">
+    <h2>Peptides worth knowing</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Peptide</th><th>Receptor</th><th>Where it matters</th><th>Clinical hook</th></tr></thead>
+        <tbody>
+          <tr><td class="k">Enkephalin, dynorphin, β-endorphin</td><td>μ, δ, κ opioid (G<sub>i/o</sub>)</td><td>Pain pathways, striatum, reward</td><td>Every opioid analgesic imitates these; κ agonism produces dysphoria rather than euphoria.</td></tr>
+          <tr><td class="k">Substance P</td><td>NK1</td><td>Dorsal horn, vomiting centre</td><td>Aprepitant blocks NK1 for chemotherapy-induced nausea; NK1 antagonists failed as analgesics.</td></tr>
+          <tr><td class="k">CGRP</td><td>CGRP receptor (G<sub>s</sub>)</td><td>Trigeminal system, cranial vessels</td><td>Erenumab and the gepants prevent migraine by blocking it — the clearest modern peptide success.</td></tr>
+          <tr><td class="k">Orexin (hypocretin)</td><td>OX1, OX2</td><td>Lateral hypothalamus → arousal systems</td><td>Loss of these neurons causes narcolepsy with cataplexy; suvorexant blocks the receptors to treat insomnia.</td></tr>
+          <tr><td class="k">Oxytocin, vasopressin</td><td>OTR, V1a, V2</td><td>Hypothalamus, pituitary, and released within the brain</td><td>Labour and lactation; V2 in the kidney is the target of desmopressin and of tolvaptan.</td></tr>
+          <tr><td class="k">NPY</td><td>Y1, Y2, Y5</td><td>Hypothalamus, sympathetic terminals</td><td>One of the most powerful appetite stimulants known; also anxiolytic in animal work.</td></tr>
+          <tr><td class="k">Somatostatin</td><td>SST1–5</td><td>Cortical interneurons, pancreas, pituitary</td><td>Octreotide controls acromegaly and some neuroendocrine tumours.</td></tr>
+          <tr><td class="k">CCK</td><td>CCK1, CCK2</td><td>Gut and cortex</td><td>Satiety peripherally; CCK-B agonists reliably provoke panic attacks in the laboratory.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="box">
+    <h2>Pharmacology</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Drug</th><th>Target</th><th>Action</th><th>Use or effect</th></tr></thead>
+        <tbody>
+          <tr><td class="k">Morphine, fentanyl</td><td>μ opioid</td><td>Agonist</td><td>Analgesia, with respiratory depression and tolerance from the same receptor.</td></tr>
+          <tr><td class="k">Buprenorphine</td><td>μ opioid</td><td>Partial agonist, slow dissociation</td><td>Opioid dependence: a ceiling on respiratory depression makes it safer.</td></tr>
+          <tr><td class="k">Naloxone, naltrexone</td><td>μ opioid</td><td>Antagonist</td><td>Overdose reversal; naltrexone also reduces alcohol craving.</td></tr>
+          <tr><td class="k">Erenumab, rimegepant</td><td>CGRP or its receptor</td><td>Antibody or small-molecule antagonist</td><td>Migraine prevention and acute treatment.</td></tr>
+          <tr><td class="k">Suvorexant, lemborexant</td><td>OX1 and OX2</td><td>Antagonist</td><td>Insomnia, by removing the wake signal rather than adding sedation.</td></tr>
+          <tr><td class="k">Aprepitant</td><td>NK1</td><td>Antagonist</td><td>Delayed chemotherapy-induced nausea.</td></tr>
+          <tr><td class="k">Octreotide</td><td>SST2</td><td>Agonist</td><td>Acromegaly, variceal bleeding, secretory tumours.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="box">
+    <h2>When it goes wrong</h2>
+    <ul class="plain">
+      <li><b>Narcolepsy type 1.</b> Loss of about ninety per cent of the fifty to eighty thousand orexin neurons, almost certainly autoimmune, leaving sleep and wake boundaries unstable.</li>
+      <li><b>Migraine.</b> CGRP release from trigeminal fibres sensitises and dilates; blocking it prevents attacks without constricting vessels, unlike the triptans.</li>
+      <li><b>Opioid tolerance and dependence.</b> Receptor desensitisation and circuit adaptation to a signal the brain normally releases only in bursts.</li>
+      <li><b>Cachexia and obesity.</b> The hypothalamic peptides — NPY, AgRP, α-MSH — are where appetite is actually computed, and where several new drugs now act.</li>
+    </ul>
+  </section>
+
+  <section class="box">
+    <h2>Related pages</h2>
+    <p class="nav"><a href="../other-messengers/">Gases, lipids and purines →</a><a href="../dopamine/">Dopamine, often co-released with a peptide →</a></p>
+  </section>
+
+  <footer><span>© 2026 Po-Han Chiang</span><span>Code licensed under <a href="https://github.com/phclab/class/blob/main/LICENSE">GPL-3.0-or-later</a></span><span><a href="../">Back to neurotransmission</a></span></footer>
+</div>
+<script type="module">
+import { synapse } from '../nt.js';
+synapse(document.getElementById('syn'), {"pre": "Peptidergic terminal", "post": "Target neuron", "loader": "dense-core vesicles", "synth": "prepropeptide → active peptide (in the soma)", "uptake": {"label": "peptidases cut it apart", "where": "cleft"}, "receptors": [{"label": "NK1", "type": "metab", "effect": "PLC"}, {"label": "μ opioid", "type": "metab", "effect": "cAMP ↓"}, {"label": "CGRP", "type": "metab", "effect": "cAMP ↑"}], "volume": true, "astro": null, "pump": null, "capId": "syncap", "playId": "synplay", "replayId": "synreplay", "slowId": "synslow"});
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "ed90c191314a4bd1b54a671616598fbd"}'></script>
+</body>
+</html>

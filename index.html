@@ -25,6 +25,7 @@
   --tile:#ffffff;
   --ephys:#2a64a8;
   --model:#6b8f2a;
+  --chem:#8a5a2b;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -36,6 +37,7 @@
     --tile:#0f1416;
     --ephys:#6ea8f0;
     --model:#a9cf63;
+    --chem:#d3a373;
   }
 }
 :root[data-theme="dark"]{
@@ -47,6 +49,7 @@
   --tile:#0f1416;
   --ephys:#6ea8f0;
   --model:#a9cf63;
+  --chem:#d3a373;
 }
 *{box-sizing:border-box}
 body{background:var(--ground);color:var(--ink);margin:0;font:15px/1.6 "IBM Plex Sans",system-ui,sans-serif;padding:0 20px}
@@ -68,12 +71,14 @@ header{display:grid;gap:10px}
 .dot{width:10px;height:10px;border-radius:50%;flex:none}
 .ephys .dot{background:var(--ephys)}
 .model .dot{background:var(--model)}
+.chem .dot{background:var(--chem)}
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
 a.tile{display:grid;gap:6px;align-content:start;text-decoration:none;color:var(--ink);background:var(--tile);border:1px solid var(--line);border-radius:8px;padding:14px 16px;transition:border-color .15s}
 a.tile:hover{border-color:var(--accent)}
 a.tile:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .ephys{--accent:var(--ephys)}
 .model{--accent:var(--model)}
+.chem{--accent:var(--chem)}
 .tile p{color:var(--dim);font-size:14px}
 .go{font:500 12px "IBM Plex Mono",monospace;color:var(--accent)}
 .soon{display:grid;gap:6px;align-content:start;border:1px dashed var(--line);border-radius:8px;padding:14px 16px;color:var(--dim);font-size:14px}
@@ -103,6 +108,38 @@ footer a{color:inherit}
       <a class="tile" href="Myelin_Cable_Explorer/">
         <h3>Myelin Cable Explorer</h3>
         <p>An axon as a chain of RC circuits: see how myelin changes how far and how fast a voltage step or pulse spreads.</p>
+        <span class="go">Open →</span>
+      </a>
+      <a class="tile" href="HH_Model_Explorer/">
+        <h3>Hodgkin–Huxley Model Explorer</h3>
+        <p>Inject a current and watch m, h and n build an action potential: threshold, the refractory period and repetitive firing.</p>
+        <span class="go">Open →</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="box chem" aria-labelledby="chem-h">
+    <div class="boxhead"><span class="dot"></span><h2 id="chem-h">Neurotransmission</h2></div>
+    <p>How a chemical synapse works, transmitter by transmitter: the five steps, the receptors, and the drugs that act on each of them. Ten pages, from glutamate to the messengers that use no vesicle at all.</p>
+    <div class="tiles">
+      <a class="tile" href="neurotransmission/">
+        <h3>All transmitters</h3>
+        <p>The five steps every synapse shares, how fast transmission differs from modulation, and ten transmitters in the same format.</p>
+        <span class="go">Open →</span>
+      </a>
+      <a class="tile" href="neurotransmission/glutamate/">
+        <h3>Glutamate</h3>
+        <p>The main excitatory transmitter: AMPA and NMDA receptors, coincidence detection and excitotoxicity.</p>
+        <span class="go">Open →</span>
+      </a>
+      <a class="tile" href="neurotransmission/gaba/">
+        <h3>GABA</h3>
+        <p>The main inhibitory transmitter: chloride channels, benzodiazepines and why the chloride gradient decides the sign.</p>
+        <span class="go">Open →</span>
+      </a>
+      <a class="tile" href="neurotransmission/dopamine/">
+        <h3>Dopamine</h3>
+        <p>A modulator: four pathways, D1 versus D2, and reward prediction error.</p>
         <span class="go">Open →</span>
       </a>
     </div>

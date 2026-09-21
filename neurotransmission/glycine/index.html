@@ -1,0 +1,127 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="google-site-verification" content="KViT-tN7lhzIxqualHoKOShjRrce-UIVY56-z95f7JE">
+<link rel="canonical" href="https://phclab.github.io/class/neurotransmission/glycine/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Glycine">
+<meta property="og:description" content="Glycine, the fast inhibitory transmitter of the spinal cord and brainstem, and one of the two co-agonists NMDA receptors cannot open without.">
+<meta property="og:url" content="https://phclab.github.io/class/neurotransmission/glycine/">
+<title>Glycine</title>
+<meta name="description" content="Glycine, the fast inhibitory transmitter of the spinal cord and brainstem, and one of the two co-agonists NMDA receptors cannot open without.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../nt.css">
+</head>
+<body class="inh">
+<div class="wrap">
+  <header>
+    <div class="toprow"><span class="eyebrow"><a href="../">Neurotransmission</a></span><a href="https://tw.linkedin.com/in/pohanc" rel="me">LinkedIn</a></div>
+    <h1>Glycine</h1>
+    <p class="byline">by Po-Han Chiang @ NYCU</p>
+    <p><span class="tag">Fast · Inhibitory</span></p>
+    <p class="lede">Glycine is the simplest amino acid and it does two opposite jobs. In the spinal cord and brainstem it opens chloride channels and inhibits; everywhere else it occupies the NMDA receptor's co-agonist site, which must be filled — by glycine or by D-serine — before glutamate can open the channel at all.</p>
+  </header>
+
+  <section class="box">
+    <h2>At a glance</h2>
+    <div class="facts">
+      <div class="fact"><span class="lab">Class</span><span class="val">Amino acid</span></div>
+      <div class="fact"><span class="lab">Made from</span><span class="val">Serine</span></div>
+      <div class="fact"><span class="lab">Key enzyme</span><span class="val">SHMT</span></div>
+      <div class="fact"><span class="lab">Vesicle loader</span><span class="val">VIAAT (VGAT)</span></div>
+      <div class="fact"><span class="lab">Cleared by</span><span class="val">GlyT2, GlyT1</span></div>
+      <div class="fact"><span class="lab">Main territory</span><span class="val">Spinal cord, brainstem</span></div>
+    </div>
+    <p class="muted">Glycine and GABA share one vesicular transporter, so many spinal interneurons load both into the same vesicle and release them together. The postsynaptic cell decides which one matters by which receptors it puts in the membrane.</p>
+  </section>
+
+  <section class="box">
+    <h2>The five steps at a glycinergic synapse</h2>
+    <div class="synapse">
+      <canvas id="syn" aria-label="Animated glycinergic synapse: vesicle fusion, chloride channel opening and GlyT2 reuptake"></canvas>
+      <div class="synbar"><button id="synplay" type="button">Pause</button><button id="synreplay" type="button">Replay</button><button id="synslow" type="button" aria-pressed="false">Slow motion</button><span class="cap" id="syncap"></span></div>
+    </div>
+    <ol class="steps">
+      <li><span><b>Synthesis.</b> Serine hydroxymethyltransferase makes glycine from serine. Unlike GABA, glycine is also a general metabolite and a building block of proteins, so the transmitter pool is defined by where it is stored, not by its chemistry.</span></li>
+      <li><span><b>Loading.</b> VIAAT, the same vesicular transporter GABAergic neurons use, concentrates glycine into vesicles.</span></li>
+      <li><span><b>Release.</b> The usual Ca²⁺-triggered SNARE machinery. Renshaw cells and other spinal interneurons fire fast, so recurrent inhibition arrives back at the motor neuron within a few milliseconds of its own spike.</span></li>
+      <li><span><b>Receptor binding.</b> Glycine receptors are pentameric chloride channels built from α1–α3 and β subunits (other mammals have a fourth α gene; in humans it is a pseudogene), clustered opposite the terminal by gephyrin. The response looks like a GABA<sub>A</sub> response and follows the same chloride rules.</span></li>
+      <li><span><b>Clearance.</b> GlyT2 on the neuron recovers glycine to refill vesicles; GlyT1 on astrocytes keeps the ambient level low, which is how it controls the NMDA co-agonist site at nearby excitatory synapses.</span></li>
+    </ol>
+  </section>
+
+  <section class="box">
+    <h2>One molecule, two opposite roles</h2>
+    <div class="grid2">
+      <div>
+        <h3>The brake</h3>
+        <p>In the spinal cord, glycine carries the reciprocal inhibition that stops an antagonist muscle contracting while its partner shortens, and the recurrent inhibition that limits motor neuron firing. Remove it — with strychnine, or with tetanus toxin, which stops release from inhibitory terminals — and every stimulus produces a whole-body spasm.</p>
+      </div>
+      <div>
+        <h3>The permit</h3>
+        <p>At excitatory synapses glycine binds a separate site on the NMDA receptor's GluN1 subunit. Glutamate alone does nothing there; the channel needs both. In the forebrain D-serine, made by astrocytes and neurons, occupies most of that site, while glycine dominates in the brainstem and spinal cord.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="box">
+    <h2>Receptors and transporters</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Protein</th><th>Type</th><th>Subunits</th><th>Ions / role</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td class="k">GlyR</td><td>Ionotropic</td><td>α1–α3 with β</td><td>Cl⁻</td><td>Fast inhibition. α1β dominates adult spinal cord; α2 is the embryonic form; α3 sits in the dorsal horn and is switched off by inflammation.</td></tr>
+          <tr><td class="k">NMDA co-agonist site</td><td>Binding site</td><td>On GluN1</td><td>Permissive</td><td>Must be occupied by glycine or D-serine before glutamate can open the channel.</td></tr>
+          <tr><td class="k">GlyT2</td><td>Transporter</td><td>SLC6A5, neuronal</td><td>3 Na⁺ : 1 Cl⁻ : glycine</td><td>Refills the presynaptic pool. Its strong stoichiometry makes it essentially irreversible, which is why losing it causes disease.</td></tr>
+          <tr><td class="k">GlyT1</td><td>Transporter</td><td>SLC6A9, mostly glial</td><td>2 Na⁺ : 1 Cl⁻ : glycine</td><td>Sets the ambient glycine concentration and therefore the occupancy of the NMDA co-agonist site.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted">Gephyrin anchors both glycine receptors and many GABA<sub>A</sub> receptors. A scaffold protein, not a transmitter, decides how much inhibition a synapse can hold.</p>
+  </section>
+
+  <section class="box">
+    <h2>Pharmacology</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Drug or toxin</th><th>Target</th><th>Action</th><th>Use or effect</th></tr></thead>
+        <tbody>
+          <tr><td class="k">Strychnine</td><td>GlyR</td><td>Competitive antagonist</td><td>Convulsant poison: removes spinal inhibition, so any stimulus produces violent spasms with consciousness preserved.</td></tr>
+          <tr><td class="k">Tetanus toxin</td><td>VAMP in inhibitory terminals</td><td>Cleaves the SNARE, blocking release</td><td>Spastic paralysis. Botulinum toxin cleaves a different SNARE, SNAP-25, at the neuromuscular junction, giving the opposite picture.</td></tr>
+          <tr><td class="k">Bitopertin, sarcosine</td><td>GlyT1</td><td>Inhibit uptake, raising ambient glycine</td><td>Tested as a way to boost NMDA function in schizophrenia; phase III results were negative.</td></tr>
+          <tr><td class="k">Propofol, alcohol, some anaesthetics</td><td>GlyR</td><td>Positive allosteric modulation</td><td>Part of the immobilising, rather than hypnotic, component of anaesthesia.</td></tr>
+          <tr><td class="k">Ivermectin</td><td>GlyR and glutamate-gated Cl⁻ channels</td><td>Opens them directly</td><td>Antiparasitic: invertebrate channels are the real target, and a healthy blood-brain barrier keeps it away from ours.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="box">
+    <h2>When it goes wrong</h2>
+    <ul class="plain">
+      <li><b>Hyperekplexia.</b> Mutations in GLRA1, GLRB or GlyT2 leave too little glycinergic inhibition, so newborns stiffen and startle violently at a touch or a sound. Benzodiazepines help by substituting GABAergic inhibition.</li>
+      <li><b>Glycine encephalopathy.</b> A failure of the glycine cleavage system lets glycine accumulate; the damage comes largely from over-activating NMDA receptors through the co-agonist site, not from too much inhibition.</li>
+      <li><b>Chronic inflammatory pain.</b> Prostaglandin E₂ acts on EP2 receptors, and the PKA that follows phosphorylates the α3 glycine receptor in the dorsal horn and cuts its current, removing inhibition exactly where pain signals enter.</li>
+      <li><b>Tetanus and strychnine poisoning.</b> Two different ways to delete the same brake, both producing rigidity that spares awareness.</li>
+    </ul>
+  </section>
+
+  <section class="box">
+    <h2>Related pages</h2>
+    <p class="nav"><a href="../gaba/">GABA, its partner in the same vesicle →</a><a href="../glutamate/">Glutamate, whose NMDA receptors need a co-agonist →</a></p>
+  </section>
+
+  <footer><span>© 2026 Po-Han Chiang</span><span>Code licensed under <a href="https://github.com/phclab/class/blob/main/LICENSE">GPL-3.0-or-later</a></span><span><a href="../">Back to neurotransmission</a></span></footer>
+</div>
+<script type="module">
+import { synapse } from '../nt.js';
+synapse(document.getElementById('syn'), {"pre": "Glycinergic terminal", "post": "Postsynaptic cell", "loader": "VIAAT (VGAT)", "synth": "serine → glycine (SHMT)", "uptake": {"label": "GlyT2", "where": "pre"}, "receptors": [{"label": "GlyR", "type": "iono", "ion": "Cl⁻"}], "volume": false, "astro": null, "pump": null, "capId": "syncap", "playId": "synplay", "replayId": "synreplay", "slowId": "synslow"});
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "ed90c191314a4bd1b54a671616598fbd"}'></script>
+</body>
+</html>
