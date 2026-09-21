@@ -154,11 +154,20 @@ footer a{color:inherit}
         <button id="reset" type="button">Reset</button>
       </div>
     </div>
+    <div class="row" style="gap:8px">
+      <span class="muted">Neuron</span>
+      <div class="seg" role="group" aria-label="Model">
+        <button id="mdSquid" type="button" aria-pressed="true">Squid axon</button>
+        <button id="mdCort" type="button" aria-pressed="false">Cortical neuron</button>
+        <button id="mdFS" type="button" aria-pressed="false">Fast-spiking interneuron</button>
+      </div>
+      <span class="muted" id="mdNote"></span>
+    </div>
     <div class="controls">
       <div class="ctl"><label for="amp">Stimulus current <b id="ampOut"></b></label><input id="amp" type="range" min="0" max="40" step="0.2" value="20"></div>
       <div class="ctl"><label for="dur">Pulse width <b id="durOut"></b></label><input id="dur" type="range" min="0.1" max="5" step="0.1" value="0.5"></div>
       <div class="ctl" id="gapCtl" hidden><label for="gap">Interval between pulses <b id="gapOut"></b></label><input id="gap" type="range" min="1" max="30" step="0.5" value="8"></div>
-      <div class="ctl"><label for="temp">Temperature <b id="tempOut"></b></label><input id="temp" type="range" min="2" max="30" step="0.5" value="6.3"></div>
+      <div class="ctl"><label for="temp">Temperature <b id="tempOut"></b></label><input id="temp" type="range" min="2" max="42" step="0.5" value="6.3"></div>
       <div class="ctl"><label for="gna">Sodium conductance ḡ<sub>Na</sub> <b id="gnaOut"></b></label><input id="gna" type="range" min="0" max="180" step="1" value="120"></div>
       <div class="ctl"><label for="gk">Potassium conductance ḡ<sub>K</sub> <b id="gkOut"></b></label><input id="gk" type="range" min="0" max="80" step="1" value="36"></div>
     </div>
@@ -208,12 +217,27 @@ footer a{color:inherit}
   </section>
 
   <section class="box">
+    <h2>The same spike, seen as a trajectory</h2>
+    <div class="legend">
+      <span><span class="swatch" style="background:var(--v)"></span>trajectory</span>
+      <span><span class="swatch" style="background:var(--na)"></span>V-nullcline, no stimulus</span>
+      <span><span class="swatch" style="background:var(--stim)"></span>V-nullcline during the pulse</span>
+      <span><span class="swatch" style="background:var(--k)"></span>n-nullcline</span>
+    </div>
+    <canvas id="plotP" width="1000" height="420" aria-label="Phase plane of membrane potential against the potassium gating variable"></canvas>
+    <p class="muted">Because m is so much faster than h and n, the four equations can be squeezed into two: let m follow the voltage instantly and let h fall as n rises. What is left is a plane, and the spike becomes a loop around it. The curves are the nullclines — the places where V, or n, stops changing. They cross at the resting state, bottom left.</p>
+    <p class="verdict" id="phaseNote"></p>
+  </section>
+
+  <section class="box">
     <h2>What to try</h2>
     <ul class="plain">
       <li><b>Find threshold.</b> Drop the current until the spike disappears. Just below it the membrane makes a small bump and returns; just above it the full spike appears. Nothing in between — that is what all-or-none means, and the readout shows the smallest current that still fires.</li>
       <li><b>Refractory period.</b> Switch to two pulses and shorten the interval. Below about 3 ms the second pulse produces nothing at all, because h is still closed: this is the absolute refractory period. Between roughly 3 and 12 ms it fires but needs more current and the spike is smaller — relative refractoriness, set by h recovering and n still open.</li>
       <li><b>Repetitive firing.</b> Switch to sustained current and raise the amplitude. The axon fires a train whose rate rises with current, but only over a limited range — the spike is not a rate code with unlimited bandwidth.</li>
       <li><b>Block the channels.</b> TTX removes the sodium current and the spike with it; TEA removes the potassium current and the spike becomes long and broad, because repolarisation now depends on leak and on sodium inactivation alone.</li>
+      <li><b>Watch the loop close.</b> In the phase plane a subthreshold stimulus pushes the state a little to the right and it slides straight back down the left branch of the V-nullcline. A suprathreshold one carries it past the middle branch, and there is no way back except the long way round — up the right branch, across the top and down again. That detour is the action potential, and the middle branch is what "threshold" really means.</li>
+      <li><b>Swap the neuron.</b> The squid equations are the original, but no mammalian cell works that way. The cortical set (Traub and Miles) and the fast-spiking interneuron set (Wang and Buzsáki) use faster gates, a more negative potassium reversal potential and, in the interneuron, sodium activation so fast that m is treated as instantaneous. Compare the spike widths and the firing rates under a sustained current: the interneuron is built to fire hundreds of hertz without accommodating.</li>
       <li><b>Cool it down.</b> Hodgkin and Huxley worked at 6.3 °C. Raise the temperature and every rate constant speeds up by a factor of about 3 per 10 °C, so the spike gets narrower and faster; at mammalian temperature this squid model stops firing altogether, which is why warm-blooded axons need different channel kinetics.</li>
     </ul>
   </section>
@@ -247,6 +271,27 @@ rates × φ, with φ = 3<sup>(T − 6.3)/10</sup>
   </section>
 
   <section class="box">
+    <h2>Three sets of the same four equations</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Parameter</th><th class="r">Squid axon</th><th class="r">Cortical neuron</th><th class="r">Fast-spiking interneuron</th></tr></thead>
+        <tbody>
+          <tr><td>Source</td><td class="v">Hodgkin &amp; Huxley 1952</td><td class="v">Traub &amp; Miles 1991</td><td class="v">Wang &amp; Buzsáki 1996</td></tr>
+          <tr><td>ḡ<sub>Na</sub></td><td class="v">120</td><td class="v">100</td><td class="v">35 mS/cm²</td></tr>
+          <tr><td>ḡ<sub>K</sub></td><td class="v">36</td><td class="v">80</td><td class="v">9 mS/cm²</td></tr>
+          <tr><td>ḡ<sub>L</sub></td><td class="v">0.3</td><td class="v">0.1</td><td class="v">0.1 mS/cm²</td></tr>
+          <tr><td>E<sub>Na</sub></td><td class="v">+50</td><td class="v">+50</td><td class="v">+55 mV</td></tr>
+          <tr><td>E<sub>K</sub></td><td class="v">−77</td><td class="v">−100</td><td class="v">−90 mV</td></tr>
+          <tr><td>Resting potential</td><td class="v">−65</td><td class="v">−67</td><td class="v">−65 mV</td></tr>
+          <tr><td>Reference temperature</td><td class="v">6.3</td><td class="v">36</td><td class="v">37 °C</td></tr>
+          <tr><td>Sodium activation</td><td class="v">gated</td><td class="v">gated</td><td class="v">instantaneous</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted">The squid model does not simply scale to body temperature: raise its temperature towards 37 °C and the spike first narrows, then fails altogether, because every rate speeds up by the same factor and sodium inactivation catches the upstroke before it can regenerate. Mammalian channels solve this with different kinetics, not with a different temperature coefficient — which is why a separate parameter set is needed rather than a warmer squid.</p>
+  </section>
+
+  <section class="box">
     <h2>Constants</h2>
     <div class="tablewrap">
       <table>
@@ -259,6 +304,7 @@ rates × φ, with φ = 3<sup>(T − 6.3)/10</sup>
           <tr><td>E<sub>Na</sub></td><td class="v">+50 mV</td><td>Nernst potential for Na⁺ in squid axon.</td></tr>
           <tr><td>E<sub>K</sub></td><td class="v">−77 mV</td><td>Nernst potential for K⁺.</td></tr>
           <tr><td>E<sub>L</sub></td><td class="v">−54.4 mV</td><td>Chosen so the model rests near −65 mV.</td></tr>
+          <tr><td>Values shown</td><td class="v">squid</td><td>The other two sets are in the table above; the simulator switches all of them together.</td></tr>
           <tr><td>Integration</td><td class="v">dt = 5 µs</td><td>Exponential Euler for the gates, forward Euler for V.</td></tr>
         </tbody>
       </table>
@@ -270,21 +316,57 @@ rates × φ, with φ = 3<sup>(T − 6.3)/10</sup>
 </div>
 
 <script>
-const CM = 1, GL = 0.3, ENA = 50, EK = -77, EL = -54.4;
 const DT = 0.005, TEND = 50, SAVE = 4;
+const MODELS = {
+  squid: {
+    label: 'Squid giant axon', ref: 'Hodgkin & Huxley 1952',
+    cm:1, gNa:120, gK:36, gL:0.3, ENa:50, EK:-77, EL:-54.4,
+    Tref:6.3, Tdef:6.3, rest:-65, instantM:false, phi0:1,
+    gNaMax:180, gKMax:80, ampMax:60, ampDef:20,
+    am: v => Math.abs(v + 40) < 1e-6 ? 1 : 0.1 * (v + 40) / (1 - Math.exp(-(v + 40) / 10)),
+    bm: v => 4 * Math.exp(-(v + 65) / 18),
+    ah: v => 0.07 * Math.exp(-(v + 65) / 20),
+    bh: v => 1 / (1 + Math.exp(-(v + 35) / 10)),
+    an: v => Math.abs(v + 55) < 1e-6 ? 0.1 : 0.01 * (v + 55) / (1 - Math.exp(-(v + 55) / 10)),
+    bn: v => 0.125 * Math.exp(-(v + 65) / 80),
+  },
+  cortical: {
+    label: 'Mammalian cortical neuron', ref: 'Traub & Miles 1991',
+    cm:1, gNa:100, gK:80, gL:0.1, ENa:50, EK:-100, EL:-67,
+    Tref:36, Tdef:36, rest:-67, instantM:false, phi0:1,
+    gNaMax:200, gKMax:160, ampMax:80, ampDef:45,
+    am: v => Math.abs(v + 54) < 1e-6 ? 1.28 : 0.32 * (v + 54) / (1 - Math.exp(-(v + 54) / 4)),
+    bm: v => Math.abs(v + 27) < 1e-6 ? 1.4 : 0.28 * (v + 27) / (Math.exp((v + 27) / 5) - 1),
+    ah: v => 0.128 * Math.exp(-(v + 50) / 18),
+    bh: v => 4 / (1 + Math.exp(-(v + 27) / 5)),
+    an: v => Math.abs(v + 52) < 1e-6 ? 0.16 : 0.032 * (v + 52) / (1 - Math.exp(-(v + 52) / 5)),
+    bn: v => 0.5 * Math.exp(-(v + 57) / 40),
+  },
+  fs: {
+    label: 'Fast-spiking interneuron', ref: 'Wang & Buzsáki 1996',
+    cm:1, gNa:35, gK:9, gL:0.1, ENa:55, EK:-90, EL:-65,
+    Tref:37, Tdef:37, rest:-65, instantM:true, phi0:5,
+    gNaMax:80, gKMax:40, ampMax:60, ampDef:25,
+    am: v => Math.abs(v + 35) < 1e-6 ? 1 : 0.1 * (v + 35) / (1 - Math.exp(-(v + 35) / 10)),
+    bm: v => 4 * Math.exp(-(v + 60) / 18),
+    ah: v => 0.07 * Math.exp(-(v + 58) / 20),
+    bh: v => 1 / (1 + Math.exp(-(v + 28) / 10)),
+    an: v => Math.abs(v + 34) < 1e-6 ? 0.1 : 0.01 * (v + 34) / (1 - Math.exp(-(v + 34) / 10)),
+    bn: v => 0.125 * Math.exp(-(v + 44) / 80),
+  },
+};
 const $ = id => document.getElementById(id);
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const fmt = (x, d = 1) => Number(x).toFixed(d);
 
-const S = { amp:20, dur:0.5, gap:8, temp:6.3, gna:120, gk:36, mode:'single', ttx:false, tea:false };
+const S = { model:'squid', amp:20, dur:0.5, gap:8, temp:6.3, gna:120, gk:36,
+            mode:'single', ttx:false, tea:false };
 let sim = null;
 
-const am = v => Math.abs(v + 40) < 1e-6 ? 1 : 0.1 * (v + 40) / (1 - Math.exp(-(v + 40) / 10));
-const bm = v => 4 * Math.exp(-(v + 65) / 18);
-const ah = v => 0.07 * Math.exp(-(v + 65) / 20);
-const bh = v => 1 / (1 + Math.exp(-(v + 35) / 10));
-const an = v => Math.abs(v + 55) < 1e-6 ? 0.1 : 0.01 * (v + 55) / (1 - Math.exp(-(v + 55) / 10));
-const bn = v => 0.125 * Math.exp(-(v + 65) / 80);
+const M = () => MODELS[S.model];
+const am = v => M().am(v), bm = v => M().bm(v);
+const ah = v => M().ah(v), bh = v => M().bh(v);
+const an = v => M().an(v), bn = v => M().bn(v);
 
 function gate(x, a, b, phi) {
   const tau = 1 / (phi * (a + b)), inf = a / (a + b);
@@ -299,20 +381,22 @@ function stimAt(t, amp) {
 }
 
 function run(amp) {
-  const phi = Math.pow(3, (S.temp - 6.3) / 10);
+  const P = M();
+  const phi = P.phi0 * Math.pow(3, (S.temp - P.Tref) / 10);
   const gNa = S.ttx ? 0 : S.gna, gK = S.tea ? 0 : S.gk;
-  let v = -65, m = am(-65) / (am(-65) + bm(-65)), h = ah(-65) / (ah(-65) + bh(-65)),
-      n = an(-65) / (an(-65) + bn(-65));
+  const v0 = P.rest;
+  let v = v0, m = am(v0) / (am(v0) + bm(v0)), h = ah(v0) / (ah(v0) + bh(v0)),
+      n = an(v0) / (an(v0) + bn(v0));
   const steps = Math.round(TEND / DT);
   const out = { t:[], v:[], m:[], h:[], n:[], gna:[], gk:[], i:[] };
   let spikes = 0, up = false, peak = -100, latency = null, last = null, isi = [];
   for (let s = 0; s <= steps; s++) {
     const t = s * DT, I = stimAt(t, amp);
-    const iNa = gNa * m * m * m * h * (v - ENA);
-    const iK = gK * Math.pow(n, 4) * (v - EK);
-    const iL = GL * (v - EL);
-    v += DT * (I - iNa - iK - iL) / CM;
-    m = gate(m, am(v), bm(v), phi);
+    const iNa = gNa * m * m * m * h * (v - P.ENa);
+    const iK = gK * Math.pow(n, 4) * (v - P.EK);
+    const iL = P.gL * (v - P.EL);
+    v += DT * (I - iNa - iK - iL) / P.cm;
+    m = P.instantM ? am(v) / (am(v) + bm(v)) : gate(m, am(v), bm(v), phi);
     h = gate(h, ah(v), bh(v), phi);
     n = gate(n, an(v), bn(v), phi);
     if (v > peak) peak = v;
@@ -330,7 +414,7 @@ function run(amp) {
 
 function thresholdCurrent() {
   if (S.ttx) return null;
-  let lo = 0, hi = 60;
+  let lo = 0, hi = M().ampMax;
   if (run(hi).spikes === 0) return null;
   for (let k = 0; k < 22; k++) {
     const mid = (lo + hi) / 2;
@@ -369,11 +453,93 @@ function curve(g, xs, ys, color, W, H, pad, xmax, ymin, ymax, width) {
   g.stroke();
 }
 
+const mInf = v => am(v) / (am(v) + bm(v));
+const nInf = v => an(v) / (an(v) + bn(v));
+const hInf = v => ah(v) / (ah(v) + bh(v));
+const FIT = {};
+function hFit() {
+  if (FIT[S.model]) return FIT[S.model];
+  let sx = 0, sy = 0, sxx = 0, sxy = 0, k = 0;
+  for (let v = -80; v <= 20; v += 1) {
+    const x = nInf(v), y = hInf(v);
+    sx += x; sy += y; sxx += x * x; sxy += x * y; k++;
+  }
+  const c = (k * sxy - sx * sy) / (k * sxx - sx * sx);
+  const a = (sy - c * sx) / k;
+  return (FIT[S.model] = { a, c });
+}
+const hOfN = n => { const f = hFit(); return Math.max(0, Math.min(1, f.a + f.c * n)); };
+
+function vNullcline(I) {
+  const P = M();
+  const gNa = S.ttx ? 0 : S.gna, gK = S.tea ? 0 : S.gk;
+  const pts = [];
+  for (let v = -110; v <= 60; v += 0.5) {
+    const m3 = Math.pow(mInf(v), 3);
+    const f = n => I - gNa * m3 * hOfN(n) * (v - P.ENa) - gK * Math.pow(n, 4) * (v - P.EK) - P.gL * (v - P.EL);
+    let lo = 0, hi = 1;
+    if (f(lo) * f(hi) > 0) continue;
+    for (let k = 0; k < 40; k++) {
+      const mid = (lo + hi) / 2;
+      if (f(lo) * f(mid) <= 0) hi = mid; else lo = mid;
+    }
+    pts.push([v, (lo + hi) / 2]);
+  }
+  return pts;
+}
+
+function drawPhase() {
+  const cv = $('plotP'), g = cv.getContext('2d'), W = cv.width, H = cv.height;
+  const pad = { l:52, r:18, t:24, b:40 };
+  const VLO = Math.min(-90, M().EK - 10), VSPAN = 60 - VLO;
+  const X = v => pad.l + (v - VLO) / VSPAN * (W - pad.l - pad.r);
+  const Y = n => pad.t + (1 - n) * (H - pad.t - pad.b);
+  g.clearRect(0, 0, W, H);
+  g.fillStyle = css('--panel'); g.fillRect(0, 0, W, H);
+  g.strokeStyle = css('--grid'); g.lineWidth = 1;
+  g.fillStyle = css('--dim'); g.font = '12px "IBM Plex Mono", monospace';
+  for (let n = 0; n <= 1.0001; n += 0.25) {
+    g.beginPath(); g.moveTo(pad.l, Y(n)); g.lineTo(W - pad.r, Y(n)); g.stroke();
+    g.fillText(n.toFixed(2), pad.l - 40, Y(n) + 4);
+  }
+  for (let v = Math.ceil(VLO / 30) * 30; v <= 60; v += 30) {
+    g.beginPath(); g.moveTo(X(v), pad.t); g.lineTo(X(v), H - pad.b); g.stroke();
+    g.fillText(String(v), X(v) - 9, H - pad.b + 17);
+  }
+  g.fillText('membrane potential (mV)', (W - pad.l - pad.r) / 2 + pad.l - 70, H - 8);
+  g.fillText('n', pad.l - 40, pad.t - 8);
+
+  const poly = (pts, color, dash, width) => {
+    g.strokeStyle = color; g.lineWidth = width || 2; g.setLineDash(dash || []);
+    g.beginPath();
+    pts.forEach(([v, n], i) => (i ? g.lineTo(X(v), Y(n)) : g.moveTo(X(v), Y(n))));
+    g.stroke(); g.setLineDash([]);
+  };
+  poly(vNullcline(0), css('--na'), [], 2.2);
+  if (S.amp > 0) poly(vNullcline(S.amp), css('--stim'), [7, 5], 2);
+  const nn = [];
+  for (let v = VLO; v <= 60; v += 0.5) nn.push([v, nInf(v)]);
+  poly(nn, css('--k'), [4, 4], 2);
+
+  g.strokeStyle = css('--v'); g.lineWidth = 2.6; g.beginPath();
+  for (let i = 0; i < sim.v.length; i++) {
+    const px = X(sim.v[i]), py = Y(sim.n[i]);
+    i ? g.lineTo(px, py) : g.moveTo(px, py);
+  }
+  g.stroke();
+
+  const vr = M().rest;
+  g.fillStyle = css('--ink');
+  g.beginPath(); g.arc(X(vr), Y(nInf(vr)), 5, 0, Math.PI * 2); g.fill();
+  g.fillStyle = css('--dim'); g.fillText('rest', X(vr) + 10, Y(nInf(vr)) + 16);
+}
+
 function drawV() {
   const cv = $('plotV'), g = cv.getContext('2d'), W = cv.width, H = cv.height;
   const pad = { l:44, r:16, t:24, b:34 };
-  axes(g, W, H, pad, TEND, -90, 60, 30, 'mV');
-  const zy = pad.t + (1 - (0 + 90) / 150) * (H - pad.t - pad.b);
+  const lo = Math.min(-90, M().EK - 10);
+  axes(g, W, H, pad, TEND, lo, 60, 30, 'mV');
+  const zy = pad.t + (1 - (0 - lo) / (60 - lo)) * (H - pad.t - pad.b);
   g.strokeStyle = css('--thr'); g.setLineDash([6, 5]);
   g.beginPath(); g.moveTo(pad.l, zy); g.lineTo(W - pad.r, zy); g.stroke(); g.setLineDash([]);
   const maxI = Math.max(1, ...sim.i);
@@ -385,7 +551,7 @@ function drawV() {
     i ? g.lineTo(px, py) : g.moveTo(px, py);
   }
   g.stroke();
-  curve(g, sim.t, sim.v, css('--v'), W, H, pad, TEND, -90, 60, 2.6);
+  curve(g, sim.t, sim.v, css('--v'), W, H, pad, TEND, lo, 60, 2.6);
 }
 
 function drawGates() {
@@ -417,7 +583,7 @@ function render() {
   $('drugNote').textContent = S.ttx && S.tea ? 'Both currents blocked: only leak remains.'
     : S.ttx ? 'No sodium current: no regenerative upstroke.'
     : S.tea ? 'No potassium current: repolarisation is left to leak and sodium inactivation.' : '';
-  drawV(); drawGates(); drawCond();
+  drawV(); drawGates(); drawCond(); drawPhase();
 
   $('rSpikes').textContent = sim.spikes;
   $('rPeak').textContent = `${fmt(sim.peak, 1)} mV`;
@@ -443,6 +609,9 @@ function render() {
     msg = `One spike, peaking at <b>${fmt(sim.peak, 1)} mV</b>, <b>${fmt(sim.latency - 5, 2)} ms</b> after the stimulus began. Threshold here is about <b>${fmt(thr, 1)} µA/cm²</b>.`;
   }
   $('verdict').innerHTML = msg;
+  $('phaseNote').innerHTML = sim.spikes === 0
+    ? 'The trajectory stays near the resting corner and slides back: the stimulus never pushed it past the middle branch.'
+    : `The loop is the spike. It leaves along the bottom, climbs the right branch as n rises, and returns below rest — the afterhyperpolarisation — before creeping back to the crossing point.`;
 }
 
 function recompute() { sim = run(S.amp); render(); }
@@ -468,18 +637,38 @@ for (const [id, key] of [['ttx', 'ttx'], ['tea', 'tea']])
     $(id).setAttribute('aria-pressed', S[key]);
     recompute();
   });
+function setModel(k) {
+  S.model = k;
+  const P = MODELS[k];
+  for (const [id, key] of [['mdSquid', 'squid'], ['mdCort', 'cortical'], ['mdFS', 'fs']])
+    $(id).setAttribute('aria-pressed', key === k);
+  S.temp = P.Tdef; S.gna = P.gNa; S.gk = P.gK; S.amp = P.ampDef;
+  $('amp').max = P.ampMax; $('amp').value = P.ampDef;
+  $('gna').max = P.gNaMax; $('gna').value = P.gNa;
+  $('gk').max = P.gKMax; $('gk').value = P.gK;
+  $('temp').value = P.Tdef;
+  $('mdNote').textContent = P.label + ' · ' + P.ref;
+  recompute();
+}
+$('mdSquid').addEventListener('click', () => setModel('squid'));
+$('mdCort').addEventListener('click', () => setModel('cortical'));
+$('mdFS').addEventListener('click', () => setModel('fs'));
 $('reset').addEventListener('click', () => {
-  Object.assign(S, { amp:20, dur:0.5, gap:8, temp:6.3, gna:120, gk:36, ttx:false, tea:false });
-  for (const [id, v] of [['amp', 20], ['dur', 0.5], ['gap', 8], ['temp', 6.3], ['gna', 120], ['gk', 36]])
-    $(id).value = v;
+  Object.assign(S, { dur:0.5, gap:8, ttx:false, tea:false });
+  $('dur').value = 0.5; $('gap').value = 8;
   $('ttx').setAttribute('aria-pressed', false);
   $('tea').setAttribute('aria-pressed', false);
-  setMode('single');
+  S.mode = 'single';
+  for (const [id, key] of [['mSingle', 'single'], ['mPair', 'pair'], ['mHold', 'hold']])
+    $(id).setAttribute('aria-pressed', key === 'single');
+  $('gapCtl').hidden = true;
+  setModel(S.model);
 });
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => render());
 new MutationObserver(() => render()).observe(document.documentElement,
   { attributes:true, attributeFilter:['data-theme'] });
-recompute();
+const wanted = new URLSearchParams(location.search).get('model');
+setModel(MODELS[wanted] ? wanted : 'squid');
 </script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "ed90c191314a4bd1b54a671616598fbd"}'></script>
 </body>
