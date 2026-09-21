@@ -1,0 +1,144 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="google-site-verification" content="KViT-tN7lhzIxqualHoKOShjRrce-UIVY56-z95f7JE">
+<link rel="canonical" href="https://phclab.github.io/class/neurotransmission/protons/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Protons">
+<meta property="og:description" content="Every synaptic vesicle is acid, so every release is also a release of protons — and acid-sensing ion channels are built to read them.">
+<meta property="og:url" content="https://phclab.github.io/class/neurotransmission/protons/">
+<title>Protons</title>
+<meta name="description" content="Every synaptic vesicle is acid, so every release is also a release of protons — and acid-sensing ion channels are built to read them.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../nt.css">
+</head>
+<body class="exc">
+<div class="wrap">
+  <header>
+    <div class="toprow"><span class="eyebrow"><a href="../">Neurotransmission</a></span><a href="https://tw.linkedin.com/in/pohanc" rel="me">LinkedIn</a></div>
+    <h1>Protons</h1>
+    <p class="byline">by Po-Han Chiang @ NYCU</p>
+    <p><span class="tag">Fast · Excitatory · Co-released</span></p>
+    <p class="lede">The proton follows the five steps as faithfully as glutamate does. It is concentrated inside the vesicle, released by the same Ca²⁺-triggered fusion, bound by receptors built to detect it, and cleared by the buffers around it. The one step it skips is synthesis — nothing has to make a proton.</p>
+  </header>
+
+  <section class="box">
+    <h2>At a glance</h2>
+    <div class="facts">
+      <div class="fact"><span class="lab">Class</span><span class="val">Ion</span></div>
+      <div class="fact"><span class="lab">Made from</span><span class="val">Nothing; pumped in</span></div>
+      <div class="fact"><span class="lab">Loaded by</span><span class="val">V-type ATPase</span></div>
+      <div class="fact"><span class="lab">Vesicle pH</span><span class="val">5.6 Glu, 6.4 GABA</span></div>
+      <div class="fact"><span class="lab">Read by</span><span class="val">ASICs</span></div>
+      <div class="fact"><span class="lab">Cleared by</span><span class="val">Buffers, exchangers</span></div>
+    </div>
+    <p class="muted">The acid inside the vesicle is not a side effect of storage: it is the energy source for storage. VAChT and VMAT2 spend this gradient directly, two protons per molecule, which is why the proton arrives in the cleft alongside whatever it paid for. VGLUT is the exception: it runs mostly on the voltage across the vesicle membrane, as the glutamate page says.</p>
+  </section>
+
+  <section class="box">
+    <h2>The five steps at an acidifying synapse</h2>
+    <div class="synapse">
+      <canvas id="syn" aria-label="Animated synapse releasing protons onto acid-sensing ion channels"></canvas>
+      <div class="synbar"><button id="synplay" type="button">Pause</button><button id="synreplay" type="button">Replay</button><button id="synslow" type="button" aria-pressed="false">Slow motion</button><span class="cap" id="syncap"></span></div>
+    </div>
+    <ol class="steps">
+      <li><span><b>Synthesis.</b> There is none. Protons come from ordinary metabolism and are everywhere already; the synapse only has to move them.</span></li>
+      <li><span><b>Loading.</b> A V-type ATPase spends ATP to pump protons in: glutamatergic vesicles settle near pH 5.6, GABAergic ones nearer 6.4. The transporters then trade that acid away — two protons for each acetylcholine, two for each monoamine. Glutamate is the odd one out: VGLUT leans on the voltage across the vesicle membrane rather than on the pH gradient, and whether it moves protons at all is unresolved. Almost none of the protons inside are free: at pH 5.6 a vesicle holds less than one free H⁺, and what leaves is the thousand or so sitting on the buffers.</span></li>
+      <li><span><b>Release.</b> The same Ca²⁺-triggered SNARE fusion. At ribbon and calyceal synapses, where the cleft is enclosed, release acidifies it by a few tenths of a pH unit over tens of milliseconds. At two conventional terminals imaged with pH probes the cleft turned alkaline instead, so how general the acid transient is remains unsettled.</span></li>
+      <li><span><b>Receptor binding.</b> Acid-sensing ion channels open: ligand-gated channels whose ligand is H⁺, carrying mostly sodium, with the ASIC1a homomer passing some calcium too, and all of them desensitising within a second or two of the acid arriving. The same acid transient also inhibits NMDA receptors and some Ca²⁺ channels, so one release event both excites and damps, on different targets.</span></li>
+      <li><span><b>Clearance.</b> No transporter carries the proton back. Bicarbonate and carbonic anhydrase absorb it, diffusion out of the cleft dilutes it, and Na⁺/H⁺ exchangers on the surrounding membranes restore the resting pH.</span></li>
+    </ol>
+  </section>
+
+  <section class="box">
+    <h2>A transmitter, or the exhaust of loading a transmitter?</h2>
+    <div class="grid2">
+      <div>
+        <h3>The case against</h3>
+        <p>The proton is released whether or not it is wanted. Nothing regulates it independently of the transmitter it was traded for, there is no proton-specific vesicle, and the acidification is unavoidable given how vesicles are filled. On that reading it is exhaust, not a message.</p>
+      </div>
+      <div>
+        <h3>The case for</h3>
+        <p>There are receptors tuned to it, and ASIC1a sits in dendritic spines at the postsynaptic density, opposite the release sites. Blocking it removes a measurable component of the response — five to ten per cent of the postsynaptic current in amygdala and accumbens. A signal does not have to be purpose-built to be used: evolution reads whatever is reliably there.</p>
+      </div>
+    </div>
+    <p class="muted">Both statements are true at once, which is why the label is still argued. It is a good example for students of how the definition of a transmitter is a matter of criteria rather than of substance.</p>
+  </section>
+
+  <section class="box">
+    <h2>Receptors and other targets</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Target</th><th>Type</th><th>Where</th><th>What the proton does</th></tr></thead>
+        <tbody>
+          <tr><td class="k">ASIC1a</td><td>Ionotropic</td><td>Amygdala, accumbens, bed nucleus, cortex</td><td>Opens a mainly sodium current within milliseconds, then desensitises. The homomer also passes some Ca²⁺.</td></tr>
+          <tr><td class="k">ASIC1a/2a</td><td>Ionotropic</td><td>Widespread in brain</td><td>The common heteromer: less acid-sensitive than the homomer and slower to desensitise.</td></tr>
+          <tr><td class="k">ASIC3</td><td>Ionotropic</td><td>Sensory ganglia</td><td>Sustained current in acid; a main reason ischaemic and inflamed tissue hurts.</td></tr>
+          <tr><td class="k">GPR4, GPR65, GPR68</td><td>Metabotropic</td><td>Vasculature, immune cells, some neurons and glia</td><td>Proton-sensing G-protein coupled receptors; established in chemoreception and inflammation, less so at synapses.</td></tr>
+          <tr><td class="k">NMDA receptor</td><td>Modulated</td><td>Everywhere glutamate acts</td><td>Inhibited by acidification, with half-block near resting pH — so the proton transient blunts the glutamate signal released with it.</td></tr>
+          <tr><td class="k">Ca<sub>v</sub> channels</td><td>Modulated</td><td>Presynaptic terminals</td><td>Acid shifts their activation, which is how proton feedback suppresses release in the retina.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="box">
+    <h2>Where it matters</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Place</th><th>What happens</th><th>Evidence and caveats</th></tr></thead>
+        <tbody>
+          <tr><td class="k">Amygdala, accumbens</td><td>Released protons open postsynaptic ASIC1a, adding a small sodium and calcium current to the glutamatergic one</td><td>Deletion or psalmotoxin removes that component, and losing ASIC1a blunts fear behaviour. The same test in hippocampus came out negative — blocking ASIC1a there left long-term potentiation and spatial memory intact — so how far the mechanism reaches is argued.</td></tr>
+          <tr><td class="k">Retina</td><td>Horizontal cells acidify the cleft and suppress the cone's Ca²⁺ channels — negative feedback that shapes centre-surround vision</td><td>The leading chemical account, but an ephaptic voltage effect runs alongside it, and the protons themselves may arrive indirectly, from ATP released through pannexin channels and broken down in the cleft.</td></tr>
+          <tr><td class="k">Sensory endings</td><td>ASIC3 and TRPV1 respond to tissue acid</td><td>Ischaemia, inflammation and lactic acid all hurt through this route; here the acid is metabolic, not synaptic.</td></tr>
+          <tr><td class="k">Brainstem chemoreceptors</td><td>Sensed by pH-sensitive potassium channels such as TASK-2, which acid closes, and by proton-activated receptors such as GPR4</td><td>Sets the drive to breathe. Inhaled CO₂ separately acidifies amygdala and bed nucleus and evokes fear in mice through ASIC1a — a different circuit, and only a suggestive link to human panic.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="box">
+    <h2>Pharmacology</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Agent</th><th>Target</th><th>Action</th><th>Use or effect</th></tr></thead>
+        <tbody>
+          <tr><td class="k">Amiloride</td><td>ASICs, and epithelial Na⁺ channels</td><td>Non-selective blocker</td><td>A potassium-sparing diuretic; in the laboratory, the blunt first test that a current is proton-gated.</td></tr>
+          <tr><td class="k">Psalmotoxin (PcTx1)</td><td>ASIC1a</td><td>Selective peptide inhibitor from tarantula venom; it shifts the channel's gating rather than plugging the pore</td><td>The reagent behind much of the amygdala work, and protective in animal models of ischaemic acidosis.</td></tr>
+          <tr><td class="k">APETx2</td><td>ASIC3</td><td>Peptide blocker, from a sea anemone</td><td>Used to separate acid pain from other nociceptive routes.</td></tr>
+          <tr><td class="k">Carbon dioxide, inhaled</td><td>The whole system</td><td>Acidifies brain tissue within seconds</td><td>A laboratory stimulus for panic, and the reason a rebreathing test feels the way it does.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted">There is still no clinical drug aimed at ASICs. The channels are attractive targets for stroke and for pain, and nothing has yet made it through.</p>
+  </section>
+
+  <section class="box">
+    <h2>When it goes wrong</h2>
+    <ul class="plain">
+      <li><b>Ischaemic acidosis.</b> When blood flow stops, lactic acid drops tissue pH by a full unit or more. ASIC1a opens for as long as the acid lasts and admits Ca²⁺, adding an injury route that glutamate blockers do not touch.</li>
+      <li><b>Inflammatory and ischaemic pain.</b> ASIC3 in sensory endings reports the acid directly, which is why angina and claudication hurt in the way they do.</li>
+      <li><b>Panic and CO₂ sensitivity.</b> Inhaling carbon dioxide provokes panic far more readily in people with panic disorder. In mice the fear response needs ASIC1a in amygdala and bed nucleus; in humans the link is still inference, and people who have lost both amygdalae can still be panicked by CO₂.</li>
+      <li><b>Seizure termination.</b> Seizures acidify tissue, and that acid appears to help end them — one reason breathing quickly, which lowers CO₂ and raises pH, can prolong an absence seizure.</li>
+    </ul>
+  </section>
+
+  <section class="box">
+    <h2>Related pages</h2>
+    <p class="nav"><a href="../glutamate/">Glutamate, released from the same vesicles →</a><a href="../other-messengers/">Messengers that really do break the scheme →</a></p>
+  </section>
+
+  <footer><span>© 2026 Po-Han Chiang</span><span>Code licensed under <a href="https://github.com/phclab/class/blob/main/LICENSE">GPL-3.0-or-later</a></span><span><a href="../">Back to neurotransmission</a></span></footer>
+</div>
+<script type="module">
+import { synapse } from '../nt.js';
+synapse(document.getElementById('syn'), {"caps": ["1 · nothing is made: protons are already there", "2 · the V-ATPase pumps them into the vesicle", "3 · Ca²⁺ enters, the vesicle fuses", "4 · the acid opens ASICs", "5 · buffers and exchangers restore the pH"], "pre": "Presynaptic terminal", "post": "Postsynaptic cell", "loader": "V-ATPase", "synth": "no synthesis: protons are pumped in", "uptake": {"label": "buffers and exchangers", "where": "cleft"}, "receptors": [{"label": "ASIC1a", "type": "iono", "ion": "Na⁺"}, {"label": "ASIC1a/2a", "type": "iono", "ion": "Na⁺"}, {"label": "GPR68", "type": "metab", "effect": "cascade"}], "volume": false, "astro": null, "pump": null, "capId": "syncap", "playId": "synplay", "replayId": "synreplay", "slowId": "synslow"});
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "ed90c191314a4bd1b54a671616598fbd"}'></script>
+</body>
+</html>

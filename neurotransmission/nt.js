@@ -348,7 +348,7 @@ export function synapse(canvas, cfg) {
     for (let i = 0; i < PHASES.length; i++) if (t >= PHASES[i].t) ph = i;
     if (ph !== phase) {
       phase = ph;
-      if (cap) cap.textContent = PHASES[ph].cap;
+      if (cap) cap.textContent = (cfg.caps && cfg.caps[ph]) || PHASES[ph].cap;
       steps.forEach((li, i) => li.classList.toggle('on', i === PHASES[ph].step));
     }
 
