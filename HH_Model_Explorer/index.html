@@ -252,15 +252,17 @@ x<sub>∞</sub> = α / (α + β) &nbsp;&nbsp;·&nbsp;&nbsp; τ = 1 / (α + β) &
     </div>
     <div class="ctl" style="max-width:420px"><label for="gv">Holding potential <b id="gvOut"></b></label><input id="gv" type="range" min="-90" max="40" step="1" value="-65"></div>
     <div class="readout">
-      <div class="fact"><span class="lab">α, opening rate</span><span class="val" id="gAlpha">—</span></div>
-      <div class="fact"><span class="lab">β, closing rate</span><span class="val" id="gBeta">—</span></div>
+      <div class="fact"><span class="lab" id="gAlphaLab">α, opening rate</span><span class="val" id="gAlpha">—</span></div>
+      <div class="fact"><span class="lab" id="gBetaLab">β, closing rate</span><span class="val" id="gBeta">—</span></div>
       <div class="fact"><span class="lab">x<sub>∞</sub>, fraction open</span><span class="val" id="gInf">—</span></div>
       <div class="fact"><span class="lab">τ, time constant</span><span class="val" id="gTau">—</span></div>
+      <div class="fact"><span class="lab" id="gPhiLab">φ, rate scaling</span><span class="val" id="gPhi">—</span></div>
     </div>
+    <p class="muted" id="phiNote"></p>
     <div class="grid2">
       <div>
         <h3>Rates against voltage</h3>
-        <div class="legend"><span><span class="swatch" style="background:var(--na)"></span>α, opening</span><span><span class="swatch" style="background:var(--k)"></span>β, closing</span></div>
+        <div class="legend"><span><span class="swatch" style="background:var(--na)"></span>α, opening</span><span><span class="swatch" style="background:var(--k)"></span>β, closing</span><span>both × φ</span></div>
         <canvas id="plotAB" width="620" height="240" aria-label="Opening and closing rate constants against voltage"></canvas>
       </div>
       <div>
@@ -315,7 +317,7 @@ x<sub>∞</sub> = α / (α + β) &nbsp;&nbsp;·&nbsp;&nbsp; τ = 1 / (α + β) &
       <div class="fact"><span class="lab">τ recovered</span><span class="val" id="cTau">—</span></div>
       <div class="fact"><span class="lab">α from the step</span><span class="val" id="cAlpha">—</span></div>
       <div class="fact"><span class="lab">β from the step</span><span class="val" id="cBeta">—</span></div>
-      <div class="fact"><span class="lab">α, β from the equations</span><span class="val" id="cCheck">—</span></div>
+      <div class="fact"><span class="lab">α, β from the equations, × φ</span><span class="val" id="cCheck">—</span></div>
     </div>
     <p class="muted" id="clampNote"></p>
     <p>Running the procedure on the model returns the constants the model was built from, which is only a consistency check. The real work was doing it on an axon, in 1952, with records photographed off an oscilloscope, curves fitted to the data by hand, and the equations then integrated on a hand-cranked calculator over about three weeks — and then showing that the resulting equations, integrated numerically, produced an action potential nobody had put into them.</p>
@@ -766,9 +768,20 @@ function gateStep(dt) {
 function renderGates() {
   const g0 = GATES[G.key], phi = gatePhi();
   const a = phi * g0.a(G.v), b = phi * g0.b(G.v);
+  const P = M(), a0 = g0.a(G.v), b0 = g0.b(G.v);
   $('gvOut').textContent = `${G.v} mV`;
   $('gAlpha').textContent = `${a.toFixed(2)} /ms`;
   $('gBeta').textContent = `${b.toFixed(2)} /ms`;
+  $('gPhi').textContent = phi.toFixed(2);
+  const scaled = Math.abs(phi - 1) > 0.005;
+  $('gAlphaLab').textContent = scaled ? `α = φ × ${a0.toFixed(2)}` : 'α, opening rate';
+  $('gBetaLab').textContent = scaled ? `β = φ × ${b0.toFixed(2)}` : 'β, closing rate';
+  $('phiNote').innerHTML = scaled
+    ? `The rates shown are the ones the model actually runs at: the published values for ${P.label.toLowerCase()} multiplied by φ = ${phi.toFixed(2)}`
+      + (Math.abs(S.temp - P.Tref) > 0.05
+        ? `, which is ${P.phi0} for this model scaled by the temperature, ${fmt(S.temp, 1)} °C against its reference ${P.Tref} °C.`
+        : `, the model's own scaling factor. Change the temperature and φ changes with it.`)
+    : `φ = 1 here, so these are the published rate constants unchanged: ${P.ref} worked at ${P.Tref} °C.`;
   $('gInf').textContent = (a / (a + b)).toFixed(3);
   $('gTau').textContent = `${(1 / (a + b)).toFixed(2)} ms`;
   $('bankNote').textContent = g0.note;
