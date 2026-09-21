@@ -486,8 +486,7 @@ function run(amp, probe) {
   const steps = Math.round(TEND / DT);
   const out = { t:[], v:[], m:[], h:[], n:[], gna:[], gk:[], i:[] };
   let spikes = 0, up = false, peak = -1e3, latency = null, last = null, isi = [];
-  const PROM = 30, floor = P.rest + 10;
-  let vmin = v, vmax = -1e3;
+  let sub = 0, oscMin = v, oscMax = v;
   for (let s = 0; s <= steps; s++) {
     const t = s * DT, I = stimAt(t, amp);
     const iNa = gNa * m * m * m * h * (v - P.ENa);
@@ -498,17 +497,18 @@ function run(amp, probe) {
     h = gate(h, ah(v), bh(v), phi);
     n = gate(n, an(v), bn(v), phi);
     if (v > peak) peak = v;
-    if (!up) {
-      if (v < vmin) vmin = v;
-      if (v > vmin + PROM && v > floor && gNa * m * m * m * h > P.gL) {
-        up = true; vmax = v; spikes++;
-        if (latency === null) latency = t;
-        if (last !== null) isi.push(t - last);
-        last = t;
-      }
-    } else {
-      if (v > vmax) vmax = v;
-      if (v < vmax - PROM) { up = false; vmin = v; }
+    if (!up && v > 0 && gNa * m * m * m * h > P.gL) {
+      up = true; spikes++;
+      if (latency === null) latency = t;
+      if (last !== null) isi.push(t - last);
+      last = t;
+    }
+    if (up && v < -20) up = false;
+    if (v > oscMax) oscMax = v;
+    if (v < oscMin) oscMin = v;
+    if (v < oscMax - 15) {
+      if (oscMax < 0 && oscMax > oscMin + 20 && oscMax > P.rest + 10) sub++;
+      oscMin = v; oscMax = v;
     }
     if (!probe && s % SAVE === 0) {
       out.t.push(t); out.v.push(v); out.m.push(m); out.h.push(h); out.n.push(n);
@@ -519,6 +519,7 @@ function run(amp, probe) {
   out.rate = isi.length ? 1000 / (isi.reduce((a, b) => a + b, 0) / isi.length) : null;
   out.lastSpike = last;
   out.blocked = last !== null && TEND - last > 10;
+  out.sub = sub;
   return out;
 }
 
@@ -960,20 +961,23 @@ function render() {
   $('rThr').textContent = thr === null ? '—' : `${fmt(thr, 1)} µA/cm²`;
 
   let msg;
+  const osc = sim.sub >= 3
+    ? ` The membrane is oscillating <b>${sim.sub}</b> times without ever reaching 0 mV, so by that criterion none of them counts as a spike.`
+    : '';
   if (sim.spikes === 0) {
-    msg = S.ttx ? 'With sodium channels blocked the membrane only charges passively, however much current you inject.'
+    msg = (S.ttx ? 'With sodium channels blocked the membrane only charges passively, however much current you inject.'
       : thr === null ? 'No current in the tested range fires this membrane.'
-      : `No spike: this stimulus is below threshold. About <b>${fmt(thr, 1)} µA/cm²</b> would be enough.`;
+      : `No spike: this stimulus is below threshold. About <b>${fmt(thr, 1)} µA/cm²</b> would be enough.`) + osc;
   } else if (S.mode === 'pair') {
     msg = sim.spikes === 1
       ? `Only the first pulse fired. At an interval of <b>${fmt(S.gap, 1)} ms</b> the membrane is still refractory: h has not recovered and n is still open.`
       : `Both pulses fired, <b>${fmt(S.gap, 1)} ms</b> apart. Shorten the interval to find where the second one fails.`;
   } else if (S.mode === 'hold') {
     msg = sim.rate === null
-      ? `A single spike, then nothing: this current is enough to fire once but not to fire repeatedly.`
+      ? `A single spike, then nothing: this current is enough to fire once but not to fire repeatedly.` + osc
       : sim.blocked
-      ? `It fired <b>${sim.spikes}</b> times and then stopped, with the membrane stuck depolarised. This is depolarisation block: too much current inactivates sodium faster than it can recover. Lower the current to get a steady train.`
-      : `Repetitive firing at <b>${fmt(sim.rate, 0)} Hz</b>. Raise the current and the rate climbs, but not without limit.`;
+      ? `It fired <b>${sim.spikes}</b> times and then stopped, with the membrane stuck depolarised. This is depolarisation block: too much current inactivates sodium faster than it can recover. Lower the current to get a steady train.` + osc
+      : `Repetitive firing at <b>${fmt(sim.rate, 0)} Hz</b>. Raise the current and the rate climbs, but not without limit.` + osc;
   } else {
     msg = `One spike, peaking at <b>${fmt(sim.peak, 1)} mV</b>, <b>${fmt(sim.latency - 5, 2)} ms</b> after the stimulus began. `
       + (thr === null ? 'No current in the tested range fires it repeatedly.' : `Threshold here is about <b>${fmt(thr, 1)} µA/cm²</b>.`);
