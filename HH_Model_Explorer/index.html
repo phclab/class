@@ -121,6 +121,23 @@ canvas{width:100%;display:block}
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
 .eq{font:14px/1.9 "IBM Plex Mono",monospace;background:var(--field);border:1px solid var(--line);
   border-radius:8px;padding:12px 14px;overflow-x:auto}
+.eqlive{display:grid;gap:6px}
+.eqlive .rates{font-size:12.5px;line-height:1.8;color:var(--dim)}
+.eqv{padding:1px 5px;border-radius:5px;transition:background .15s,color .15s}
+.eqv b{font-weight:600}
+.eqv.hot{background:var(--v);color:var(--panel)}
+.term.off{opacity:.35;text-decoration:line-through}
+details.fold{border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+details.fold>summary{cursor:pointer;padding:11px 14px;font:500 14px "IBM Plex Sans",sans-serif;
+  list-style:none;display:flex;align-items:center;gap:9px}
+details.fold>summary::-webkit-details-marker{display:none}
+details.fold>summary::before{content:"▸";color:var(--dim);font-size:12px}
+details.fold[open]>summary::before{content:"▾"}
+details.fold>summary:hover{color:var(--v)}
+details.fold .body{padding:0 14px 14px;display:grid;gap:12px}
+details.fold .body p,details.fold .body li{max-width:74ch}
+.code{font:12.5px/1.75 "IBM Plex Mono",monospace;background:var(--field);border:1px solid var(--line);
+  border-radius:7px;padding:10px 12px;overflow-x:auto;white-space:pre}
 .tablewrap{overflow-x:auto}
 table{border-collapse:collapse;width:100%;min-width:520px;font-size:14px}
 th{font:500 12px "IBM Plex Mono",monospace;color:var(--dim);text-align:left;padding:0 10px 8px}
@@ -170,6 +187,22 @@ footer a{color:inherit}
       </div>
       <span class="muted" id="mdNote"></span>
     </div>
+    <div class="eq eqlive">
+      <div class="eqline">C<sub>m</sub> dV/dt =
+        <span class="eqv" id="eqI">I<sub>stim</sub></span> −
+        <span class="term" id="termNa"><span class="eqv" id="eqGNa">ḡ<sub>Na</sub></span> m³h (V − E<sub>Na</sub>)</span> −
+        <span class="term" id="termK"><span class="eqv" id="eqGK">ḡ<sub>K</sub></span> n⁴ (V − E<sub>K</sub>)</span> −
+        ḡ<sub>L</sub>(V − E<sub>L</sub>)</div>
+      <div class="eqline">dx/dt = <span class="eqv" id="eqPhi">φ</span> [ α<sub>x</sub>(V)(1 − x) − β<sub>x</sub>(V) x ] &nbsp; for x = m, h, n</div>
+      <div class="eqline"><span id="eqStimSingle">I<sub>stim</sub>(t) = <span class="eqv" id="eqI2">A</span> for t₀ ≤ t &lt; t₀ + <span class="eqv" id="eqDur">w</span></span><span id="eqStimPair">, and again at t₀ + <span class="eqv" id="eqGap">Δ</span></span><span id="eqStimHold">I<sub>stim</sub>(t) = <span class="eqv" id="eqI3">A</span> for t ≥ t₀</span></div>
+      <div class="eqline rates">
+        α<sub>m</sub> = <span id="eqAm"></span> &nbsp;·&nbsp; β<sub>m</sub> = <span id="eqBm"></span><br>
+        α<sub>h</sub> = <span id="eqAh"></span> &nbsp;·&nbsp; β<sub>h</sub> = <span id="eqBh"></span><br>
+        α<sub>n</sub> = <span id="eqAn"></span> &nbsp;·&nbsp; β<sub>n</sub> = <span id="eqBn"></span><br>
+        <span class="eqv" id="eqPhi2">φ</span> = 3<sup>(T − T<sub>ref</sub>)/10</sup>
+      </div>
+    </div>
+    <p class="muted">The exponents are not theory. Hodgkin and Huxley chose m³h and n⁴ because those powers fitted the sigmoid onset of the measured currents; the interpretation as independent gating particles came afterwards, and the modern reading is that they approximate the sequential conformational changes of the channel protein.</p>
     <div class="controls">
       <div class="ctl"><label for="amp">Stimulus current <b id="ampOut"></b></label><input id="amp" type="range" min="0" max="40" step="0.2" value="20"></div>
       <div class="ctl"><label for="dur">Pulse width <b id="durOut"></b></label><input id="dur" type="range" min="0.1" max="5" step="0.1" value="0.5"></div>
@@ -224,7 +257,9 @@ footer a{color:inherit}
   </section>
 
   <section class="box">
-    <h2>The same spike, seen as a trajectory</h2>
+    <details class="fold" id="phasefold">
+      <summary>The same spike, seen as a trajectory</summary>
+      <div class="body">
     <div class="legend">
       <span><span class="swatch" style="background:var(--v)"></span>trajectory</span>
       <span><span class="swatch" style="background:var(--na)"></span>V-nullcline, no stimulus</span>
@@ -234,6 +269,8 @@ footer a{color:inherit}
     <canvas id="plotP" width="1000" height="420" aria-label="Phase plane of membrane potential against the potassium gating variable"></canvas>
     <p class="muted">m is so fast that it can follow the voltage instantly, which removes one equation. h and n then turn out to move in step — h falls roughly as n rises — which removes another; that is an empirical fit, not a consequence of the speeds. What is left is a plane, and the spike becomes a loop around it. The curves are the nullclines — the places where V, or n, stops changing. They cross at the resting state, bottom left.</p>
     <p class="verdict" id="phaseNote"></p>
+      </div>
+    </details>
   </section>
 
   <section class="box" id="gating">
@@ -287,18 +324,141 @@ x<sub>∞</sub> = α / (α + β) &nbsp;&nbsp;·&nbsp;&nbsp; τ = 1 / (α + β) &
         <p>Look at the middle panel. For m, τ is under a millisecond everywhere, so m is always nearly at x<sub>∞</sub> — it tracks the voltage. For h and n, τ is several milliseconds near rest, so they lag. Depolarisation therefore opens m immediately, and only later closes h and opens n. That lag is the action potential.</p>
       </div>
     </div>
+    <details class="fold" id="numerics">
+      <summary>How m, h and n are actually computed</summary>
+      <div class="body">
+        <p>They are not solved for. They are integrated, one small step at a time, and the voltage and the gates take turns feeding each other. The step here is 5 µs.</p>
+        <p><b>Start at rest.</b> Each gate begins at the value it would settle to if the voltage were held at the model's resting potential:</p>
+        <div class="code">m = α<sub>m</sub>(V₀) / (α<sub>m</sub>(V₀) + β<sub>m</sub>(V₀))   and the same for h and n</div>
+        <p><b>Then, every step, move the voltage using the present gates:</b></p>
+        <div class="code">i<sub>Na</sub> = ḡ<sub>Na</sub> · m³h · (V − E<sub>Na</sub>)
+i<sub>K</sub>  = ḡ<sub>K</sub> · n⁴ · (V − E<sub>K</sub>)
+i<sub>L</sub>  = ḡ<sub>L</sub> · (V − E<sub>L</sub>)
+V  ← V + dt · (I − i<sub>Na</sub> − i<sub>K</sub> − i<sub>L</sub>) / C<sub>m</sub></div>
+        <p><b>Then move the gates using the new voltage:</b></p>
+        <div class="code">τ  = 1 / (φ · (α(V) + β(V)))
+x<sub>∞</sub> = α(V) / (α(V) + β(V))
+x  ← x<sub>∞</sub> + (x − x<sub>∞</sub>) · e<sup>−dt/τ</sup></div>
+        <p>That last line is the exact solution of dx/dt = (x<sub>∞</sub> − x)/τ for a voltage held constant across the step, not a difference approximation. It matters: in the fast-spiking model at 37 °C τ<sub>m</sub> is about 0.03 ms, far shorter than some of the steps a browser would otherwise take, and a plain forward step would blow up where this one cannot.</p>
+        <p>Then back to the voltage, with the new gates. Nothing in the loop knows what an action potential is; the spike is what the loop does.</p>
+        <p>Two details worth knowing. In the fast-spiking model m is not integrated at all — it is set to m<sub>∞</sub>(V) every step, because Wang and Buzsáki treated sodium activation as instantaneous. And φ multiplies only the gate rates, never the voltage equation: warming the model speeds the gates while leaving the membrane's charging time alone, which is exactly why the squid set stops firing near body temperature.</p>
+        <p class="muted">Accuracy: against a fourth-order Runge–Kutta reference at a tenth of the step, the spike peak here differs by 0.11 mV for the squid set, 0.34 mV for the cortical set and 0.14 mV for the fast-spiking set, and the spike width by under one per cent.</p>
+      </div>
+    </details>
   </section>
 
   <section class="box" id="clamp">
     <h2>Where those numbers came from</h2>
-    <p>None of the constants in those rate equations was derived. Hodgkin and Huxley measured them. The membrane was held at a fixed voltage with a feedback amplifier — the voltage clamp — so that the only thing changing was the conductance. Sodium and potassium currents were separated by replacing the sodium in the seawater with choline: what remained was the potassium current, and the difference gave sodium. Dividing each current by its driving force gave a conductance, and the shape of that conductance over time is what the gating variables were invented to describe.</p>
+    <p>None of the constants in those rate equations was derived. Hodgkin and Huxley measured them, in a series of papers published in 1952, on the giant axon of the squid <i>Loligo forbesi</i> at Plymouth. The axon is 400–800 µm across, wide enough to thread electrodes down its middle: two fine silver wires wound on a glass capillary and pushed twenty or thirty millimetres along the axis, one to pass current and one to measure voltage, in a method taken from Cole and from Marmont. Those internal wires are what make the rest possible: it short-circuits the inside so the whole length of membrane sits at one potential, and a feedback amplifier then holds that potential wherever the experimenter puts it and reports the current needed to keep it there. Without the clamp, voltage and conductance chase each other and neither can be measured; with it, voltage is the knob and current is the reading.</p>
+    <p><b>The raw record.</b> Step the membrane from rest to, say, 0 mV and hold it. The current shows three things in succession: a brief capacitive surge as the membrane charges, then an <i>inward</i> current that grows and dies away within a few milliseconds although the voltage is still being held, then an <i>outward</i> current that rises with a delay and stays up until the step ends. Everything that follows is an attempt to account for those two later components.</p>
     <ol class="steps">
-      <li><span><b>Step the voltage and record.</b> Potassium conductance rises with a delay and stays up; sodium conductance rises faster, then falls even though the voltage is still held — that decline is what inactivation means.</span></li>
-      <li><span><b>Take the fourth root.</b> A delayed, S-shaped rise is exactly what four independent particles in series produce. Plot g<sub>K</sub>(t)/g<sub>K,∞</sub> to the power of one quarter and the S-shape straightens into a single exponential.</span></li>
-      <li><span><b>Read off the two numbers.</b> The final level gives n<sub>∞</sub>, and the time to cover 63 per cent of the distance from the starting level to that final level gives τ.</span></li>
-      <li><span><b>Convert.</b> α = n<sub>∞</sub>/τ and β = (1 − n<sub>∞</sub>)/τ. One clamp step yields one pair of rate constants, at one voltage.</span></li>
-      <li><span><b>Repeat and fit.</b> Do it at twenty voltages, plot α and β against voltage, and draw smooth curves through the points. Those curves — chosen to fit, not deduced — are the equations at the top of this page.</span></li>
+      <li><span><b>Separate the two currents.</b> Replace the sodium in the seawater with choline, an inert cation. The axon stops being excitable but holds its resting potential, and the inward hump vanishes — not because sodium has stopped moving, but because with no sodium outside it can only move outward, so the record now shows an early outward hump instead. Comparing the two records is what separates the currents: assume potassium behaves identically in both solutions and that sodium only changes in size and sign, and the sodium current falls out of the difference, leaving potassium as the remainder. Neither current was ever recorded on its own.</span></li>
+      <li><span><b>Turn current into conductance.</b> A current is not a property of the membrane — it depends on how far the voltage sits from the ion's equilibrium potential. Divide by that driving force, g = I / (V − E), taking E<sub>Na</sub> from the step at which the transient reverses direction. Now each clamp step has given two curves against time: g<sub>K</sub>(t), which rises with an S-shaped delay and stays up, and g<sub>Na</sub>(t), which rises faster and then falls while the voltage is still held. That decline is what inactivation means, and it is why sodium needs two variables and potassium only one.</span></li>
+      <li><span><b>Straighten the potassium curve.</b> A delayed S-shaped rise is what several independent particles that must all be open produce. Raise g<sub>K</sub>(t)/g<sub>K,∞</sub> to the power of one quarter and the S-shape flattens into a simple exponential approach to its final level. The fourth power was a convenience, not a result: Hodgkin and Huxley wrote that a fifth or sixth power would have fitted slightly better, but not well enough to be worth the extra complication. The same trick with a cube root does the equivalent job for the rising phase of sodium, which is where m³ comes from.</span></li>
+      <li><span><b>Read off two numbers, convert to two rates.</b> The final level gives n<sub>∞</sub> and the time to cover 63 per cent of the change gives τ. Then α = n<sub>∞</sub>/τ and β = (1 − n<sub>∞</sub>)/τ. One clamp step yields one pair of rate constants, at one voltage. Inactivation needs a second protocol: hold a conditioning voltage, then step to a fixed test voltage and see how much sodium current survives — that gives h<sub>∞</sub>(V), and the recovery between paired steps gives τ<sub>h</sub>.</span></li>
+      <li><span><b>Repeat, plot, and draw a curve.</b> Do it at a dozen or more voltages on one axon, pool the points from several axons, plot α and β against voltage, and draw smooth functions through them. Those functions — chosen to fit, not deduced — are the equations at the top of this page.</span></li>
     </ol>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>What was recorded</th><th>What it gave</th><th>Which constants came out</th></tr></thead>
+        <tbody>
+          <tr><td>g<sub>K</sub>(t) at each clamp step, fourth root taken</td><td class="v">n<sub>∞</sub>(V), τ<sub>n</sub>(V)</td><td>α<sub>n</sub> and β<sub>n</sub>: the 0.01, the 10 mV offset, the 0.125 and the 80 mV slope</td></tr>
+          <tr><td>g<sub>Na</sub>(t) rising phase, cube root taken</td><td class="v">m<sub>∞</sub>(V), τ<sub>m</sub>(V)</td><td>α<sub>m</sub> and β<sub>m</sub>: the 0.1, the 25 mV offset, the 4 and the 18 mV slope</td></tr>
+          <tr><td>g<sub>Na</sub>(t) decline, and the two-pulse protocol</td><td class="v">h<sub>∞</sub>(V), τ<sub>h</sub>(V)</td><td>α<sub>h</sub> and β<sub>h</sub>: the 0.07, the 20 mV slope, the 30 mV offset</td></tr>
+          <tr><td>Peak conductance at strong depolarisation</td><td class="v">ḡ<sub>Na</sub>, ḡ<sub>K</sub></td><td>120 and 36 mS/cm², rounded from a spread of axons</td></tr>
+          <tr><td>The step at which the early transient reverses</td><td class="v">E<sub>Na</sub></td><td>+50 mV</td></tr>
+          <tr><td>Nothing: the potassium current is outward everywhere they could reach and never reversed</td><td class="v">E<sub>K</sub></td><td>−77 mV, a chosen value rather than a measured one</td></tr>
+          <tr><td>The small residue left once the two currents were accounted for</td><td class="v">ḡ<sub>L</sub>, E<sub>L</sub></td><td>0.3 mS/cm², admitted to be poorly determined; E<sub>L</sub> = −54.4 mV was then back-calculated so that the total ionic current is zero at rest, which is why it alone carries three decimals</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <details class="fold" id="origeq">
+      <summary>Why the 1952 equations look different from the ones above</summary>
+      <div class="body">
+        <p>Hodgkin and Huxley did not write voltage as we do. Theirs was the displacement from the resting potential, with the sign reversed, so depolarisation was negative. In their notation:</p>
+        <div class="code">α<sub>m</sub> = 0.1(V + 25)/(e<sup>(V+25)/10</sup> − 1)     β<sub>m</sub> = 4 e<sup>V/18</sup>
+α<sub>h</sub> = 0.07 e<sup>V/20</sup>                  β<sub>h</sub> = 1/(e<sup>(V+30)/10</sup> + 1)
+α<sub>n</sub> = 0.01(V + 10)/(e<sup>(V+10)/10</sup> − 1)     β<sub>n</sub> = 0.125 e<sup>V/80</sup></div>
+        <p>Substitute V = −(V<sub>m</sub> + 65) and every one of them turns into the modern form printed at the top of this page — the two sets agree to the last digit at every voltage. So the 65 that appears everywhere is not a measurement at all: it is the squid axon's resting potential, carried in by the change of variable. The offsets follow from it too: 40 = 65 − 25, 55 = 65 − 10, 35 = 65 − 30.</p>
+        <p>What was actually fitted is the rest: the amplitudes 0.1, 4, 0.07, 0.125, 0.01, the offsets 25, 10, 30, and the slope factors 10, 18, 20, 80 millivolts per e-fold. The exponential shapes were not arbitrary — a charged particle sitting in the membrane field should distribute exponentially with voltage — but the numbers came off the graphs.</p>
+      </div>
+    </details>
+  </section>
+
+  <section class="box" id="bench">
+    <h2>Run the experiment</h2>
+    <p>This is the protocol itself. Hold the membrane wherever you like, step it to a series of command potentials, and record what the amplifier has to supply to hold each one. Nothing here is fitted: these are the model's own currents, drawn the way an oscilloscope drew them in 1952 — one sweep per step, all superimposed on the same frame. Temperature and the two maximum conductances come from the sliders in the first panel. Capacity current is left out, as it was subtracted from the original records; the leak is left out too, which the 1952 records could not do — there it stayed in, a small term Hodgkin and Huxley admitted was not well determined.</p>
+    <div class="row" style="gap:8px">
+      <span class="muted">Neuron</span>
+      <div class="seg" role="group" aria-label="Model">
+        <button id="bmSquid" type="button" aria-pressed="true">Squid axon</button>
+        <button id="bmCort" type="button" aria-pressed="false">Cortical neuron</button>
+        <button id="bmFS" type="button" aria-pressed="false">Fast-spiking interneuron</button>
+      </div>
+      <span class="muted" id="bmNote"></span>
+    </div>
+    <div class="row" style="gap:8px">
+      <div class="seg" role="group" aria-label="Blockers">
+        <button id="bdNone" type="button" aria-pressed="true">Normal seawater</button>
+        <button id="bdTTX" type="button" aria-pressed="false">TTX: block Na⁺</button>
+        <button id="bdTEA" type="button" aria-pressed="false">TEA: block K⁺</button>
+        <button id="bdBoth" type="button" aria-pressed="false">Both</button>
+      </div>
+      <div class="seg" role="group" aria-label="What to plot">
+        <button id="bsI" type="button" aria-pressed="true">Current</button>
+        <button id="bsG" type="button" aria-pressed="false">Conductance</button>
+      </div>
+    </div>
+    <div class="controls">
+      <div class="ctl"><label for="bhold">Holding potential <b id="bholdOut"></b></label><input id="bhold" type="range" min="-120" max="-20" step="1" value="-65"></div>
+      <div class="ctl"><label for="bsel">Highlight the step to <b id="bselOut"></b></label><input id="bsel" type="range" min="-70" max="60" step="10" value="0"></div>
+    </div>
+    <div class="legend"><span>one sweep per command potential, <b style="color:var(--k)">−70 mV</b> through <b style="color:var(--na)">+60 mV</b></span><span id="bLegend"></span></div>
+    <canvas id="plotFam" width="1000" height="340" aria-label="Family of clamp records, one sweep per command potential"></canvas>
+    <div class="grid2">
+      <div>
+        <h3>The current–voltage relation</h3>
+        <div class="legend"><span><span class="swatch" style="background:var(--na)"></span>early peak</span><span><span class="swatch" style="background:var(--k)"></span>late, at the end of the step</span></div>
+        <canvas id="plotIV" width="620" height="260" aria-label="Early peak and late current against command potential"></canvas>
+      </div>
+      <div>
+        <h3>What the holding potential decides</h3>
+        <div class="legend"><span><span class="swatch" style="background:var(--na)"></span>peak inward current for a test step to 0 mV</span><span><span class="swatch" style="background:var(--h)"></span>h<sub>∞</sub> from the equations</span></div>
+        <canvas id="plotAvail" width="620" height="260" aria-label="Peak sodium current against holding potential, against the steady state inactivation curve"></canvas>
+      </div>
+    </div>
+    <h3>Getting m<sub>∞</sub> out, even though sodium inactivates</h3>
+    <p class="muted">The peak of g<sub>Na</sub> is already too small: h starts falling before m has finished rising, so no record ever shows what sodium would have done on its own. The way round it is to use the decay. By then m is steady, so the fall is h alone — fit it with an exponential and carry that exponential back to the start of the step. The intercept is the conductance there would have been without inactivation. Divide by ḡ<sub>Na</sub> and by h at the holding potential, take the cube root, and you have m<sub>∞</sub> at that command potential. Hold near −120 mV and h ≈ 1, so the second correction almost vanishes.</p>
+    <div class="grid2">
+      <div>
+        <h3>The extrapolation, at the marked step</h3>
+        <div class="legend"><span><span class="swatch" style="background:var(--na)"></span>g<sub>Na</sub>(t) as recorded</span><span><span class="swatch" style="background:var(--stim)"></span>exponential fitted to the decay, carried back to t = 0</span></div>
+        <canvas id="plotMfit" width="620" height="260" aria-label="Sodium conductance with an exponential fitted to its decay and extrapolated back to the start of the step"></canvas>
+      </div>
+      <div>
+        <h3>The activation curve it builds</h3>
+        <div class="legend"><span><span class="swatch" style="background:var(--na)"></span>m<sub>∞</sub> recovered from each step</span><span><span class="swatch" style="background:var(--ink)"></span>m<sub>∞</sub>(V) from the equations</span></div>
+        <canvas id="plotMinf" width="620" height="260" aria-label="Recovered steady state activation against command potential, against the equation"></canvas>
+      </div>
+    </div>
+    <div class="readout">
+      <div class="fact"><span class="lab">m<sub>∞</sub> recovered, marked step</span><span class="val" id="bMinf">—</span></div>
+      <div class="fact"><span class="lab">m<sub>∞</sub> from the equations</span><span class="val" id="bMinfEq">—</span></div>
+      <div class="fact"><span class="lab">τ<sub>h</sub> recovered</span><span class="val" id="bTauH">—</span></div>
+      <div class="fact"><span class="lab">τ<sub>h</sub> from the equations</span><span class="val" id="bTauHEq">—</span></div>
+    </div>
+    <p class="muted" id="mNote"></p>
+    <div class="readout">
+      <div class="fact"><span class="lab">Sodium available at the hold</span><span class="val" id="bAvail">—</span></div>
+      <div class="fact"><span class="lab">Early peak, marked step</span><span class="val" id="bPeak">—</span></div>
+      <div class="fact"><span class="lab">Late current, marked step</span><span class="val" id="bLate">—</span></div>
+      <div class="fact"><span class="lab">Where the early peak reverses</span><span class="val" id="bRev">—</span></div>
+      <div class="fact"><span class="lab">E<sub>Na</sub> in this model</span><span class="val" id="bENa">—</span></div>
+    </div>
+    <p class="muted" id="benchNote"></p>
+    <p>Hodgkin and Huxley had no channel blockers: tetrodotoxin came a decade later, and tetraethylammonium reached the squid giant axon five years later. They removed the sodium current by replacing the sodium in the seawater with choline, which does the same thing to the record. Every button here is a shortcut to a record they had to obtain by changing the solution around the axon.</p>
+
+    <h3>Fit one step</h3>
     <div class="ctl" style="max-width:420px"><label for="cv">Step from rest to <b id="cvOut"></b></label><input id="cv" type="range" min="-50" max="40" step="1" value="0"></div>
     <div class="grid2">
       <div>
@@ -333,7 +493,7 @@ x<sub>∞</sub> = α / (α + β) &nbsp;&nbsp;·&nbsp;&nbsp; τ = 1 / (α + β) &
       <li><b>Watch the loop close.</b> In the phase plane a subthreshold stimulus pushes the state a little to the right and it slides straight back down the left branch of the V-nullcline. A suprathreshold one carries it past the middle branch, and there is no way back except the long way round — up the right branch, across the top and down again. That detour is the action potential, and the middle branch is what acts as the threshold here — the line the stimulus has to clear.</li>
       <li><b>Hold a voltage and watch the particles.</b> In the gating panel, step the holding potential from −65 mV to 0 mV. The m squares flip open almost at once; the h squares empty slowly; n fills slowly. Those three time constants, read off the middle graph, are all you need to understand why the spike rises, stops and repolarises in that order.</li>
       <li><b>Swap the neuron.</b> The squid equations are the original, but no mammalian cell works that way. The cortical set (Traub and Miles) and the fast-spiking interneuron set (Wang and Buzsáki) use faster gates, a more negative potassium reversal potential and, in the interneuron, sodium activation so fast that m is treated as instantaneous. Compare the spike widths under a sustained current: both mammalian sets fire far faster and far more briefly than the squid axon. Neither accommodates, because these reduced sets carry no adaptation currents — exactly what a real pyramidal cell adds and a fast-spiking interneuron largely does without.</li>
-      <li><b>Cool it down.</b> Hodgkin and Huxley worked at 6.3 °C. Raise the temperature and every rate constant speeds up by a factor of about 3 per 10 °C, so the spike gets narrower and faster; at mammalian temperature this squid model stops firing altogether, which is why warm-blooded axons need different channel kinetics.</li>
+      <li><b>Cool it down.</b> Hodgkin and Huxley recorded between about 3 and 11 °C, with a few runs far warmer, and reduced everything to a standard 6.3 °C. Raise the temperature and every rate constant speeds up by a factor of about 3 per 10 °C, so the spike gets narrower and faster; at mammalian temperature this squid model stops firing altogether, which is why warm-blooded axons need different channel kinetics.</li>
     </ul>
   </section>
 
@@ -352,19 +512,6 @@ x<sub>∞</sub> = α / (α + β) &nbsp;&nbsp;·&nbsp;&nbsp; τ = 1 / (α + β) &
     <p class="muted">m is fast and h and n are slow: that single separation of timescales is the whole mechanism. Take it away — make h as fast as m — and the model no longer spikes.</p>
   </section>
 
-  <section class="box">
-    <h2>The equations</h2>
-    <div class="eq">
-C<sub>m</sub> dV/dt = I<sub>stim</sub> − ḡ<sub>Na</sub>m³h(V − E<sub>Na</sub>) − ḡ<sub>K</sub>n⁴(V − E<sub>K</sub>) − ḡ<sub>L</sub>(V − E<sub>L</sub>)<br>
-dx/dt = α<sub>x</sub>(V)(1 − x) − β<sub>x</sub>(V)x &nbsp; for x = m, h, n<br>
-α<sub>m</sub> = 0.1(V + 40) / (1 − e<sup>−(V+40)/10</sup>) &nbsp;&nbsp; β<sub>m</sub> = 4 e<sup>−(V+65)/18</sup><br>
-α<sub>h</sub> = 0.07 e<sup>−(V+65)/20</sup> &nbsp;&nbsp; β<sub>h</sub> = 1 / (1 + e<sup>−(V+35)/10</sup>)<br>
-α<sub>n</sub> = 0.01(V + 55) / (1 − e<sup>−(V+55)/10</sup>) &nbsp;&nbsp; β<sub>n</sub> = 0.125 e<sup>−(V+65)/80</sup><br>
-rates × φ, with φ = 3<sup>(T − 6.3)/10</sup><br>
-<span style="color:var(--dim)">those rate equations are the squid set; the other two neurons use their own, listed further down</span>
-    </div>
-    <p class="muted">The exponents are not theory. Hodgkin and Huxley chose m³h and n⁴ because those powers fitted the sigmoid onset of the measured currents; the interpretation as independent gating particles came afterwards, and the modern reading is that they approximate the sequential conformational changes of the channel protein.</p>
-  </section>
 
   <section class="box">
     <h2>Three sets of the same four equations</h2>
@@ -419,6 +566,9 @@ const MODELS = {
     cm:1, gNa:120, gK:36, gL:0.3, ENa:50, EK:-77, EL:-54.4,
     Tref:6.3, Tdef:6.3, rest:-65, instantM:false, phi0:1,
     gNaMax:180, gKMax:80, ampMax:60, ampDef:20,
+    eqs: { am:'0.1(V + 40) / (1 − e<sup>−(V+40)/10</sup>)', bm:'4 e<sup>−(V+65)/18</sup>',
+           ah:'0.07 e<sup>−(V+65)/20</sup>', bh:'1 / (1 + e<sup>−(V+35)/10</sup>)',
+           an:'0.01(V + 55) / (1 − e<sup>−(V+55)/10</sup>)', bn:'0.125 e<sup>−(V+65)/80</sup>' },
     am: v => Math.abs(v + 40) < 1e-6 ? 1 : 0.1 * (v + 40) / (1 - Math.exp(-(v + 40) / 10)),
     bm: v => 4 * Math.exp(-(v + 65) / 18),
     ah: v => 0.07 * Math.exp(-(v + 65) / 20),
@@ -431,6 +581,9 @@ const MODELS = {
     cm:1, gNa:100, gK:80, gL:0.1, ENa:50, EK:-100, EL:-67,
     Tref:36, Tdef:36, rest:-67, instantM:false, phi0:1,
     gNaMax:200, gKMax:160, ampMax:80, ampDef:45,
+    eqs: { am:'0.32(V + 54) / (1 − e<sup>−(V+54)/4</sup>)', bm:'0.28(V + 27) / (e<sup>(V+27)/5</sup> − 1)',
+           ah:'0.128 e<sup>−(V+50)/18</sup>', bh:'4 / (1 + e<sup>−(V+27)/5</sup>)',
+           an:'0.032(V + 52) / (1 − e<sup>−(V+52)/5</sup>)', bn:'0.5 e<sup>−(V+57)/40</sup>' },
     am: v => Math.abs(v + 54) < 1e-6 ? 1.28 : 0.32 * (v + 54) / (1 - Math.exp(-(v + 54) / 4)),
     bm: v => Math.abs(v + 27) < 1e-6 ? 1.4 : 0.28 * (v + 27) / (Math.exp((v + 27) / 5) - 1),
     ah: v => 0.128 * Math.exp(-(v + 50) / 18),
@@ -443,6 +596,9 @@ const MODELS = {
     cm:1, gNa:35, gK:9, gL:0.1, ENa:55, EK:-90, EL:-65,
     Tref:37, Tdef:37, rest:-65, instantM:true, phi0:5,
     gNaMax:80, gKMax:40, ampMax:60, ampDef:20,
+    eqs: { am:'0.1(V + 35) / (1 − e<sup>−(V+35)/10</sup>)', bm:'4 e<sup>−(V+60)/18</sup>',
+           ah:'0.07 e<sup>−(V+58)/20</sup>', bh:'1 / (1 + e<sup>−(V+28)/10</sup>)',
+           an:'0.01(V + 34) / (1 − e<sup>−(V+34)/10</sup>)', bn:'0.125 e<sup>−(V+44)/80</sup>' },
     am: v => Math.abs(v + 35) < 1e-6 ? 1 : 0.1 * (v + 35) / (1 - Math.exp(-(v + 35) / 10)),
     bm: v => 4 * Math.exp(-(v + 60) / 18),
     ah: v => 0.07 * Math.exp(-(v + 58) / 20),
@@ -782,7 +938,7 @@ function renderGates() {
       + (Math.abs(S.temp - P.Tref) > 0.05
         ? `, which is ${P.phi0} for this model scaled by the temperature, ${fmt(S.temp, 1)} °C against its reference ${P.Tref} °C.`
         : `, the model's own scaling factor. Change the temperature and φ changes with it.`)
-    : `φ = 1 here, so these are the published rate constants unchanged: ${P.ref} worked at ${P.Tref} °C.`;
+    : `φ = 1 here, so these are the published rate constants unchanged: ${P.ref} gives them for ${P.Tref} °C.`;
   $('gInf').textContent = (a / (a + b)).toFixed(3);
   $('gTau').textContent = `${(1 / (a + b)).toFixed(2)} ms`;
   $('bankNote').textContent = g0.note;
@@ -901,6 +1057,389 @@ function drawClamp() {
     : 'The recovered pair and the pair from the equations agree because the recording came from the equations. In 1952 the agreement had to be earned: the same constants had to fit steps at every voltage at once.';
 }
 
+const B = { hold:-65, sel:0, drug:'none', show:'i' };
+const BSTEPS = [];
+for (let v = -70; v <= 60; v += 10) BSTEPS.push(v);
+
+function hx(c) { const t = c.replace('#', ''); return [0, 2, 4].map(i => parseInt(t.slice(i, i + 2), 16)); }
+function mixc(c1, c2, f) {
+  const a = hx(c1), b = hx(c2);
+  return `rgb(${a.map((x, i) => Math.round(x + (b[i] - x) * f)).join(',')})`;
+}
+
+function benchTrace(vh, v1, dur, gNaBar, gKBar, phi, P) {
+  const dt = 0.01, N = Math.round(dur / dt);
+  let m = mInf(vh), h = hInf(vh), n = nInf(vh);
+  if (P.instantM) m = mInf(v1);
+  const t = [], cur = [], cgna = [], cgk = [];
+  for (let s = 0; s <= N; s++) {
+    const gNa = gNaBar * m * m * m * h, gK = gKBar * n * n * n * n;
+    if (s % 2 === 0) {
+      t.push(s * dt);
+      cur.push(gNa * (v1 - P.ENa) + gK * (v1 - P.EK));
+      cgna.push(gNa); cgk.push(gK);
+    }
+    m = P.instantM ? mInf(v1) : m + (mInf(v1) - m) * (1 - Math.exp(-dt * phi * (am(v1) + bm(v1))));
+    h = h + (hInf(v1) - h) * (1 - Math.exp(-dt * phi * (ah(v1) + bh(v1))));
+    n = n + (nInf(v1) - n) * (1 - Math.exp(-dt * phi * (an(v1) + bn(v1))));
+  }
+  return { t, cur, gna: cgna, gk: cgk };
+}
+
+function benchFamily() {
+  const P = M(), phi = gatePhi();
+  const gNaBar = (B.drug === 'ttx' || B.drug === 'both') ? 0 : S.gna;
+  const gKBar = (B.drug === 'tea' || B.drug === 'both') ? 0 : S.gk;
+  const dur = Math.min(60, Math.max(8, 8 / (phi * (an(0) + bn(0)))));
+  const win = Math.min(dur, 5 / phi);
+  const traces = BSTEPS.map(v1 => {
+    const r = benchTrace(B.hold, v1, dur, gNaBar, gKBar, phi, P);
+    let peak = 0;
+    for (let i = 0; i < r.t.length; i++) {
+      if (r.t[i] > win) break;
+      if (Math.abs(r.cur[i]) > Math.abs(peak)) peak = r.cur[i];
+    }
+    return { v1, r, peak, late: r.cur[r.cur.length - 1] };
+  });
+  let rev = null;
+  for (let i = 1; i < traces.length; i++) {
+    const a = traces[i - 1].peak, b = traces[i].peak;
+    if (a < 0 && b >= 0) { rev = traces[i - 1].v1 + (traces[i].v1 - traces[i - 1].v1) * (-a) / (b - a); break; }
+  }
+  return { traces, dur, gNaBar, gKBar, phi, P, rev };
+}
+
+function benchAvail(F) {
+  const out = [];
+  for (let vh = -120; vh <= -20; vh += 2) {
+    const r = benchTrace(vh, 0, Math.min(F.dur, 6 / F.phi), F.gNaBar, 0, F.phi, F.P);
+    let pk = 0;
+    for (let i = 0; i < r.cur.length; i++) if (r.cur[i] < pk) pk = r.cur[i];
+    out.push({ vh, pk });
+  }
+  return out;
+}
+
+function niceRange(lo, hi, n) {
+  if (hi - lo < 1e-9) { lo -= 1; hi += 1; }
+  const raw = (hi - lo) / n, mag = Math.pow(10, Math.floor(Math.log10(raw))), norm = raw / mag;
+  const step = (norm <= 1 ? 1 : norm <= 2 ? 2 : norm <= 2.5 ? 2.5 : norm <= 5 ? 5 : 10) * mag;
+  return { lo: Math.floor(lo / step) * step, hi: Math.ceil(hi / step) * step, step };
+}
+const tickLab = (v, step) => step >= 1 ? String(Math.round(v)) : v.toFixed(step >= 0.1 ? 1 : 2);
+
+function frame(g, W, H, pad) {
+  g.clearRect(0, 0, W, H);
+  g.fillStyle = css('--panel'); g.fillRect(0, 0, W, H);
+  g.strokeStyle = css('--grid'); g.lineWidth = 1;
+  g.fillStyle = css('--dim'); g.font = '12px "IBM Plex Mono", monospace';
+}
+
+function drawBench() {
+  const F = benchFamily(), P = F.P;
+  const showG = B.show === 'g';
+  const cvs = $('plotFam'), g = cvs.getContext('2d'), W = cvs.width, H = cvs.height;
+  const pad = { l: 60, r: 16, t: 26, b: 52 };
+  let lo = 0, hi = 0;
+  for (const tr of F.traces) {
+    const arrs = showG ? [tr.r.gna, tr.r.gk] : [tr.r.cur];
+    for (const a of arrs) for (const y of a) { if (y < lo) lo = y; if (y > hi) hi = y; }
+  }
+  const span0 = hi - lo;
+  const R = niceRange(lo >= 0 ? 0 : lo - span0 * 0.08, hi <= 0 ? 0 : hi + span0 * 0.08, 4);
+  lo = R.lo; hi = R.hi;
+  frame(g, W, H, pad);
+  const X = t => pad.l + t / F.dur * (W - pad.l - pad.r);
+  const Y = y => pad.t + (1 - (y - lo) / (hi - lo)) * (H - pad.t - pad.b);
+  for (let val = lo; val <= hi + R.step * 1e-6; val += R.step) {
+    const y = Y(val);
+    g.beginPath(); g.moveTo(pad.l, y); g.lineTo(W - pad.r, y); g.stroke();
+    const s = tickLab(val, R.step);
+    g.fillText(s, pad.l - 8 - g.measureText(s).width, y + 4);
+  }
+  for (let k = 0; k <= 5; k++) {
+    const tt = F.dur * k / 5;
+    g.beginPath(); g.moveTo(X(tt), pad.t); g.lineTo(X(tt), H - pad.b); g.stroke();
+    const s = k === 5 ? `${tt.toFixed(tt < 10 ? 1 : 0)} ms` : tt.toFixed(tt < 10 ? 1 : 0);
+    g.fillText(s, X(tt) - (k === 5 ? g.measureText(s).width : 8), H - pad.b + 16);
+  }
+  g.fillText(showG ? 'mS/cm²' : 'µA/cm²', pad.l - 44, pad.t - 8);
+  if (lo < 0 && hi > 0) {
+    g.strokeStyle = css('--line'); g.lineWidth = 1.4; g.beginPath();
+    g.moveTo(pad.l, Y(0)); g.lineTo(W - pad.r, Y(0)); g.stroke();
+  }
+  const cK = css('--k'), cNa = css('--na');
+  const drawTr = (tr, arr, dash, wide) => {
+    const f = (tr.v1 + 70) / 130;
+    g.strokeStyle = mixc(cK, cNa, f);
+    g.lineWidth = wide ? 3.2 : 1.6;
+    g.globalAlpha = wide ? 1 : 0.75;
+    g.setLineDash(dash ? [5, 4] : []);
+    g.beginPath();
+    for (let i = 0; i < arr.length; i++) {
+      const px = X(tr.r.t[i]), py = Y(arr[i]);
+      i ? g.lineTo(px, py) : g.moveTo(px, py);
+    }
+    g.stroke(); g.setLineDash([]); g.globalAlpha = 1;
+  };
+  for (const tr of F.traces) {
+    const wide = tr.v1 === B.sel;
+    if (showG) { drawTr(tr, tr.r.gna, true, wide); drawTr(tr, tr.r.gk, false, wide); }
+    else drawTr(tr, tr.r.cur, false, wide);
+  }
+  const sel = F.traces.find(t => t.v1 === B.sel);
+  if (sel) {
+    g.fillStyle = css('--ink'); g.font = '500 13px "IBM Plex Mono", monospace';
+    g.fillText(`hold ${B.hold} mV → step ${sel.v1 > 0 ? '+' : ''}${sel.v1} mV`, pad.l + 8, pad.t + 14);
+  }
+  g.fillStyle = css('--dim'); g.font = '12px "IBM Plex Mono", monospace';
+  g.fillText(showG ? 'dashed g_Na · solid g_K' : 'inward current downward', pad.l + 8, H - 8);
+
+  // current-voltage relation
+  let cv2 = $('plotIV'), g2 = cv2.getContext('2d'), W2 = cv2.width, H2 = cv2.height;
+  const pad2 = { l: 58, r: 16, t: 22, b: 40 };
+  let ylo = 0, yhi = 0;
+  for (const tr of F.traces) {
+    for (const y of [tr.peak, tr.late]) { if (y < ylo) ylo = y; if (y > yhi) yhi = y; }
+  }
+  const sp2 = yhi - ylo;
+  const R2 = niceRange(ylo >= 0 ? 0 : ylo - sp2 * 0.1, yhi <= 0 ? 0 : yhi + sp2 * 0.1, 4);
+  ylo = R2.lo; yhi = R2.hi;
+  frame(g2, W2, H2, pad2);
+  const X2 = v => pad2.l + (v + 80) / 150 * (W2 - pad2.l - pad2.r);
+  const Y2 = y => pad2.t + (1 - (y - ylo) / (yhi - ylo)) * (H2 - pad2.t - pad2.b);
+  for (let val = ylo; val <= yhi + R2.step * 1e-6; val += R2.step) {
+    const y = Y2(val);
+    g2.beginPath(); g2.moveTo(pad2.l, y); g2.lineTo(W2 - pad2.r, y); g2.stroke();
+    const s = tickLab(val, R2.step);
+    g2.fillText(s, pad2.l - 8 - g2.measureText(s).width, y + 4);
+  }
+  for (let v = -80; v <= 70; v += 30) {
+    g2.beginPath(); g2.moveTo(X2(v), pad2.t); g2.lineTo(X2(v), H2 - pad2.b); g2.stroke();
+    g2.fillText(String(v), X2(v) - 10, H2 - pad2.b + 16);
+  }
+  g2.fillText('command potential (mV)', (W2 - pad2.l) / 2 - 20, H2 - 6);
+  g2.fillText('µA/cm²', pad2.l - 46, pad2.t - 7);
+  if (ylo < 0 && yhi > 0) {
+    g2.strokeStyle = css('--line'); g2.lineWidth = 1.4;
+    g2.beginPath(); g2.moveTo(pad2.l, Y2(0)); g2.lineTo(W2 - pad2.r, Y2(0)); g2.stroke();
+  }
+  const ivLine = (key, color) => {
+    g2.strokeStyle = color; g2.lineWidth = 2.2; g2.beginPath();
+    F.traces.forEach((tr, i) => { const px = X2(tr.v1), py = Y2(tr[key]); i ? g2.lineTo(px, py) : g2.moveTo(px, py); });
+    g2.stroke();
+    g2.fillStyle = color;
+    for (const tr of F.traces) { g2.beginPath(); g2.arc(X2(tr.v1), Y2(tr[key]), 2.6, 0, 7); g2.fill(); }
+  };
+  ivLine('late', cK); ivLine('peak', cNa);
+  if (F.rev !== null) {
+    g2.strokeStyle = css('--thr'); g2.lineWidth = 1.6; g2.setLineDash([5, 4]);
+    g2.beginPath(); g2.moveTo(X2(F.rev), pad2.t); g2.lineTo(X2(F.rev), H2 - pad2.b); g2.stroke();
+    g2.setLineDash([]);
+    g2.fillStyle = css('--thr'); g2.font = '500 12px "IBM Plex Mono", monospace';
+    g2.fillText(`${F.rev.toFixed(0)} mV`, X2(F.rev) + 5, pad2.t + 12);
+  }
+
+  // availability against holding potential
+  const A = benchAvail(F);
+  let cv3 = $('plotAvail'), g3 = cv3.getContext('2d'), W3 = cv3.width, H3 = cv3.height;
+  const pad3 = { l: 50, r: 16, t: 22, b: 40 };
+  frame(g3, W3, H3, pad3);
+  const X3 = v => pad3.l + (v + 120) / 100 * (W3 - pad3.l - pad3.r);
+  const Y3 = y => pad3.t + (1 - y) * (H3 - pad3.t - pad3.b);
+  for (let i = 0; i <= 4; i++) {
+    const y = Y3(i / 4);
+    g3.beginPath(); g3.moveTo(pad3.l, y); g3.lineTo(W3 - pad3.r, y); g3.stroke();
+    g3.fillText((i / 4).toFixed(2), 8, y + 4);
+  }
+  for (let v = -120; v <= -20; v += 20) {
+    g3.beginPath(); g3.moveTo(X3(v), pad3.t); g3.lineTo(X3(v), H3 - pad3.b); g3.stroke();
+    g3.fillText(String(v), X3(v) - 12, H3 - pad3.b + 16);
+  }
+  g3.fillText('holding potential (mV)', (W3 - pad3.l) / 2 - 20, H3 - 6);
+  g3.fillText('fraction of the maximum', pad3.l, pad3.t - 7);
+  const pkMax = Math.min(...A.map(d => d.pk));
+  if (pkMax < -1e-9) {
+    g3.strokeStyle = cNa; g3.lineWidth = 2.4; g3.beginPath();
+    A.forEach((d, i) => { const px = X3(d.vh), py = Y3(d.pk / pkMax); i ? g3.lineTo(px, py) : g3.moveTo(px, py); });
+    g3.stroke();
+  }
+  g3.strokeStyle = css('--h'); g3.lineWidth = 2; g3.setLineDash([6, 5]); g3.beginPath();
+  A.forEach((d, i) => { const px = X3(d.vh), py = Y3(hInf(d.vh)); i ? g3.lineTo(px, py) : g3.moveTo(px, py); });
+  g3.stroke(); g3.setLineDash([]);
+  g3.strokeStyle = css('--thr'); g3.lineWidth = 1.6; g3.beginPath();
+  g3.moveTo(X3(B.hold), pad3.t); g3.lineTo(X3(B.hold), H3 - pad3.b); g3.stroke();
+
+  const avail = hInf(B.hold);
+  $('bholdOut').textContent = `${B.hold} mV`;
+  $('bselOut').textContent = `${B.sel > 0 ? '+' : ''}${B.sel} mV`;
+  $('bAvail').textContent = `h∞ = ${avail.toFixed(2)}`;
+  $('bPeak').textContent = sel ? `${fmt(sel.peak, 0)} µA/cm²` : '—';
+  $('bLate').textContent = sel ? `${fmt(sel.late, 0)} µA/cm²` : '—';
+  $('bRev').textContent = F.rev === null ? '—' : `${F.rev.toFixed(0)} mV`;
+  $('bENa').textContent = `${P.ENa} mV`;
+  $('bLegend').textContent = showG ? 'dashed g_Na, solid g_K' : '';
+  drawMinf(F);
+
+  let note;
+  if (B.drug === 'both') {
+    note = 'Both currents are blocked, so the amplifier has nothing to supply beyond the leak that has already been subtracted. This is the zero line every other record is measured against.';
+  } else if (B.drug === 'ttx') {
+    note = `Only the delayed outward current is left: potassium alone. It rises with an S-shaped delay, holds, and gets larger and faster the more you depolarise. This is the record whose fourth root straightens — the curve gₖ(t) that the n⁴ term was invented for. In 1952 the same record came from replacing the sodium of the seawater with choline.`;
+  } else if (B.drug === 'tea') {
+    note = `Sodium alone. Every sweep rises and then falls back while the voltage is still held: that decline is inactivation, and it is why sodium needs two variables. Read where the early peak changes sign — ${F.rev === null ? 'raise the steps until it does' : `about ${F.rev.toFixed(0)} mV, against an Eₙₐ of ${P.ENa} mV in this model`} — and you have measured the sodium equilibrium potential from the currents themselves.`;
+  } else {
+    note = `The two currents are superimposed, which is the problem the whole experiment had to solve: the early inward hump and the late outward rise overlap in time, so neither can be measured cleanly. The reversal read off the early peak here is ${F.rev === null ? 'not even defined' : `${F.rev.toFixed(0)} mV`}, against a true Eₙₐ of ${P.ENa} mV — the potassium current contaminates it. Press TEA, or TTX, to separate them.`;
+  }
+  if (avail < 0.35) {
+    note += ` Holding at ${B.hold} mV leaves only ${(avail * 100).toFixed(0)} per cent of the sodium channels available: most are already inactivated before the step begins, and every sodium current on the screen is smaller for that reason alone.`;
+  } else if (B.hold <= -85) {
+    note += ` Holding at ${B.hold} mV removes essentially all resting inactivation, so the sodium currents are as large as this membrane can make them.`;
+  }
+  $('benchNote').innerHTML = note;
+}
+
+function fitDecay(r, gBar) {
+  const y = r.gna, t = r.t;
+  let pi = 0;
+  for (let i = 1; i < y.length; i++) if (y[i] > y[pi]) pi = i;
+  const peak = y[pi], gInf = y[y.length - 1], amp = peak - gInf;
+  if (peak < gBar * 0.002 || amp < peak * 0.2) return null;
+  let sx = 0, sy = 0, sxx = 0, sxy = 0, k = 0;
+  for (let i = pi + 1; i < y.length; i++) {
+    const d = y[i] - gInf;
+    if (d <= amp * 0.08) break;
+    if (d >= amp * 0.98) continue;
+    const ly = Math.log(d);
+    sx += t[i]; sy += ly; sxx += t[i] * t[i]; sxy += t[i] * ly; k++;
+  }
+  if (k < 5) return null;
+  const den = k * sxx - sx * sx;
+  if (Math.abs(den) < 1e-12) return null;
+  const slope = (k * sxy - sx * sy) / den;
+  if (!(slope < 0)) return null;
+  const inter = (sy - slope * sx) / k;
+  return { tau: -1 / slope, g0: Math.exp(inter) + gInf, gInf, peak, pi };
+}
+
+function panelMsg(g, W, H, text) {
+  g.clearRect(0, 0, W, H);
+  g.fillStyle = css('--panel'); g.fillRect(0, 0, W, H);
+  g.fillStyle = css('--dim'); g.font = '13px "IBM Plex Sans", sans-serif';
+  g.fillText(text, 18, H / 2);
+}
+
+function drawMinf(F) {
+  const P = F.P, h0 = hInf(B.hold);
+  const c1 = $('plotMfit'), g1 = c1.getContext('2d'), W1 = c1.width, H1 = c1.height;
+  const c2 = $('plotMinf'), g2 = c2.getContext('2d'), W2 = c2.width, H2 = c2.height;
+  const pad = { l: 58, r: 16, t: 22, b: 40 };
+  const sel = F.traces.find(t => t.v1 === B.sel);
+  const setOut = (a, b, c, d) => {
+    $('bMinf').textContent = a; $('bMinfEq').textContent = b;
+    $('bTauH').textContent = c; $('bTauHEq').textContent = d;
+  };
+  if (F.gNaBar <= 0) {
+    panelMsg(g1, W1, H1, 'Sodium is blocked, so there is nothing to extrapolate.');
+    panelMsg(g2, W2, H2, 'Release the sodium channels to build the activation curve.');
+    setOut('—', '—', '—', '—');
+    $('mNote').textContent = 'With sodium blocked this panel has no record to work from.';
+    return;
+  }
+  const fits = F.traces.map(tr => ({ tr, f: fitDecay(tr.r, F.gNaBar) }));
+
+  // left: the extrapolation for the marked step
+  const selFit = fits.find(d => d.tr.v1 === B.sel);
+  if (!selFit || !selFit.f) {
+    panelMsg(g1, W1, H1, `The step to ${B.sel} mV opens too little sodium to fit.`);
+  } else {
+    const f = selFit.f, r = selFit.tr.r;
+    const R = niceRange(0, Math.max(f.g0, f.peak) * 1.08, 4);
+    g1.clearRect(0, 0, W1, H1);
+    g1.fillStyle = css('--panel'); g1.fillRect(0, 0, W1, H1);
+    g1.strokeStyle = css('--grid'); g1.lineWidth = 1;
+    g1.fillStyle = css('--dim'); g1.font = '12px "IBM Plex Mono", monospace';
+    const X = t => pad.l + t / F.dur * (W1 - pad.l - pad.r);
+    const Y = y => pad.t + (1 - (y - R.lo) / (R.hi - R.lo)) * (H1 - pad.t - pad.b);
+    for (let v = R.lo; v <= R.hi + R.step * 1e-6; v += R.step) {
+      g1.beginPath(); g1.moveTo(pad.l, Y(v)); g1.lineTo(W1 - pad.r, Y(v)); g1.stroke();
+      const s = tickLab(v, R.step);
+      g1.fillText(s, pad.l - 8 - g1.measureText(s).width, Y(v) + 4);
+    }
+    for (let k = 0; k <= 4; k++) {
+      const tt = F.dur * k / 4;
+      g1.beginPath(); g1.moveTo(X(tt), pad.t); g1.lineTo(X(tt), H1 - pad.b); g1.stroke();
+      const s = k === 4 ? `${tt.toFixed(tt < 10 ? 1 : 0)} ms` : tt.toFixed(tt < 10 ? 1 : 0);
+      g1.fillText(s, X(tt) - (k === 4 ? g1.measureText(s).width : 8), H1 - pad.b + 16);
+    }
+    g1.fillText('mS/cm²', pad.l - 46, pad.t - 7);
+    g1.strokeStyle = css('--na'); g1.lineWidth = 2.4; g1.beginPath();
+    r.gna.forEach((y, i) => { const px = X(r.t[i]), py = Y(y); i ? g1.lineTo(px, py) : g1.moveTo(px, py); });
+    g1.stroke();
+    g1.strokeStyle = css('--stim'); g1.lineWidth = 2; g1.setLineDash([6, 5]); g1.beginPath();
+    for (let i = 0; i < r.t.length; i++) {
+      const y = f.gInf + (f.g0 - f.gInf) * Math.exp(-r.t[i] / f.tau), px = X(r.t[i]), py = Y(y);
+      i ? g1.lineTo(px, py) : g1.moveTo(px, py);
+    }
+    g1.stroke(); g1.setLineDash([]);
+    g1.fillStyle = css('--stim');
+    g1.beginPath(); g1.arc(X(0), Y(f.g0), 4, 0, 7); g1.fill();
+    g1.font = '500 12px "IBM Plex Mono", monospace';
+    g1.fillText(`${f.g0.toFixed(1)} without inactivation`, X(0) + 8, Y(f.g0) - 6);
+    g1.fillStyle = css('--na');
+    g1.fillText(`${f.peak.toFixed(1)} as recorded`, X(r.t[f.pi]) + 8, Y(f.peak) + 16);
+  }
+
+  // right: the activation curve
+  const pts = fits.filter(d => d.f).map(d => ({ v: d.tr.v1, m: Math.cbrt(d.f.g0 / (F.gNaBar * Math.max(1e-6, h0))) }));
+  g2.clearRect(0, 0, W2, H2);
+  g2.fillStyle = css('--panel'); g2.fillRect(0, 0, W2, H2);
+  g2.strokeStyle = css('--grid'); g2.lineWidth = 1;
+  g2.fillStyle = css('--dim'); g2.font = '12px "IBM Plex Mono", monospace';
+  const X2 = v => pad.l + (v + 80) / 150 * (W2 - pad.l - pad.r);
+  const Y2 = y => pad.t + (1 - y / 1.1) * (H2 - pad.t - pad.b);
+  for (let i = 0; i <= 4; i++) {
+    const y = i / 4;
+    g2.beginPath(); g2.moveTo(pad.l, Y2(y)); g2.lineTo(W2 - pad.r, Y2(y)); g2.stroke();
+    g2.fillText(y.toFixed(2), 8, Y2(y) + 4);
+  }
+  for (let v = -80; v <= 70; v += 30) {
+    g2.beginPath(); g2.moveTo(X2(v), pad.t); g2.lineTo(X2(v), H2 - pad.b); g2.stroke();
+    g2.fillText(String(v), X2(v) - 10, H2 - pad.b + 16);
+  }
+  g2.fillText('command potential (mV)', (W2 - pad.l) / 2 - 20, H2 - 6);
+  g2.fillText('m∞', pad.l - 40, pad.t - 7);
+  g2.strokeStyle = css('--ink'); g2.lineWidth = 2; g2.beginPath();
+  for (let v = -80, i = 0; v <= 70; v += 1, i++) {
+    const px = X2(v), py = Y2(mInf(v));
+    i ? g2.lineTo(px, py) : g2.moveTo(px, py);
+  }
+  g2.stroke();
+  g2.fillStyle = css('--na');
+  for (const pt of pts) { g2.beginPath(); g2.arc(X2(pt.v), Y2(Math.min(1.1, pt.m)), 3.4, 0, 7); g2.fill(); }
+  if (sel) {
+    g2.strokeStyle = css('--thr'); g2.lineWidth = 1.4; g2.setLineDash([4, 4]);
+    g2.beginPath(); g2.moveTo(X2(sel.v1), pad.t); g2.lineTo(X2(sel.v1), H2 - pad.b); g2.stroke();
+    g2.setLineDash([]);
+  }
+
+  const mp = pts.find(pt => pt.v === B.sel);
+  const tauEq = selFit && selFit.f ? 1 / (F.phi * (ah(B.sel) + bh(B.sel))) : null;
+  setOut(mp ? mp.m.toFixed(3) : '—', mInf(B.sel).toFixed(3),
+         selFit && selFit.f ? `${selFit.f.tau.toFixed(2)} ms` : '—',
+         tauEq === null ? '—' : `${tauEq.toFixed(2)} ms`);
+
+  let note;
+  if (!mp) {
+    note = `At ${B.sel} mV too little sodium conductance opens for the decay to be fitted — which is also why the measured points thin out at the bottom of the curve.`;
+  } else {
+    const err = Math.abs(mp.m - mInf(B.sel));
+    note = `At ${B.sel} mV the recorded peak was ${selFit.f.peak.toFixed(1)} mS/cm², the extrapolation puts it at ${selFit.f.g0.toFixed(1)}, and the cube root of that, divided by ḡ<sub>Na</sub> and h = ${h0.toFixed(2)}, gives m<sub>∞</sub> = ${mp.m.toFixed(3)} against ${mInf(B.sel).toFixed(3)} in the equations — ${err < 0.02 ? 'the correction has recovered it' : `still ${(err).toFixed(3)} out`}.`;
+    if (P.instantM) note += ' In this model m is instantaneous, so the whole record is decay and the extrapolation has nothing to undo but h.';
+  }
+  $('mNote').innerHTML = note;
+}
+
 function drawV() {
   const cv = $('plotV'), g = cv.getContext('2d'), W = cv.width, H = cv.height;
   const pad = { l:44, r:16, t:24, b:34 };
@@ -950,7 +1489,7 @@ function render() {
   $('drugNote').textContent = S.ttx && S.tea ? 'Both currents blocked: only leak remains.'
     : S.ttx ? 'No sodium current: no regenerative upstroke.'
     : S.tea ? 'No potassium current: repolarisation is left to leak and sodium inactivation.' : '';
-  drawV(); drawGates(); drawCond(); drawPhase(); renderGates(); drawClamp();
+  renderEq(); drawV(); drawGates(); drawCond(); drawPhase(); renderGates(); drawClamp(); drawBench();
 
   $('rSpikes').textContent = sim.spikes;
   $('rPeak').textContent = `${fmt(sim.peak, 1)} mV`;
@@ -988,11 +1527,35 @@ function render() {
     : `The loop is the spike. It leaves along the bottom, climbs the right branch as n rises, and returns below rest — the afterhyperpolarisation — before creeping back to the crossing point.`;
 }
 
+const EQMAP = { amp:'eqI', dur:'eqDur', gap:'eqGap', temp:'eqPhi', gna:'eqGNa', gk:'eqGK' };
+let hotTimer = null;
+function hot(id) {
+  document.querySelectorAll('.eqv.hot').forEach(e => e.classList.remove('hot'));
+  const ids = id === 'eqI' ? ['eqI', 'eqI2', 'eqI3'] : id === 'eqPhi' ? ['eqPhi', 'eqPhi2'] : [id];
+  for (const k of ids) { const el = $(k); if (el) el.classList.add('hot'); }
+  clearTimeout(hotTimer);
+  hotTimer = setTimeout(() => document.querySelectorAll('.eqv.hot').forEach(e => e.classList.remove('hot')), 1800);
+}
+
+function renderEq() {
+  const P = M();
+  $('termNa').classList.toggle('off', S.ttx || S.gna === 0);
+  $('termK').classList.toggle('off', S.tea || S.gk === 0);
+  $('eqStimSingle').hidden = S.mode === 'hold';
+  $('eqStimPair').hidden = S.mode !== 'pair';
+  $('eqStimHold').hidden = S.mode !== 'hold';
+  for (const [id, key] of [['eqAm','am'],['eqBm','bm'],['eqAh','ah'],['eqBh','bh'],['eqAn','an'],['eqBn','bn']])
+    $(id).innerHTML = P.eqs[key];
+}
+
 function recompute() { sim = run(S.amp); render(); }
 
-const bind = (id, key, scale) => $(id).addEventListener('input', e => {
-  S[key] = +e.target.value * (scale || 1); recompute();
-});
+const bind = (id, key, scale) => {
+  const el = $(id);
+  el.addEventListener('input', e => { S[key] = +e.target.value * (scale || 1); hot(EQMAP[key]); recompute(); });
+  el.addEventListener('focus', () => hot(EQMAP[key]));
+  el.addEventListener('pointerdown', () => hot(EQMAP[key]));
+};
 bind('amp', 'amp'); bind('dur', 'dur'); bind('gap', 'gap');
 bind('temp', 'temp'); bind('gna', 'gna'); bind('gk', 'gk');
 
@@ -1009,6 +1572,7 @@ for (const [id, key] of [['ttx', 'ttx'], ['tea', 'tea']])
   $(id).addEventListener('click', () => {
     S[key] = !S[key];
     $(id).setAttribute('aria-pressed', S[key]);
+    hot(key === 'ttx' ? 'eqGNa' : 'eqGK');
     recompute();
   });
 function setModel(k) {
@@ -1016,6 +1580,9 @@ function setModel(k) {
   const P = MODELS[k];
   for (const [id, key] of [['mdSquid', 'squid'], ['mdCort', 'cortical'], ['mdFS', 'fs']])
     $(id).setAttribute('aria-pressed', key === k);
+  for (const [id, key] of [['bmSquid', 'squid'], ['bmCort', 'cortical'], ['bmFS', 'fs']])
+    $(id).setAttribute('aria-pressed', key === k);
+  $('bmNote').textContent = P.label + ' · ' + P.ref;
   S.temp = P.Tdef; S.gna = P.gNa; S.gk = P.gK; S.amp = P.ampDef;
   $('amp').max = P.ampMax; $('amp').value = P.ampDef;
   $('gna').max = P.gNaMax; $('gna').value = P.gNa;
@@ -1033,7 +1600,25 @@ for (const [id, key] of [['gM', 'm'], ['gH', 'h'], ['gN', 'n']])
     G.bank.fill(0); G.avg = null; renderGates();
   });
 $('gv').addEventListener('input', e => { G.v = +e.target.value; renderGates(); });
+$('bhold').addEventListener('input', e => { B.hold = +e.target.value; drawBench(); });
+$('bsel').addEventListener('input', e => { B.sel = +e.target.value; drawBench(); });
+for (const [id, key] of [['bdNone', 'none'], ['bdTTX', 'ttx'], ['bdTEA', 'tea'], ['bdBoth', 'both']])
+  $(id).addEventListener('click', () => {
+    B.drug = key;
+    for (const [i2, k2] of [['bdNone', 'none'], ['bdTTX', 'ttx'], ['bdTEA', 'tea'], ['bdBoth', 'both']])
+      $(i2).setAttribute('aria-pressed', k2 === key);
+    drawBench();
+  });
+for (const [id, key] of [['bsI', 'i'], ['bsG', 'g']])
+  $(id).addEventListener('click', () => {
+    B.show = key;
+    for (const [i2, k2] of [['bsI', 'i'], ['bsG', 'g']]) $(i2).setAttribute('aria-pressed', k2 === key);
+    drawBench();
+  });
 $('cv').addEventListener('input', e => { C.step = +e.target.value; drawClamp(); });
+$('bmSquid').addEventListener('click', () => setModel('squid'));
+$('bmCort').addEventListener('click', () => setModel('cortical'));
+$('bmFS').addEventListener('click', () => setModel('fs'));
 $('mdSquid').addEventListener('click', () => setModel('squid'));
 $('mdCort').addEventListener('click', () => setModel('cortical'));
 $('mdFS').addEventListener('click', () => setModel('fs'));
@@ -1051,11 +1636,20 @@ $('reset').addEventListener('click', () => {
     $(i2).setAttribute('aria-pressed', k2 === 'm');
   $('gv').value = -65;
   C.step = 0; $('cv').value = 0;
+  Object.assign(B, { hold:-65, sel:0, drug:'none', show:'i' });
+  $('bhold').value = -65; $('bsel').value = 0;
+  for (const [i2, k2] of [['bdNone', 'none'], ['bdTTX', 'ttx'], ['bdTEA', 'tea'], ['bdBoth', 'both']])
+    $(i2).setAttribute('aria-pressed', k2 === 'none');
+  for (const [i2, k2] of [['bsI', 'i'], ['bsG', 'g']]) $(i2).setAttribute('aria-pressed', k2 === 'i');
   setModel(S.model);
 });
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => render());
 new MutationObserver(() => render()).observe(document.documentElement,
   { attributes:true, attributeFilter:['data-theme'] });
+const wantMode = new URLSearchParams(location.search).get('stim');
+const wantDrug = new URLSearchParams(location.search).get('drug');
+if (wantDrug === 'ttx' || wantDrug === 'both') { S.ttx = true; $('ttx').setAttribute('aria-pressed', true); }
+if (wantDrug === 'tea' || wantDrug === 'both') { S.tea = true; $('tea').setAttribute('aria-pressed', true); }
 const wantGate = new URLSearchParams(location.search).get('gate');
 if (wantGate && Object.prototype.hasOwnProperty.call(GATES, wantGate)) {
   G.key = wantGate;
@@ -1073,6 +1667,7 @@ if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
 }
 const wanted = new URLSearchParams(location.search).get('model');
 setModel(wanted && Object.prototype.hasOwnProperty.call(MODELS, wanted) ? wanted : 'squid');
+if (wantMode === 'pair' || wantMode === 'hold') setMode(wantMode);
 </script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "ed90c191314a4bd1b54a671616598fbd"}'></script>
 </body>
