@@ -1,0 +1,1107 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="google-site-verification" content="KViT-tN7lhzIxqualHoKOShjRrce-UIVY56-z95f7JE">
+<link rel="canonical" href="https://phclab.github.io/class/DBS_Explorer/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="DBS Explorer">
+<meta property="og:description" content="A live model of the basal ganglia and cerebellar motor loops: Parkinson's disease, essential tremor and dystonia, and what deep brain stimulation of STN, GPi, Vim or any other region does to them — at high or low frequency, mechanism by mechanism.">
+<meta property="og:url" content="https://phclab.github.io/class/DBS_Explorer/">
+<title>DBS Explorer</title>
+<meta name="description" content="A live model of the basal ganglia and cerebellar motor loops: Parkinson's disease, essential tremor and dystonia, and what deep brain stimulation of STN, GPi, Vim or any other region does to them — at high or low frequency, mechanism by mechanism.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#eef1ee;
+  --panel:#fbfcfa;
+  --ink:#1b2226;
+  --dim:#5d6a6f;
+  --line:#d3dad6;
+  --grid:#e2e8e4;
+  --field:#ffffff;
+  --exc:#2f7d4f;
+  --inh:#b3263c;
+  --da:#6b3fa0;
+  --hi:#c8561c;
+  --lo:#2a64a8;
+  --sel:#0f766e;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#111618;
+    --panel:#182024;
+    --ink:#e4eaec;
+    --dim:#93a1a6;
+    --line:#2b373c;
+    --grid:#222d31;
+    --field:#0f1416;
+    --exc:#6fcf97;
+    --inh:#ff6b81;
+    --da:#c39bf0;
+    --hi:#ff9a5c;
+    --lo:#6ea8f0;
+    --sel:#5eead4;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#111618;
+  --panel:#182024;
+  --ink:#e4eaec;
+  --dim:#93a1a6;
+  --line:#2b373c;
+  --grid:#222d31;
+  --field:#0f1416;
+  --exc:#6fcf97;
+  --inh:#ff6b81;
+  --da:#c39bf0;
+  --hi:#ff9a5c;
+  --lo:#6ea8f0;
+  --sel:#5eead4;
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);margin:0;
+  font:15px/1.6 "IBM Plex Sans",system-ui,sans-serif;padding:0 20px}
+.wrap{max-width:1080px;margin:0 auto;padding-block:40px 56px;display:grid;gap:22px}
+h1,h2,h3{text-wrap:balance;margin:0}
+h1{font-size:32px;font-weight:600;line-height:1.2}
+h2{font-size:20px;font-weight:600}
+h3{font-size:15px;font-weight:600}
+p{margin:0}
+ul,ol{margin:0;padding-left:22px;display:grid;gap:6px}
+header{display:grid;gap:10px}
+.toprow{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 16px}
+.eyebrow{font:500 11px/1 "IBM Plex Mono",ui-monospace,monospace;letter-spacing:1.4px;
+  text-transform:uppercase;color:var(--dim)}
+.eyebrow a{color:inherit;text-decoration:none;border-bottom:1px solid var(--line)}
+.eyebrow a:hover{color:var(--ink)}
+.toprow > a{color:var(--dim);font-size:13px;text-decoration:none;border-bottom:1px solid var(--line)}
+.toprow > a:hover{color:var(--ink);border-color:var(--ink)}
+.byline{color:var(--dim);font-size:14px;margin-top:-4px}
+.byline a{color:inherit}
+.lede{color:var(--dim);max-width:74ch}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px;
+  display:grid;gap:14px;min-width:0}
+.box > p,.box li{max-width:76ch}
+.muted{color:var(--dim)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+button{font:500 13px "IBM Plex Sans",sans-serif;color:var(--ink);background:var(--field);
+  border:1px solid var(--line);border-radius:6px;padding:7px 12px;cursor:pointer}
+button:hover{border-color:var(--dim)}
+button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--panel)}
+button.go{background:var(--sel);border-color:var(--sel);color:var(--panel)}
+button:focus-visible,input:focus-visible,.node:focus-visible{outline:2px solid var(--sel);outline-offset:2px}
+.lab{font:500 11px/1 "IBM Plex Mono",monospace;letter-spacing:.8px;text-transform:uppercase;color:var(--dim)}
+
+.stage{display:grid;grid-template-columns:1fr;gap:16px}
+@media (max-width:860px){.stage{grid-template-columns:1fr}}
+.circuit{background:var(--field);border:1px solid var(--line);border-radius:8px;padding:6px}
+.circuit svg{width:100%;height:auto;display:block}
+.circuit text{font-family:"IBM Plex Sans",sans-serif;fill:var(--ink)}
+.circuit .sub{font:500 11px "IBM Plex Mono",monospace;fill:var(--dim)}
+.circuit .hz{font:600 13px "IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+.circuit .elab{font:500 11px "IBM Plex Mono",monospace;paint-order:stroke;stroke:var(--field);stroke-width:4px}
+.circuit .grp{fill:none;stroke:var(--line);stroke-dasharray:4 4}
+.circuit .grpname{font:500 11px "IBM Plex Mono",monospace;fill:var(--dim);letter-spacing:.8px}
+.node{cursor:pointer}
+.node rect{stroke:var(--line);stroke-width:1.5}
+.node.sel rect{stroke:var(--sel);stroke-width:3}
+.node:hover rect{stroke:var(--dim)}
+.edge{fill:none;stroke-linecap:butt}
+.head.exc{fill:var(--exc)} .head.inh{fill:var(--inh)} .head.da{fill:var(--da)}
+.edge.exc{stroke:var(--exc)}
+.edge.inh{stroke:var(--inh)}
+.edge.da{stroke:var(--da);stroke-dasharray:7 5}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--dim)}
+.sw{display:inline-block;width:18px;height:3px;vertical-align:4px;margin-right:6px;border-radius:2px}
+.scale{display:inline-block;width:90px;height:9px;border-radius:5px;vertical-align:0;margin:0 6px;
+  background:linear-gradient(90deg,var(--lo),var(--field),var(--hi));border:1px solid var(--line)}
+
+.sliders{display:grid;gap:6px 14px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.sl{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;padding:6px 8px;border-radius:7px;
+  border:1px solid transparent}
+.sl.sel{border-color:var(--sel);background:var(--field)}
+.sl label{font-size:13.5px;color:var(--ink)}
+.sl .v{font:500 13px "IBM Plex Mono",monospace;color:var(--dim);font-variant-numeric:tabular-nums}
+.sl input{grid-column:1 / -1;width:100%;accent-color:var(--sel)}
+.sl .hint{grid-column:1 / -1;font-size:12px;color:var(--dim);line-height:1.4}
+.dbs{display:grid;grid-template-columns:auto 1fr;gap:10px 18px;align-items:center;background:var(--field);
+  border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.dbs .note{grid-column:1 / -1;font-size:13.5px;color:var(--dim);max-width:90ch}
+.dbs .note b{color:var(--ink)}
+.dbs .note a,td a{color:inherit}
+.dbsrow{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+.seg{display:inline-flex;flex-wrap:wrap}
+.seg button{border-radius:0;margin-left:-1px}
+.seg button:first-child{border-radius:6px 0 0 6px;margin-left:0}
+.seg button:last-child{border-radius:0 6px 6px 0}
+.tgt{font-size:14px;color:var(--dim)}
+.mech{grid-column:1 / -1;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:4px 18px;border-top:1px solid var(--line);padding-top:10px}
+.mech .lab{grid-column:1 / -1}
+.mech label{font-size:13.5px;display:flex;gap:7px;align-items:baseline;cursor:pointer}
+.mech label span{color:var(--dim);font-size:12px}
+.mech input{accent-color:var(--sel)}
+.mech .tinfo{grid-column:1 / -1;font-size:13px;color:var(--dim)}
+.hint-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;font-size:14px;color:var(--dim);margin-bottom:-8px}
+.hint-row b{color:var(--ink);font-weight:600}
+.tgt b{color:var(--ink)}
+.amp{display:flex;align-items:center;gap:10px;min-width:220px;flex:1}
+.amp label{font-size:13px;color:var(--dim);white-space:nowrap}
+.amp label b{color:var(--ink);font:500 13px "IBM Plex Mono",monospace}
+.amp input{flex:1;accent-color:var(--sel)}
+.amp input:disabled{opacity:.4}
+@media (max-width:560px){.dbs{grid-template-columns:1fr}}
+.grp.stim{stroke:var(--sel);stroke-width:3;stroke-dasharray:6 4}
+#strgrp{cursor:pointer;pointer-events:all}
+.node.stim > rect{stroke:var(--sel);stroke-width:3;stroke-dasharray:6 4}
+.badge rect{fill:var(--sel)}
+.badge text{fill:var(--panel)!important;font:600 11px "IBM Plex Mono",monospace}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.fact{background:var(--field);border:1px solid var(--line);border-radius:8px;padding:11px 13px;display:grid;gap:4px}
+.fact .val{font:600 16px "IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+.fact .d{font-size:12.5px;color:var(--dim)}
+.verdict{border-left:3px solid var(--sel);padding:4px 0 4px 12px;display:grid;gap:4px}
+.dash{background:var(--field);border:1px solid var(--line);border-radius:8px;padding:14px 16px;display:grid;gap:10px}
+.dash-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px;align-items:baseline}
+.dash-head .lab{font-size:11px}
+.dash-key{font-size:12px;color:var(--dim)}
+.sym{display:grid;grid-template-columns:minmax(150px,210px) 1fr 132px;gap:4px 14px;align-items:center}
+.sym .nm{font-size:14px;font-weight:600;line-height:1.3}
+.sym .nm span{display:block;font-weight:400;font-size:11.5px;color:var(--dim)}
+.track{position:relative;height:14px;border-radius:7px;border:1px solid var(--line);
+  background:linear-gradient(90deg,color-mix(in oklab,var(--exc) 22%,var(--field)),color-mix(in oklab,var(--hi) 30%,var(--field)) 55%,color-mix(in oklab,var(--inh) 40%,var(--field)))}
+.track .fill{position:absolute;left:0;top:0;bottom:0;border-radius:7px;background:var(--ink);opacity:.18;transition:width .3s}
+.track .now{position:absolute;top:-4px;width:6px;height:20px;margin-left:-3px;border-radius:3px;background:var(--ink);transition:left .3s}
+.track .was{position:absolute;top:-4px;width:6px;height:20px;margin-left:-3px;border-radius:3px;border:2px dashed var(--dim);background:transparent;transition:left .3s}
+.sym .sev{font:500 12.5px "IBM Plex Mono",monospace;text-align:right}
+.sev.s0{color:var(--exc)} .sev.s1{color:var(--hi)} .sev.s2,.sev.s3{color:var(--inh)}
+@media (max-width:560px){.sym{grid-template-columns:1fr 120px}.sym .track{grid-column:1 / -1;grid-row:2}}
+@media (prefers-reduced-motion: reduce){.track .fill,.track .now,.track .was{transition:none}}
+canvas{width:100%;display:block;background:var(--field);border:1px solid var(--line);border-radius:8px}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 11px "IBM Plex Mono",monospace;letter-spacing:.8px;text-transform:uppercase;color:var(--dim)}
+td.n{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;white-space:nowrap}
+td.k{font-weight:600;white-space:nowrap}
+.up{color:var(--hi)} .down{color:var(--lo)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.card{background:var(--field);border:1px solid var(--line);border-radius:8px;padding:14px 16px;display:grid;gap:8px;align-content:start}
+.card p{color:var(--dim);font-size:14px}
+details.fold{border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+details.fold>summary{cursor:pointer;padding:11px 14px;font:500 15px "IBM Plex Sans",sans-serif;
+  list-style:none;display:flex;align-items:center;gap:9px}
+details.fold>summary::-webkit-details-marker{display:none}
+details.fold>summary::before{content:"▸";color:var(--dim);font-size:12px}
+details.fold[open]>summary::before{content:"▾"}
+details.fold .body{padding:0 16px 16px;display:grid;gap:12px}
+details.fold .body p,details.fold .body li{max-width:76ch}
+.eq{font:13.5px/1.9 "IBM Plex Mono",monospace;background:var(--field);border:1px solid var(--line);
+  border-radius:8px;padding:12px 14px;overflow-x:auto;white-space:pre}
+footer{color:var(--dim);font-size:13px;display:flex;flex-wrap:wrap;gap:6px 16px}
+footer a{color:inherit}
+@media (max-width:560px){body{padding:0 14px} h1{font-size:26px} .box{padding:15px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="toprow"><span class="eyebrow"><a href="../">Classroom for Neuroscience</a></span><a href="https://tw.linkedin.com/in/pohanc" rel="me">LinkedIn</a></div>
+    <h1>DBS Explorer</h1>
+    <p class="byline">by Po-Han Chiang @ NYCU · <a href="https://tw.linkedin.com/in/pohanc" rel="me">LinkedIn</a></p>
+    <p class="lede">Deep brain stimulation treats Parkinson's disease, essential tremor and dystonia by changing a circuit, not a single nucleus. Below is a live model of the two motor loops involved: the basal ganglia loop, which loses its dopamine in Parkinson's disease, and the cerebello-thalamo-cortical loop behind tremor. Choose a disease, place an electrode on any region, switch between high- and low-frequency stimulation, and compare what the circuit does with what patients and recordings show.</p>
+  </header>
+
+  <section class="box" aria-labelledby="circ-h">
+    <h2 id="circ-h">The circuit</h2>
+    <div class="row" role="group" aria-label="Disease">
+      <span class="lab" style="margin-right:4px">Disease</span>
+      <button type="button" data-preset="healthy">Healthy</button>
+      <button type="button" data-preset="pd">Parkinson's (80% SNc loss)</button>
+      <button type="button" data-preset="ldopa">PD + levodopa</button>
+      <button type="button" data-preset="dyskinesia">PD + too much levodopa</button>
+      <button type="button" data-preset="hemiballism">STN stroke</button>
+      <button type="button" data-preset="et">Essential tremor</button>
+      <button type="button" data-preset="dystonia">Dystonia</button>
+    </div>
+    <div class="dbs" role="group" aria-labelledby="dbs-l">
+      <span class="lab" id="dbs-l">Deep brain stimulation</span>
+      <div class="dbsrow">
+        <span class="tgt">Electrode in <b id="dbs-name">none</b></span>
+        <div class="amp"><label for="dbs-a">Amplitude <b id="dbs-av">100%</b></label><input type="range" id="dbs-a" min="0" max="100" step="5" value="100"></div>
+      </div>
+      <p class="note" id="dbs-note" aria-live="polite"></p>
+      <div class="mech" role="group" aria-labelledby="mech-l">
+        <span class="lab" id="mech-l">Mechanisms (switch any off to see what it contributes)</span>
+        <label><input type="checkbox" data-mech="soma" checked> Cell bodies inhibited <span>Dostrovsky et al. 2000</span></label>
+        <label><input type="checkbox" data-mech="axon" checked> Output axons driven at the stimulation rate <span>McIntyre et al. 2004; Hashimoto et al. 2003</span></label>
+        <label><input type="checkbox" data-mech="syn" checked> Synaptic depression / vesicle depletion <span>Rosenbaum et al. 2014; Milosevic et al. 2018</span></label>
+        <label><input type="checkbox" data-mech="pass" checked> Fibres of passage (pallidothalamic fibres beside STN)</label>
+        <label><input type="checkbox" data-mech="aff" checked> Afferent axons jammed (hyperdirect cortex in STN, DRTT in Vim) <span>Gradinaru et al. 2009</span></label>
+        <label><input type="checkbox" data-mech="glia" checked> Astrocytic adenosine <span>Bekar et al. 2008</span></label>
+        <p class="tinfo" id="dbs-info"></p>
+      </div>
+    </div>
+    <div class="stage">
+      <div class="hint-row"><span><b>Click a brain region to add DBS</b> — click it again to remove the electrode.</span><span class="seg" role="group" aria-label="Stimulation mode"><button type="button" data-mode="HFS">HFS 130 Hz</button><button type="button" data-mode="LFS">LFS 20 Hz</button><button type="button" id="dbs-off">Off</button></span></div>
+      <div class="circuit">
+        <svg id="svg" viewBox="0 0 1000 500" role="img" aria-labelledby="svg-t">
+          <title id="svg-t">Basal ganglia–thalamocortical loop. Line width shows how much signal each connection carries compared with the healthy circuit; node colour shows firing above or below healthy.</title>
+          <rect class="grp" id="strgrp" x="150" y="112" width="380" height="76" rx="12"/>
+          <text class="grpname" x="345" y="106" text-anchor="middle">STRIATUM (PUTAMEN)</text>
+          <text class="grpname" x="34" y="320">MIDBRAIN</text>
+          <rect class="grp" x="564" y="226" width="278" height="72" rx="12"/>
+          <text class="grpname" x="703" y="220" text-anchor="middle">MOTOR THALAMUS</text>
+          <rect class="grp" x="722" y="396" width="268" height="70" rx="12"/>
+          <text class="grpname" x="856" y="484" text-anchor="middle">CEREBELLUM</text>
+          <g id="edges"></g>
+          <g id="nodes"></g>
+          <g id="elabs"></g>
+        </svg>
+      </div>
+      <div class="dash" aria-labelledby="dash-l">
+        <div class="dash-head"><span class="lab" id="dash-l">Symptoms · healthy ← → severe</span><span class="dash-key">▮ now · <span style="border:1.5px dashed var(--dim);padding:0 3px;border-radius:3px">┆</span> without DBS</span></div>
+        <div id="dash-rows"></div>
+        <p class="dash-key">Each bar is read from the model: slowness from how far VA/VL falls below its healthy rate, rigidity from the STN beta rhythm, tremor from M1's 4–10 Hz rhythm, dystonia from the 4–10 Hz rhythm the thalamus passes to cortex, involuntary movement from how far VA/VL rises above healthy. The scales are illustrative, not clinical scores.</p>
+      </div>
+      <div class="sliders" id="sliders" aria-label="Neuron strength controls"></div>
+    </div>
+    <div class="legend">
+      <span>with DBS: <b>out</b> = what the nucleus sends on, <b>soma</b> = how fast its cell bodies fire</span>
+      <span><span class="sw" style="background:var(--exc)"></span>excitatory (glutamate)</span>
+      <span><span class="sw" style="background:var(--inh)"></span>inhibitory (GABA)</span>
+      <span><span class="sw" style="background:repeating-linear-gradient(90deg,var(--da) 0 6px,transparent 6px 10px)"></span>dopamine</span>
+      <span>line width = signal carried; label = change vs healthy</span>
+      <span>node: below<span class="scale"></span>above healthy rate</span>
+    </div>
+    <div class="facts" id="facts">
+      <div class="fact"><span class="lab">Striatal dopamine</span><span class="val" id="f-da">100%</span><span class="d">of the healthy level</span></div>
+      <div class="fact"><span class="lab">GPi / SNr output</span><span class="val" id="f-gpi">70 Hz</span><span class="d" id="f-gpi-d">healthy 70 Hz</span></div>
+      <div class="fact"><span class="lab">VA/VL thalamus → cortex</span><span class="val" id="f-th">15 Hz</span><span class="d" id="f-th-d">healthy 15 Hz</span></div>
+      <div class="fact"><span class="lab">STN–GPe beta rhythm</span><span class="val" id="f-beta">none</span><span class="d" id="f-beta-d">steady firing</span></div>
+      <div class="fact"><span class="lab">Dystonic rhythm (VA/VL 4–10 Hz)</span><span class="val" id="f-dys">none</span><span class="d" id="f-dys-d">thalamus steady</span></div>
+      <div class="fact"><span class="lab">Tremor (cerebellar loop)</span><span class="val" id="f-trem">none</span><span class="d" id="f-trem-d">M1 steady</span></div>
+    </div>
+    <div class="verdict" id="verdict" aria-live="polite"></div>
+  </section>
+
+  <section class="box" aria-labelledby="tr-h">
+    <h2 id="tr-h">Activity over the last second</h2>
+    <p class="muted">Each lane is one nucleus, in spikes per second; the dashed line is its healthy rate. The last lane, M1, is where tremor shows up. A movement starts when cortex fires harder: in a healthy circuit that command passes through the direct pathway, GPi pauses and the thalamus is released.</p>
+    <div class="row">
+      <button type="button" class="go" id="cmd">Send a movement command</button>
+      <span class="muted" id="cmd-out" aria-live="polite" style="font-size:14px"></span>
+    </div>
+    <canvas id="tr" height="300" aria-label="Firing rate traces of STN, GPe, GPi and thalamus over the last second"></canvas>
+  </section>
+
+  <section class="box" aria-labelledby="tab-h">
+    <h2 id="tab-h">Every nucleus, now versus healthy</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Nucleus</th><th>Transmitter</th><th>Healthy</th><th>Without DBS</th><th>Now</th><th>Change vs healthy</th></tr></thead>
+      <tbody id="tbody"></tbody>
+    </table></div>
+  </section>
+
+  <section class="box" aria-labelledby="what-h">
+    <h2 id="what-h">What goes wrong in Parkinson's disease</h2>
+    <p>The nigrostriatal pathway runs from the substantia nigra pars compacta (SNc) in the midbrain to the dorsal striatum, mostly the putamen. In Parkinson's disease these dopamine neurons degenerate, with Lewy bodies made of aggregated α-synuclein in the survivors. The motor signs — slowness (bradykinesia), rigidity, a 4–6 Hz tremor at rest and, later, unstable posture — usually appear only once roughly 60–80% of striatal dopamine is gone. The terminals seem to go first and the cell bodies later, so only about a third to a half of the neurons are lost at diagnosis.</p>
+    <p>Dopamine itself does not move anything. It sets the balance between two populations of striatal projection neurons, and the rest of the loop amplifies that imbalance.</p>
+    <div class="grid2">
+      <div class="card">
+        <h3>Direct pathway: D1 → GPi</h3>
+        <p>D1 receptors couple to Gα<sub>s/olf</sub>, raise cAMP and make these neurons easier to drive. They inhibit GPi/SNr directly. GPi is itself inhibitory and fires tonically at 60–80 Hz, holding the motor thalamus down; when D1 neurons fire, GPi pauses and the thalamus is released. Net effect: <b>go</b>.</p>
+      </div>
+      <div class="card">
+        <h3>Indirect pathway: D2 → GPe → STN → GPi</h3>
+        <p>D2 receptors couple to Gα<sub>i/o</sub> and make these neurons harder to drive. They inhibit GPe, which releases the subthalamic nucleus, whose glutamate excites GPi. Two inhibitions and an excitation: the net effect is more GPi, a firmer brake. Net effect: <b>no-go</b>.</p>
+      </div>
+    </div>
+    <p>Because dopamine excites one pathway and suppresses the other, losing it pushes both in the same direction: the direct pathway falls silent, the indirect pathway becomes overactive, and both converge on <b>more GPi output and less thalamic drive to motor cortex</b>. This is the rate model of Albin, Young and Penney (1989) and DeLong (1990). It predicted, correctly, that silencing the subthalamic nucleus should relieve parkinsonism in monkeys made parkinsonian with MPTP (Bergman, Wichmann and DeLong, 1990) — the origin of today's STN deep brain stimulation.</p>
+  </section>
+
+  <section class="box" aria-labelledby="beta-h">
+    <h2 id="beta-h">Rates are half the story: the beta rhythm</h2>
+    <p>The rate model cannot explain everything. Lesioning GPi helps, but so does adding more stimulation to STN, and some patients improve without their firing rates returning to normal. What recordings from patients show instead is a change in pattern: neurons in STN and GPe start firing in synchrony, and the local field potential carries a strong oscillation at 13–30 Hz, the beta band. Beta power falls with levodopa and with DBS roughly in proportion to how much bradykinesia and rigidity improve, which is why adaptive DBS systems now use STN beta as their feedback signal.</p>
+    <p>The rhythm comes from the STN–GPe loop: STN excites GPe, GPe inhibits STN, and each step takes a few milliseconds. A loop with negative feedback and delay oscillates once its gain is high enough (Holgado, Terry and Bogacz, 2010). After dopamine loss, GPe→STN synapses proliferate (Fan et al., 2012), raising that gain. In this model the GPe→STN weight grows with the dopamine deficit, and the loop starts to oscillate at about 16 Hz once around 70% of SNc output is gone. Watch the STN and GPe lanes above while you drag the SNc slider down.</p>
+    <p class="muted">Tremor is a different rhythm, slower and generated in a different loop — see the next section.</p>
+  </section>
+
+  <section class="box" aria-labelledby="cb-h">
+    <h2 id="cb-h">A second loop: the cerebellum, Vim and tremor</h2>
+    <p>The motor thalamus is not one relay. Its front part, <b>VA/VL</b>, receives the GABAergic output of GPi and projects mainly to premotor cortex and the SMA: that is the basal ganglia loop above. Just behind it, the <b>ventral intermediate nucleus (Vim)</b> receives excitatory input from the dentate nucleus of the cerebellum and projects mainly to primary motor cortex. M1 sends a copy of every command through the pontine nuclei to the cerebellar cortex, whose Purkinje cells inhibit the dentate nucleus, which drives Vim, which drives M1 again.</p>
+    <p>That cerebello-thalamo-cortical loop contains one inhibitory step, so it is a <b>negative feedback loop with delay</b>. Such a loop is stable while its gain is low and starts to oscillate once the gain is too high; here the rhythm comes out at about 7 Hz, inside the 4–12 Hz range of essential tremor. Post-mortem studies of essential tremor find Purkinje cell damage and fewer GABA receptors in the dentate nucleus, both of which would leave the dentate under-inhibited. A second idea comes from the harmaline model of essential tremor: the inferior olive, which drives Purkinje cells through climbing fibres, starts to oscillate at 6–10 Hz. The <i>Essential tremor</i> preset combines both — a 7 Hz olivary drive into the Purkinje cells and a dentate 30% stronger than normal — so the loop resonates with a rhythm that it did not make itself. That distinction matters for stimulation: high-frequency Vim DBS stops the rhythm from reaching M1, while 20 Hz stimulation only adds to it, as Benabid and colleagues found when they first tested frequencies in the 1980s.</p>
+    <p>This is why thalamic DBS for tremor goes to Vim and not to VA/VL. Stimulating Vim replaces its output with a steady signal, the loop opens and the oscillation stops, but the basal ganglia brake on VA/VL is untouched: in Parkinson's disease, Vim DBS can abolish the tremor and leave slowness and rigidity exactly where they were. STN and GPi stimulation help Parkinsonian tremor too, which led to the <b>dimmer–switch</b> idea (Helmich et al., 2012): the basal ganglia switch tremor episodes on, and the cerebellar loop sets their amplitude. That trigger is not in this model, so the Parkinson's presets here have no tremor.</p>
+  </section>
+
+  <section class="box" aria-labelledby="dy-h">
+    <h2 id="dy-h">Dystonia: a weak brake, in the wrong rhythm</h2>
+    <p>Dystonia is a movement disorder of sustained or intermittent muscle contractions that twist the body into abnormal, often repetitive postures — in one region, such as the neck or the hand that writes, or across the whole body, as in the inherited <i>TOR1A</i> (DYT1) form. It is a disorder of a network rather than of one nucleus: patients show reduced inhibition inside motor cortex, abnormal plasticity at corticostriatal synapses and fewer available D2 receptors, and the cerebellum is involved too.</p>
+    <p>Recordings made during DBS surgery show the pallidal side of it. GPi neurons fire <b>lower</b> than in Parkinson's disease, and irregularly, in bursts and pauses; the local field potential carries a strong <b>4–12 Hz</b> rhythm that is coherent with the dystonic muscle activity. The <i>Dystonia</i> preset reproduces that picture: the direct pathway is stronger and the indirect pathway weaker, so GPi falls and the thalamus is released, and a synchronised 6 Hz rhythm is injected into the striatum. Where that rhythm really comes from is unknown — striatal cholinergic interneurons, cortex and cerebellum are all candidates — so the model does not pretend to generate it.</p>
+    <p>GPi DBS is the standard treatment, and it shows the paradox of pallidal surgery most clearly. GPi is already too low, yet stimulating it helps: high-frequency stimulation replaces its bursts and pauses with a steady signal, and the thalamus stops following the rhythm. STN is used as an alternative target. Unlike tremor, which stops within seconds, dystonia improves over weeks to months after the stimulator is switched on, a sign that slow plasticity in the network does much of the work; that is not in this model.</p>
+  </section>
+
+  <section class="box" aria-labelledby="rx-h">
+    <h2 id="rx-h">Treatments, placed on the circuit</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Treatment</th><th>Where it acts</th><th>What it does to the loop</th><th></th></tr></thead>
+      <tbody>
+        <tr><td class="k">Levodopa + carbidopa</td><td>SNc terminals, striatum</td><td>Dopamine precursor; surviving terminals and other cells convert it. Restores the D1/D2 balance. As neurons are lost, the brain buffers it less, the window between "off" and peak-dose dyskinesia narrows, and too much flips the circuit into excess movement.</td><td><button type="button" data-preset="ldopa">Try</button></td></tr>
+        <tr><td class="k">Dopamine agonists</td><td>D2/D3 receptors</td><td>Pramipexole, ropinirole, rotigotine act on the receptors directly, mostly the indirect pathway; in this model they behave like added dopamine.</td><td></td></tr>
+        <tr><td class="k">MAO-B and COMT inhibitors</td><td>Dopamine breakdown</td><td>Selegiline, rasagiline, safinamide; entacapone, opicapone. Make each molecule of dopamine last longer.</td><td></td></tr>
+        <tr><td class="k">STN deep brain stimulation</td><td>STN</td><td>130–185 Hz pulses through an implanted electrode. The mechanism is still debated; the net effect resembles taking STN's patterned output out of the loop — partly because the stimulated terminals <a href="../DBS_Vesicle_Depletion/">run out of vesicles</a>. Breaks the beta rhythm and reduces GPi drive.</td><td><button type="button" data-preset="dbs">Try</button></td></tr>
+        <tr><td class="k">GPi DBS, pallidotomy</td><td>GPi</td><td>Pallidotomy removes the abnormal output; DBS replaces it with a steady signal near the healthy level. STN and GPe may still oscillate, but their pattern no longer reaches the thalamus. Focused ultrasound can now make the same lesion without opening the skull.</td><td><button type="button" data-preset="gpidbs">Try DBS</button> <button type="button" data-preset="pallidotomy">Try lesion</button></td></tr>
+        <tr><td class="k">Vim DBS, thalamotomy</td><td>Vim</td><td>The standard surgery for essential tremor and tremor-dominant Parkinson's disease; focused ultrasound can make the thalamotomy without an incision. Stops the cerebellar-loop oscillation; does not touch the basal ganglia loop.</td><td><button type="button" data-preset="etvim">Try</button></td></tr>
+        <tr><td class="k">Propranolol, primidone</td><td>Peripheral β-receptors; GABA-A</td><td>First-line drugs for essential tremor. They lower tremor amplitude in many patients; their exact site in the circuit is uncertain.</td><td></td></tr>
+        <tr><td class="k">GPi DBS for dystonia</td><td>GPi</td><td>The standard surgical treatment for generalised and cervical dystonia; benefit builds up over weeks to months.</td><td><button type="button" data-preset="dystgpi">Try</button></td></tr>
+        <tr><td class="k">Botulinum toxin</td><td>Neuromuscular junction</td><td>First-line for focal dystonia: blocks acetylcholine release in the overactive muscles. Acts outside the brain, so it is not on this circuit.</td><td></td></tr>
+        <tr><td class="k">Amantadine</td><td>NMDA receptors</td><td>Weak NMDA antagonist; mainly used to reduce levodopa-induced dyskinesia.</td><td></td></tr>
+        <tr><td class="k">Anticholinergics</td><td>Striatal cholinergic interneurons</td><td>Trihexyphenidyl; acetylcholine and dopamine oppose each other in striatum. Mostly for tremor in younger patients. Interneurons are not in this model.</td><td></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="box" aria-labelledby="try-h">
+    <h2 id="try-h">What to try</h2>
+    <ol>
+      <li>From <b>Healthy</b>, drag the SNc slider down slowly. GPi rises and the thalamus falls well before anything oscillates; beta appears only near 30% remaining. Clinical symptoms also wait for a large loss.</li>
+      <li>At <b>Parkinson's</b>, press <i>Send a movement command</i>. In a healthy circuit the command releases the thalamus; here the silent direct pathway cannot pass it, and the overactive indirect and hyperdirect pathways push GPi up instead.</li>
+      <li>Add levodopa a little at a time. Around 80% added (back to 100% total) everything is normal; a little more and GPi collapses — the circuit version of peak-dose dyskinesia.</li>
+      <li>Start from <b>Parkinson's</b> and click each region of the circuit in turn to stimulate it. Which ones help, and which make things worse? With the electrode in STN, lower the amplitude: how much stimulation does it take to stop the beta rhythm?</li>
+      <li>Keep the STN electrode and switch between <b>HFS</b> and <b>LFS</b>. Which one removes the beta rhythm, and which one imposes a rhythm of its own?</li>
+      <li>Put the electrode in GPi, then switch the disease between <b>Parkinson's</b> and <b>STN stroke</b>. GPi is too high in the first and too low in the second, yet the same stimulation helps both. Why?</li>
+      <li>With an STN or GPi electrode, press <i>Send a movement command</i>. The command no longer passes through the stimulated output — what does the thalamus do instead?</li>
+      <li>At <b>Parkinson's</b>, compare STN DBS with the pallidotomy in the treatment table. Both relieve the thalamus; only DBS stops the beta rhythm.</li>
+      <li>Press <b>Essential tremor</b> and watch the M1 lane. Then try every DBS target. Only one stops the tremor without touching the basal ganglia. Now press <b>Parkinson's</b> and put DBS in Vim: what happens to the VA/VL thalamus?</li>
+      <li>From <b>Healthy</b>, raise the dentate slider slowly. At what strength does the loop start to oscillate? Does lowering any other node in the same loop (pons, Purkinje, Vim, M1) bring it back?</li>
+      <li>Press <b>Dystonia</b> and watch the GPi and VA/VL lanes: low, and pulsing at 6 Hz. Put the electrode in GPi with HFS. Which number changes more — the mean rate or the rhythm? Then try Vim.</li>
+      <li>Weaken one node at a time in a healthy circuit and predict the sign of the change at GPi before you look. <b>STN stroke</b> and a weak D2 slider (loss of indirect-pathway neurons) both release the thalamus: involuntary movement is the mirror image of parkinsonism.</li>
+    </ol>
+  </section>
+
+  <details class="fold">
+    <summary>The model</summary>
+    <div class="body">
+      <p>Each nucleus is one population with a firing rate r (spikes/s) that relaxes toward a sigmoid of its input. The sigmoid is set so that every nucleus sits exactly at its healthy rate B when all its inputs are at their healthy rates; inputs are therefore deviations from healthy.</p>
+      <div class="eq">τ<sub>i</sub> dr<sub>i</sub>/dt = −r<sub>i</sub> + F<sub>i</sub>( Σ<sub>j</sub> w<sub>ji</sub> · ( o<sub>j</sub>(t − d<sub>ji</sub>) − B<sub>j</sub> ) )
+o<sub>j</sub> = s<sub>j</sub> · r<sub>j</sub>            (s = the strength slider: 0 = lesion, 1 = healthy, 2 = doubled)
+F(x) = M / (1 + ((M − B)/B) · e<sup>−4x/M</sup>)    so F(0) = B
+
+dopamine  DA = s<sub>SNc</sub> + levodopa   (1 = healthy)
+D1 input  += 6 · (DA − 1);  cortex → D1 scaled by DA
+D2 input  −= 8 · (DA − 1);  cortex → D2 scaled by 1 − 0.6 (DA − 1)
+GPe → STN weight × (1 + 3.5 · max(0, 1 − DA))
+dystonia: D1 and D2 inputs += 20 · θ · sin(2π · 6 Hz · t)   (θ = the striatal 6 Hz drive slider)
+DBS at amplitude A affects a = A · cover<sub>k</sub> of the target (cover: STN 1, Vim 1, GPi 0.9, VA/VL 0.8, dentate 0.8, GPe 0.6, pons 0.5, SNc 0.5, striatum 0.1, cortex 0.05)
+HFS, myelinated output axons: o<sub>k</sub> = s<sub>k</sub> · ( (1 − a) · r<sub>k</sub> + a · D<sub>k</sub> )      driven axons replace the cell's own spikes
+HFS, thin axons (striatum, SNc): o<sub>k</sub> = s<sub>k</sub> · (1 − a) · r<sub>k</sub>            cell bodies inhibited
+D<sub>k</sub> = B<sub>k</sub> · R(130) / R(B<sub>k</sub>) with synaptic depression, or min(130 Hz, M<sub>k</sub>) without it
+fibres of passage: STN electrode → 0.85 A of the GPi output replaced by D<sub>GPi</sub>
+afferent jamming (HFS): hyperdirect CTX → STN and dentate → Vim inputs × (1 − a)
+adenosine (HFS): excitatory inputs to the target × (1 − 0.3 a)
+LFS (20 Hz): o<sub>k</sub> = s<sub>k</sub> · ( r<sub>k</sub> + a · D<sub>k</sub>(20) · (1 + cos 2π·20·t) )     extra spikes on top of the cell's own
+R(f) = f · x<sub>ss</sub>(1000/f)   (vesicle depletion, τ = 250 ms; release probability 0.7 thalamocortical, 0.35 GABAergic, 0.05 other glutamatergic terminals)
+essential tremor: Purkinje input += 30 · ι · sin(2π · 7 Hz · t)   (ι = the inferior olive drive slider)</div>
+      <div class="tbl"><table>
+        <thead><tr><th>Connection</th><th>Weight</th><th>Delay</th><th>Connection</th><th>Weight</th><th>Delay</th></tr></thead>
+        <tbody id="ptab"></tbody>
+      </table></div>
+      <p class="muted">Healthy rates (spikes/s) and time constants: cortex 10 (τ 10 ms), D1 and D2 projection neurons 1 (10 ms), GPe 60 (20 ms), STN 20 (12.8 ms), GPi/SNr 70 (15 ms), thalamus 15 (10 ms), SNc 4; M1 and pontine nuclei 10 (10 ms), Purkinje cells 50 (12 ms), dentate 40 (15 ms), Vim 20 (15 ms). The rates are typical of primate recordings; the weights were chosen so that the model reproduces the textbook direction of every change after dopamine loss, after STN or GPi lesions and after loss of indirect-pathway neurons, and so that the STN–GPe loop oscillates only after severe dopamine loss. Integration: forward Euler, 0.1 ms steps, run live in your browser.</p>
+    </div>
+  </details>
+
+  <details class="fold">
+    <summary>How the model compares with the literature</summary>
+    <div class="body">
+      <p>Each line is checked automatically against the model's steady state (3 s of model time). DBS benefit is measured as the share of the way the VA/VL thalamus moves back towards its healthy rate.</p>
+      <div class="tbl"><table>
+        <thead><tr><th></th><th>Clinical or experimental finding</th><th>Model</th></tr></thead>
+        <tbody>
+          <tr><td>✓</td><td>Parkinson's: GPi and STN rates rise, GPe falls (MPTP monkeys)</td><td class="n">GPi 70→121, STN 20→40, GPe 60→53 Hz</td></tr>
+          <tr><td>✓</td><td>STN beta (13–30 Hz) only after severe dopamine loss; removed by levodopa and STN DBS</td><td class="n">17 Hz at 20% SNc, none at 50%</td></tr>
+          <tr><td>✓</td><td>Excess levodopa → dyskinesia, with GPi rates falling</td><td class="n">GPi 3, VA/VL 45 Hz</td></tr>
+          <tr><td>✓</td><td>STN lesion relieves MPTP parkinsonism; STN stroke causes hemiballism</td><td class="n">VA/VL 3.7→6.8; 15→23.5 Hz</td></tr>
+          <tr><td>✓</td><td>STN DBS improves Parkinson's motor scores by about half</td><td class="n">52% of the way back; beta gone</td></tr>
+          <tr><td>✓</td><td>During STN DBS, GPi and GPe neurons fire faster (Hashimoto et al., 2003)</td><td class="n">GPi cell bodies 121→160, GPe 52→63 Hz; GPi output to thalamus 87 Hz and pattern-free</td></tr>
+          <tr><td>✓</td><td>GPi DBS improves Parkinson's</td><td class="n">72%</td></tr>
+          <tr><td>✓</td><td>Vim DBS stops tremor but not slowness</td><td class="n">ET tremor gone; PD VA/VL unchanged</td></tr>
+          <tr><td>✓</td><td>Striatal stimulation is not a treatment for movement symptoms</td><td class="n">4%</td></tr>
+          <tr><td>✓</td><td>5–20 Hz STN or GPi stimulation worsens slowness</td><td class="n">VA/VL 3.7→1.3 Hz</td></tr>
+          <tr><td>✓</td><td>GPi (and STN) DBS treat dystonia; Vim does not</td><td class="n">thalamic 6 Hz swing ±13 → ±1 (GPi), ±2 (STN)</td></tr>
+          <tr><td>✓</td><td>Thalamic (Vo) DBS can help dystonia, less than GPi; only high frequency stops the rhythm</td><td class="n">HFS: thalamic 6 Hz ±13 → ±3; LFS: unchanged</td></tr>
+          <tr><td>✓</td><td>GPi DBS / pallidotomy treat hemiballism</td><td class="n">VA/VL 23.5→14.1 Hz</td></tr>
+          <tr><td>✓</td><td>Low-frequency Vim stimulation does not stop tremor; high-frequency does (Benabid et al., 1991)</td><td class="n">7 Hz tremor: 13.4 → 6.1 at 20 Hz, → 0 at 130 Hz</td></tr>
+          <tr><td>—</td><td>Dystonia improves over weeks to months; 60 Hz STN DBS can help gait freezing</td><td class="n">not modelled (no plasticity, no gait)</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </details>
+
+  <details class="fold">
+    <summary>What this model leaves out</summary>
+    <div class="body">
+      <ul>
+        <li>Spikes and individual neurons. Each nucleus is one average rate, so the model shows synchrony only as an oscillation of that average.</li>
+        <li>Parallel channels. Real basal ganglia keep many action channels side by side; selecting one movement means releasing one channel while braking the rest. Recordings also show direct and indirect pathway neurons active together at movement onset, which the simple go/no-go picture does not capture.</li>
+        <li>Striatal interneurons (cholinergic, fast-spiking), the SNr–GPi distinction, the pedunculopontine nucleus and thalamostriatal projections.</li>
+        <li>Plasticity. Dopamine also teaches corticostriatal synapses; that learning, and the brain's compensation before symptoms appear, is absent.</li>
+        <li>Drug kinetics. Levodopa here is a steady level, not a dose that rises and wears off.</li>
+        <li>Parts of how DBS works. The six mechanisms above are reduced to rates. Left out: cortex has no beta of its own here, so jamming the hyperdirect axons does little; partial axonal conduction failure; the side effects of current spreading into the internal capsule, medial lemniscus or oculomotor fibres; electrode geometry and directional leads; and the plasticity that makes dystonia improve over weeks.</li>
+        <li>The origin of the essential tremor rhythm. The inferior olive is represented by a fixed 7 Hz drive, not by its own neurons.</li>
+        <li>The origin of the dystonic rhythm. It is injected into the striatum as a fixed 6 Hz drive; the model does not explain where it comes from or why dystonia improves slowly after surgery.</li>
+        <li>Parkinsonian rest tremor. The cerebellar loop can oscillate here, but the basal ganglia trigger of the dimmer–switch model is absent, and so are the inferior olive and climbing fibres, the other proposed tremor generator.</li>
+        <li>Non-motor symptoms (smell, sleep, mood, autonomic) and the parts of the disease outside the nigrostriatal pathway.</li>
+      </ul>
+    </div>
+  </details>
+
+  <footer><span>© 2026 Po-Han Chiang</span><span>Code licensed under <a href="https://github.com/phclab/class/blob/main/LICENSE">GPL-3.0-or-later</a></span><span><a href="../">Back to the classroom</a></span></footer>
+</div>
+<script>
+(() => {
+const NODES = {
+  CTX:  {name:"Premotor cortex and SMA", short:"Cortex (SMA)", tx:"glutamate", B:10, M:40, tau:10, x:360, y:46, w:420},
+  M1:   {name:"Primary motor cortex (M1)", short:"M1", tx:"glutamate", B:10, M:40, tau:10, x:855, y:46, w:230},
+  D1:   {name:"Striatum D1 neurons", short:"D1 (direct)", tx:"GABA", B:1, M:30, tau:10, x:240, y:150},
+  D2:   {name:"Striatum D2 neurons", short:"D2 (indirect)", tx:"GABA", B:1, M:30, tau:10, x:450, y:150},
+  GPE:  {name:"Globus pallidus external (GPe)", short:"GPe", tx:"GABA", B:60, M:250, tau:20, x:450, y:262},
+  STN:  {name:"Subthalamic nucleus (STN)", short:"STN", tx:"glutamate", B:20, M:250, tau:12.8, x:450, y:372},
+  GPI:  {name:"Globus pallidus internal / SNr", short:"GPi / SNr", tx:"GABA", B:70, M:250, tau:15, x:240, y:372},
+  THAL: {name:"Motor thalamus VA/VL (pallidal)", short:"VA/VL", tx:"glutamate", B:15, M:60, tau:10, x:640, y:262},
+  SNC:  {name:"Substantia nigra pars compacta (SNc)", short:"SNc", tx:"dopamine", B:4, M:20, tau:20, x:80, y:372},
+  PN:   {name:"Pontine nuclei", short:"Pons", tx:"glutamate", B:10, M:40, tau:10, x:930, y:262, w:100},
+  PC:   {name:"Purkinje cells (cerebellar cortex)", short:"Purkinje", tx:"GABA", B:50, M:150, tau:12, x:930, y:430, w:100},
+  DN:   {name:"Dentate nucleus (cerebellum)", short:"Dentate", tx:"glutamate", B:40, M:150, tau:15, x:780, y:430, w:100},
+  VIM:  {name:"Motor thalamus Vim (cerebellar)", short:"Vim", tx:"glutamate", B:20, M:80, tau:15, x:780, y:262, w:100}
+};
+const ORDER = ["CTX","M1","D1","D2","GPE","STN","GPI","THAL","SNC","PN","PC","DN","VIM"];
+const HINT = {
+  SNC:"The neurons lost in Parkinson's disease.",
+  CTX:"Drives striatum and, via the hyperdirect pathway, STN.",
+  M1:"Sends the movement to the spinal cord; tremor shows up here.",
+  D1:"Direct pathway: inhibits GPi.",
+  D2:"Indirect pathway: inhibits GPe.",
+  GPE:"Pacemaking GABA neurons; brake on STN.",
+  STN:"The only glutamatergic nucleus inside the loop.",
+  GPI:"Output nucleus; tonic brake on the thalamus.",
+  THAL:"Pallidal-receiving thalamus: relays the released signal back to cortex.",
+  PN:"Relays motor cortex to the cerebellum.",
+  PC:"Inhibit the dentate nucleus.",
+  DN:"Cerebellar output: excites Vim.",
+  VIM:"Cerebellar-receiving thalamus; the tremor DBS target."
+};
+// [from, to, weight, delay ms, type, svg path, label x, label y]
+const EDGES = [
+  ["CTX","D1",  1.5, 5,  "exc","M240 72 V122",240,98],
+  ["CTX","D2",  1.5, 5,  "exc","M450 72 V122",450,98],
+  ["CTX","STN", 1.0, 5.5,"exc","M548 72 V372 H520",548,322],
+  ["D1","GPI", -15,  7,  "inh","M240 178 V340",240,250],
+  ["D2","GPE", -25,  5,  "inh","M450 178 V232",450,206],
+  ["GPE","STN",-1.5, 6,  "inh","M436 290 V342",412,318],
+  ["STN","GPE", 2.0, 6,  "exc","M464 346 V294",490,318],
+  ["GPE","GPE",-0.3, 4,  "inh","M388 250 C352 236 352 290 382 278",344,262],
+  ["STN","GPI", 2.0, 3,  "exc","M382 372 H310",346,386],
+  ["GPE","GPI",-0.3, 3,  "inh","M392 288 L300 348",330,304],
+  ["GPI","THAL",-0.5,5,  "inh","M240 400 V460 H640 V292",440,460],
+  ["THAL","CTX",0.25,5,  "exc","M640 234 V58 H574",640,140],
+  ["CTX","M1",  0.5, 3,  "exc","M572 34 H738",655,26],
+  ["M1","PN",   1.0, 4,  "exc","M930 74 V232",930,150],
+  ["PN","PC",   2.0, 6,  "exc","M930 290 V400",930,345],
+  ["PC","DN",  -1.0, 3,  "inh","M878 430 H834",856,416],
+  ["DN","VIM",  1.0, 4,  "exc","M780 402 V292",780,345],
+  ["VIM","M1",  1.0, 4,  "exc","M780 234 V76",780,150],
+  ["SNC","D1",  0,   0,  "da", "M80 344 C80 220 130 150 172 150",112,226],
+  ["SNC","D2",  0,   0,  "da", "M120 352 C230 300 300 200 392 174",318,226]
+];
+const TH_HZ = 6, TH_AMP = 20, IO_HZ = 7, IO_AMP = 30;
+const CPL = 3.5, DT = 0.1, HLEN = Math.round(10/DT)+2;
+
+const s = {}; ORDER.forEach(k => s[k] = 1);
+let ldopa = 0, theta = 0, olive = 0;
+const st = {
+  r: ORDER.map(k => NODES[k].B),
+  hist: ORDER.map(k => new Float64Array(HLEN).fill(NODES[k].B)),
+  hp: 0, t: 0
+};
+const IDX = Object.fromEntries(ORDER.map((k,i) => [k,i]));
+function F(x,p){ return p.M/(1+((p.M-p.B)/p.B)*Math.exp(-4*x/p.M)); }
+function dopa(g){
+  let sn = g.SNC;
+  const d = g.dbs;
+  if(d) sn *= dbsOut(d, IDX.SNC, NODES.SNC.B, 0)/NODES.SNC.B;
+  return Math.max(0, sn + g.ld);
+}
+// release probability: thalamocortical terminals depress strongest, GABAergic
+// pallidal and striatal ones strongly, other glutamatergic ones (STN, cortex) little
+const HFS_HZ = 130, LFS_HZ = 20, TAU_REC = 250;
+const PREL = k => k==="THAL" || k==="VIM" ? 0.7 : NODES[k].tx==="glutamate" ? 0.05 : 0.35;
+function xss(T, p){ const e = Math.exp(-T/TAU_REC); return (1-e)/(1-(1-p)*e); }
+function release(f, p){ return f*xss(1000/f, p); }
+function driven(k, f){ return NODES[k].B * release(f, PREL(k))/release(NODES[k].B, PREL(k)); }
+
+function step(S, g, cmd){
+  const DA = dopa(g), dac = Math.min(DA,2.5);
+  const inp = new Float64Array(ORDER.length);
+  const em = g.dbs ? g.dbs.edgeMul : null;
+  for(let j=0;j<EDGES.length;j++){
+    const e = EDGES[j];
+    if(e[4]==="da" || e[0]===e[1] && e[0]!=="GPE") continue;
+    const a = IDX[e[0]], b = IDX[e[1]];
+    let pre = S.hist[a][(S.hp - Math.round(e[3]/DT) + HLEN*4) % HLEN];
+    let w = e[2];
+    if(e[0]==="GPE" && e[1]==="STN") w *= 1 + CPL*Math.max(0,1-DA);
+    if(e[1]==="D1") pre *= dac;
+    if(e[1]==="D2") pre *= Math.max(0, 1-0.6*(dac-1));
+    inp[b] += w*(em ? em[j] : 1)*(pre - NODES[e[0]].B);
+  }
+  inp[IDX.D1] += 6*(dac-1);
+  inp[IDX.D2] -= 8*(dac-1);
+  // dystonia: an injected, synchronised 6 Hz rhythm in the striatum
+  if(g.th){ const th = g.th*TH_AMP*Math.sin(2*Math.PI*TH_HZ*S.t/1000); inp[IDX.D1] += th; inp[IDX.D2] += th; }
+  // essential tremor: rhythmic climbing-fibre input from the inferior olive
+  if(g.io) inp[IDX.PC] += g.io*IO_AMP*Math.sin(2*Math.PI*IO_HZ*S.t/1000);
+  inp[IDX.CTX] += cmd;
+  for(let i=0;i<ORDER.length;i++){
+    const p = NODES[ORDER[i]];
+    const target = ORDER[i]==="SNC" ? p.B : F(inp[i],p);
+    S.r[i] += DT/p.tau*(target - S.r[i]);
+  }
+  S.hp = (S.hp+1) % HLEN;
+  const d = g.dbs;
+  for(let i=0;i<ORDER.length;i++){
+    const o = d ? dbsOut(d, i, S.r[i], S.t) : S.r[i];
+    S.hist[i][S.hp] = o*g[ORDER[i]];
+  }
+  S.t += DT;
+}
+const dbs = {target:"", amp:1, mode:"HFS"};
+// ---------- DBS: several mechanisms, each with its own switch ----------
+// Fraction of the nucleus' motor territory inside the volume an electrode
+// activates (~2-3 mm radius): small nuclei are covered, the putamen is not.
+const COVER = {STN:1, GPI:0.9, GPE:0.6, VIM:1, THAL:0.8, STR:0.1, SNC:0.5, CTX:0.05, M1:0.05, PN:0.5, PC:0.1, DN:0.8};
+const NODES_OF = t => t==="STR" ? ["D1","D2"] : [t];
+// thin or unmyelinated output axons are hard to drive
+const THIN = {D1:1, D2:1, SNC:1};
+// fibres of passage beside a target: pallidothalamic fibres skirt STN
+const PASSING = {STN:{GPI:0.85}};
+// afferent axons driven antidromically: hyperdirect cortical axons in STN,
+// the dentato-rubro-thalamic tract in Vim
+const AFFERENT = {STN:["CTX"], VIM:["DN"]};
+const MECH = {soma:true, axon:true, aff:true, pass:true, syn:true, glia:true};
+const tname = t => t==="STR" ? "Striatum" : NODES[t].short;
+function dbsSpec(target, mode, amp){
+  if(!target) return null;
+  const a = new Float64Array(ORDER.length), p = new Float64Array(ORDER.length);
+  for(const k of NODES_OF(target)) a[IDX[k]] = amp*COVER[target];
+  if(MECH.pass) for(const [k, f] of Object.entries(PASSING[target] || {})) p[IDX[k]] = amp*f;
+  const edgeMul = new Float64Array(EDGES.length).fill(1);
+  const tset = new Set(NODES_OF(target)), cov = amp*COVER[target];
+  EDGES.forEach((e, j) => {
+    if(!tset.has(e[1])) return;
+    // collision with antidromic spikes jams an afferent pathway only at high frequency
+    if(MECH.aff && mode==="HFS" && (AFFERENT[target] || []).includes(e[0])) edgeMul[j] *= 1 - cov;
+    if(MECH.glia && mode==="HFS" && e[2] > 0) edgeMul[j] *= 1 - 0.3*cov;
+  });
+  const f = mode==="LFS" ? LFS_HZ : HFS_HZ;
+  // what a driven axon delivers: depleted at 130 Hz, or every pulse in full
+  const level = ORDER.map(k => mode==="LFS" || MECH.syn ? driven(k, f) : Math.min(HFS_HZ, NODES[k].M));
+  return {a, p, mode, edgeMul, level};
+}
+// output of node i whose own (soma) rate is r
+function dbsOut(d, i, r, t){
+  const a = d.a[i], p = d.p[i];
+  if(!a && !p) return r;
+  const axon = MECH.axon && !THIN[ORDER[i]];
+  if(d.mode==="LFS"){
+    const pulse = d.level[i]*(1 + Math.cos(2*Math.PI*LFS_HZ*t/1000));
+    return r + (axon ? a*pulse : 0) + (MECH.axon ? p*pulse : 0);
+  }
+  // driven axons replace the neuron's own spikes (collision); undriven ones carry
+  // whatever the cell body still fires, which HFS suppresses locally
+  let o = r;
+  if(a) o = (1-a)*o + a*(axon ? d.level[i] : (MECH.soma ? 0 : r));
+  if(p && MECH.axon) o = (1-p)*o + p*d.level[i];
+  return o;
+}
+function gains(){
+  const g = {...s}; g.ld = ldopa; g.th = theta; g.io = olive;
+  g.dbs = dbsSpec(dbs.target, dbs.mode, dbs.amp);
+  return g;
+}
+
+// healthy response to the movement command, computed once
+const CMD_AMP = 10, CMD_MS = 300;
+const healthyCmd = (() => {
+  const S = {r:ORDER.map(k=>NODES[k].B), hist:ORDER.map(k=>new Float64Array(HLEN).fill(NODES[k].B)), hp:0, t:0};
+  const g = {...Object.fromEntries(ORDER.map(k=>[k,1])), ld:0};
+  let peak = 0;
+  for(let i=0;i<CMD_MS/DT;i++){ step(S,g,CMD_AMP); peak = Math.max(peak, S.r[IDX.THAL]); }
+  return peak;
+})();
+
+// ---------- SVG ----------
+const NS = "http://www.w3.org/2000/svg";
+const el = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for(const k in attrs) e.setAttribute(k, attrs[k]); if(parent) parent.appendChild(e); return e; };
+const gE = document.getElementById("edges"), gN = document.getElementById("nodes"), gL = document.getElementById("elabs");
+const edgeEls = EDGES.map(e => {
+  const p = el("path", {d:e[5], class:"edge "+e[4]}, gE);
+  const h = el(e[4]==="da" ? "circle" : "polygon", {class:"head "+e[4]}, gE);
+  const t = el("text", {x:e[6], y:e[7]+4, "text-anchor":"middle", class:"elab"}, gL);
+  return {p, h, t, len:0};
+});
+const nodeEls = {};
+for(const k of ORDER){
+  const n = NODES[k], w = n.w || 132, h = 54;
+  const g = el("g", {class:"node", tabindex:"0", role:"button", "aria-label":n.name+": place or remove the DBS electrode"}, gN);
+  const r = el("rect", {x:n.x-w/2, y:n.y-h/2, width:w, height:h, rx:10}, g);
+  const t1 = el("text", {x:n.x, y:n.y-5, "text-anchor":"middle", "font-size":"14", "font-weight":"600"}, g); t1.textContent = n.short;
+  const t2 = el("text", {x:n.x, y:n.y+15, "text-anchor":"middle", class:"hz"}, g);
+  g.addEventListener("click", () => stimulate(k));
+  g.addEventListener("keydown", ev => { if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); stimulate(k); } });
+  const bx = n.x + w/2 - 44, by = n.y + h/2 - 9;
+  const badge = el("g", {class:"badge", visibility:"hidden"}, g);
+  el("rect", {x:bx, y:by, width:50, height:20, rx:10}, badge);
+  const bt = el("text", {x:bx+25, y:by+14, "text-anchor":"middle"}, badge); bt.textContent = "⚡DBS";
+  nodeEls[k] = {g, r, t2, badge};
+}
+const strBadge = el("g", {class:"badge", visibility:"hidden"}, gN);
+el("rect", {x:476, y:179, width:50, height:20, rx:10}, strBadge);
+el("text", {x:501, y:193, "text-anchor":"middle"}, strBadge).textContent = "⚡DBS";
+document.getElementById("strgrp").addEventListener("click", () => stimulate("STR"));
+const nig = el("text", {x:56, y:250, "text-anchor":"middle", class:"grpname", transform:"rotate(-90 56 250)"}, gL);
+nig.textContent = "NIGROSTRIATAL";
+
+// ---------- sliders ----------
+const sliderBox = document.getElementById("sliders");
+const sliderEls = {};
+function addSlider(key, label, hint, max){
+  const d = document.createElement("div"); d.className = "sl"; d.dataset.k = key;
+  const id = "s-"+key;
+  d.innerHTML = `<label for="${id}">${label}</label><span class="v" id="${id}-v"></span><input type="range" id="${id}" min="0" max="${max}" step="5"><span class="hint">${hint}</span>`;
+  sliderBox.appendChild(d);
+  const inp = d.querySelector("input");
+  inp.addEventListener("input", () => {
+    if(key==="LD") ldopa = inp.value/100; else if(key==="TH") theta = inp.value/100; else if(key==="IO") olive = inp.value/100; else s[key] = inp.value/100;
+    syncSliders(); markPreset(null);
+  });
+  inp.addEventListener("focus", () => select(key, false));
+  sliderEls[key] = {d, inp, v:d.querySelector(".v")};
+}
+addSlider("SNC", "SNc dopamine neurons", HINT.SNC, 200);
+addSlider("LD", "Levodopa (dopamine added)", "Extra dopamine, as % of the healthy level.", 150);
+addSlider("IO", "Inferior olive 7 Hz drive", "Rhythmic climbing-fibre input to the Purkinje cells, the pacemaker of the harmaline model of essential tremor. Injected: the model does not generate it.", 100);
+addSlider("TH", "Striatal 6 Hz drive", "Synchronised low-frequency striatal activity, as recorded in dystonia. Injected: the model does not generate it.", 100);
+for(const k of ["CTX","D1","D2","GPE","STN","GPI","THAL","M1","PN","PC","DN","VIM"]) addSlider(k, NODES[k].short+" strength", HINT[k], 200);
+function syncSliders(){
+  for(const k in sliderEls){
+    const v = k==="LD" ? ldopa : k==="TH" ? theta : k==="IO" ? olive : s[k];
+    sliderEls[k].inp.value = Math.round(v*100);
+    sliderEls[k].v.textContent = Math.round(v*100)+"%";
+  }
+}
+let selected = null;
+function select(k, focus){
+  if(k==="LD") k = "SNC";
+  if(k==="TH") k = "D1";
+  if(k==="IO") k = "PC";
+  selected = k;
+  const on = n => k==="STR" ? (n==="D1" || n==="D2") : n===k;
+  for(const n in nodeEls) nodeEls[n].g.classList.toggle("sel", on(n));
+  for(const n in sliderEls) sliderEls[n].d.classList.toggle("sel", on(n));
+  if(focus && sliderEls[k]) sliderEls[k].inp.focus({preventScroll:false});
+}
+
+// ---------- presets ----------
+const PRESETS = {
+  healthy:{}, pd:{SNC:.2}, ldopa:{SNC:.2, LD:.8}, dyskinesia:{SNC:.2, LD:1.3},
+  dbs:{SNC:.2, DBS:"STN", base:"pd"}, gpidbs:{SNC:.2, DBS:"GPI", base:"pd"}, pallidotomy:{SNC:.2, GPI:.3}, hemiballism:{STN:.2}, et:{DN:1.3, IO:1}, dystonia:{D1:1.5, D2:0.6, TH:1}, dystgpi:{D1:1.5, D2:0.6, TH:1, DBS:"GPI", base:"dystonia"}, etvim:{DN:1.3, IO:1, DBS:"VIM", base:"et"}
+};
+function markPreset(name){
+  document.querySelectorAll("button[data-preset]").forEach(b => {
+    if(b.closest("table")) return;
+    b.setAttribute("aria-pressed", b.dataset.preset===name ? "true" : "false");
+  });
+}
+// a disease button keeps the current DBS setting; a treatment button sets both
+function applyPreset(name, withDbs){
+  const p = PRESETS[name];
+  ORDER.forEach(k => s[k] = p[k] ?? 1);
+  ldopa = p.LD ?? 0; theta = p.TH ?? 0; olive = p.IO ?? 0;
+  if(withDbs){ dbs.target = p.DBS ?? ""; dbs.amp = p.DBSA ?? 1; }
+  syncSliders(); syncDbs(); markPreset(p.base || name);
+}
+document.querySelectorAll("button[data-preset]").forEach(b => b.addEventListener("click", () => {
+  applyPreset(b.dataset.preset, !!b.closest("table"));
+  if(b.closest("table")) document.getElementById("circ-h").scrollIntoView({behavior:"smooth", block:"start"});
+}));
+
+// ---------- deep brain stimulation ----------
+const DBS_NOTE = {
+  "": "Choose HFS or LFS, then click a brain region to implant a virtual electrode (click it again to remove it). The electrode stays when you switch disease, and the readouts compare each disease with and without stimulation. DBS is not one mechanism: it inhibits cell bodies, drives myelinated output axons at the stimulation rate, depletes their synapses, activates fibres passing by, jams afferent axons by collision and releases adenosine from astrocytes. Which of these matter depends on the target — switch them off one at a time below. <a href=\"../DBS_Vesicle_Depletion/\">The synapse page</a> shows the depletion step in detail.",
+  STN: "<b>STN</b> — the most common target for Parkinson's disease. The electrode covers the small motor STN, drives its output axons (whose depleted terminals no longer carry the beta pattern) and captures most of the pallidothalamic fibres that run along its top. Clinically motor scores improve by about half and the levodopa dose can be cut. Switch off <i>fibres of passage</i> or <i>synaptic depression</i> to see how much each contributes.",
+  GPI: "<b>GPi</b> — the other approved target, and the standard one for dystonia; it is also tried for hemiballism. GPi's output is replaced by a steady signal close to its healthy level. That helps whether GPi was too high (Parkinson's) or too low and irregular (the hyperkinetic disorders) — the paradox a pure rate model cannot explain.",
+  GPE: "<b>GPe</b> — not an approved target, though GPe stimulation has improved parkinsonian signs in monkeys (Vitek et al., 2012). Here its steady output holds STN down and breaks the beta loop.",
+  VIM: "<b>Vim</b> — the thalamic DBS target for essential tremor and tremor-dominant Parkinson's disease. HFS replaces Vim's output with a steady signal and jams the dentato-rubro-thalamic tract arriving there (switch off <i>axons driven</i> and <i>afferents jammed</i> together to lose the effect), so the tremor rhythm no longer reaches M1. The basal ganglia brake on VA/VL is untouched: slowness and rigidity do not improve.",
+  THAL: "<b>VA/VL</b> — not a target for Parkinson's disease: stimulation replaces the relay with a steady signal, so the pallidal brake no longer reaches cortex, but neither does anything else — send a movement command and watch it fail to pass. Its pallidal-receiving part (VoA/VoP) is sometimes stimulated for dystonia, with smaller benefit than GPi: in the model HFS stops the 6 Hz rhythm reaching cortex, while LFS leaves it in place. Thalamocortical terminals depress strongly, so the steady HFS output stays close to the resting rate.",
+  CTX: "<b>Premotor cortex / SMA</b> — not a DBS target, although epidural motor-cortex stimulation has been tried in Parkinson's disease and is used for chronic pain. Its steady output floods the striatum and STN with drive.",
+  M1: "<b>M1</b> — not a target. A steady M1 output opens the cerebellar loop only by replacing the motor output itself.",
+  STR: "<b>Striatum (putamen)</b> — not a DBS target for movement disorders, and the model agrees. The putamen is large, so an electrode covers only about a tenth of its motor territory; its projection axons are thin and are not driven, so stimulation only inhibits nearby cell bodies — D1 and D2 alike. Damage to the putamen causes dystonia or parkinsonism rather than relieving them (Bhatia & Marsden, 1994). The ventral striatum is stimulated for obsessive-compulsive disorder.",
+  SNC: "<b>SNc</b> — not a target. Driving the surviving dopamine axons releases extra dopamine, like a dose of levodopa — and just as easy to overdo.",
+  PN: "<b>Pontine nuclei</b> — not a target (the pedunculopontine nucleus, a different brainstem nucleus, is stimulated experimentally for freezing of gait). A steady pontine relay opens the cerebellar loop, so a tremor stops here too.",
+  PC: "<b>Purkinje cells</b> — the cerebellar cortex is reached clinically with non-invasive stimulation (TMS, tDCS), not electrodes. A steady Purkinje output opens the cerebellar loop.",
+  DN: "<b>Dentate nucleus</b> — dentate DBS is being tested to improve arm function after stroke (Baker et al., 2023). A steady dentate output opens the cerebellar loop at its exit."
+};
+const MODE_NOTE = {
+  HFS: "",
+  LFS: " <b>LFS:</b> at 20 Hz the synapse is not depleted, so every pulse is released in full on top of the neuron's own spikes: the target is excited, and it drives its targets at 20 Hz — inside the beta band. In patients, 5–20 Hz stimulation of STN or GPi does not help and tends to worsen slowness."
+};
+const dbsAmp = document.getElementById("dbs-a");
+function stimulate(k){
+  if(k==="D1" || k==="D2") k = "STR";
+  dbs.target = dbs.target === k ? "" : k;
+  syncDbs(); select(k, false);
+}
+function syncDbs(){
+  document.getElementById("dbs-info").textContent = targetInfo(dbs.target);
+  document.getElementById("dbs-name").textContent = dbs.target ? `${tname(dbs.target)} (${dbs.mode==="HFS" ? "HFS 130 Hz" : "LFS 20 Hz"})` : "none";
+  document.getElementById("dbs-off").disabled = !dbs.target;
+  dbsAmp.value = Math.round(dbs.amp*100); dbsAmp.disabled = !dbs.target;
+  document.getElementById("dbs-av").textContent = Math.round(dbs.amp*100)+"%";
+  document.getElementById("dbs-note").innerHTML = DBS_NOTE[dbs.target] + (dbs.target ? MODE_NOTE[dbs.mode] : "");
+  document.querySelectorAll("button[data-mode]").forEach(b => b.setAttribute("aria-pressed", b.dataset.mode===dbs.mode ? "true" : "false"));
+  for(const k of ORDER){
+    nodeEls[k].g.classList.toggle("stim", k===dbs.target);
+    nodeEls[k].badge.setAttribute("visibility", k===dbs.target ? "visible" : "hidden");
+  }
+  document.getElementById("strgrp").classList.toggle("stim", dbs.target==="STR");
+  strBadge.setAttribute("visibility", dbs.target==="STR" ? "visible" : "hidden");
+}
+document.getElementById("dbs-off").addEventListener("click", () => { dbs.target = ""; syncDbs(); });
+document.querySelectorAll("input[data-mech]").forEach(c => c.addEventListener("change", () => { MECH[c.dataset.mech] = c.checked; }));
+function targetInfo(t){
+  if(!t) return "";
+  const thin = NODES_OF(t).some(k => THIN[k]);
+  const pass = Object.entries(PASSING[t] || {}).map(([k,f]) => `${NODES[k].short} output fibres (${Math.round(f*100)}%)`);
+  const aff = (AFFERENT[t] || []).map(k => k==="CTX" ? "hyperdirect cortical axons" : k==="DN" ? "dentato-rubro-thalamic tract" : NODES[k].short);
+  return `${tname(t)}: the electrode covers ${Math.round(COVER[t]*100)}% of its motor territory · output axons ${thin ? "thin, not driven" : "myelinated, driven"}` +
+    (pass.length ? ` · fibres of passage: ${pass.join(", ")}` : "") + (aff.length ? ` · afferents jammed: ${aff.join(", ")}` : "") + ".";
+}
+document.querySelectorAll("button[data-mode]").forEach(b => b.addEventListener("click", () => { dbs.mode = b.dataset.mode; syncDbs(); }));
+dbsAmp.addEventListener("input", () => { dbs.amp = dbsAmp.value/100; syncDbs(); });
+
+// the same circuit without stimulation, for the before/after comparison
+let baseKey = "", base = null;
+function noDbs(){
+  const key = JSON.stringify([s, ldopa, theta, olive]);
+  if(key === baseKey) return base;
+  const S = {r:ORDER.map(k=>NODES[k].B), hist:ORDER.map(k=>new Float64Array(HLEN).fill(NODES[k].B)), hp:0, t:0};
+  const g = {...s}; g.ld = ldopa; g.th = theta; g.io = olive;
+  const T = 3000, keep = ["STN","M1","GPI"].map(k => []);
+  const sum = new Float64Array(ORDER.length); let n = 0;
+  for(let i=0;i<T/DT;i++){
+    step(S, g, 0);
+    if(S.t > T-1000 && i%20===0){
+      n++; for(let j=0;j<ORDER.length;j++) sum[j] += S.hist[j][S.hp];
+      keep[0].push(S.hist[IDX.STN][S.hp]); keep[1].push(S.hist[IDX.M1][S.hp]); keep[2].push(S.hist[IDX.THAL][S.hp]);
+    }
+  }
+  const osc = (a, lo, hi) => bandOsc(a.slice(-500), lo, hi);
+  base = {mean:Object.fromEntries(ORDER.map((k,j)=>[k, sum[j]/n])), beta:osc(keep[0], 13, 30), trem:osc(keep[1], 3, 10), dys:osc(keep[2], 3, 10)};
+  baseKey = key;
+  return base;
+}
+
+// ---------- parameter table ----------
+(() => {
+  const rows = EDGES.filter(e => e[4]!=="da").map(e => `<td>${NODES[e[0]].short} → ${NODES[e[1]].short}</td><td class="n">${e[2]>0?"+":""}${e[2]}</td><td class="n">${e[3]} ms</td>`);
+  let html = "";
+  for(let i=0;i<rows.length;i+=2) html += "<tr>"+rows[i]+(rows[i+1]||"<td></td><td></td><td></td>")+"</tr>";
+  document.getElementById("ptab").innerHTML = html;
+})();
+
+// ---------- results table ----------
+const tbody = document.getElementById("tbody");
+const trow = {};
+for(const k of ORDER){
+  const tr = document.createElement("tr");
+  tr.innerHTML = `<td class="k">${NODES[k].name}</td><td>${NODES[k].tx}</td><td class="n">${NODES[k].B} Hz</td><td class="n"></td><td class="n"></td><td class="n"></td>`;
+  tbody.appendChild(tr); trow[k] = tr.children;
+}
+
+// ---------- running averages and traces ----------
+const avg = ORDER.map(k => NODES[k].B), avgSoma = ORDER.map(k => NODES[k].B);
+const TR_MS = 1000, TR_N = 500;           // one sample per 2 ms
+const trace = ORDER.map(k => new Float32Array(TR_N).fill(NODES[k].B));
+const cmdTrace = new Uint8Array(TR_N);
+let trp = 0, sampleAcc = 0;
+let cmdLeft = 0, cmdPre = 0, cmdPeak = 0, cmdMin = 1e9, cmdActive = false;
+
+function advance(ms){
+  const g = gains(), n = Math.round(ms/DT);
+  const a = 1 - Math.exp(-DT/300);
+  for(let i=0;i<n;i++){
+    const c = cmdLeft > 0 ? CMD_AMP : 0;
+    step(st, g, c);
+    for(let j=0;j<ORDER.length;j++){ avg[j] += a*(st.hist[j][st.hp] - avg[j]); avgSoma[j] += a*(st.r[j] - avgSoma[j]); }
+    if(cmdLeft > 0){
+      cmdLeft -= DT;
+      const th = st.hist[IDX.THAL][st.hp];
+      cmdPeak = Math.max(cmdPeak, th); cmdMin = Math.min(cmdMin, th);
+      if(cmdLeft <= 0) reportCmd();
+    }
+    sampleAcc += DT;
+    if(sampleAcc >= 2){
+      sampleAcc -= 2;
+      for(let j=0;j<ORDER.length;j++) trace[j][trp] = st.hist[j][st.hp];
+      cmdTrace[trp] = c ? 1 : 0;
+      trp = (trp+1) % TR_N;
+    }
+  }
+}
+// strongest oscillation between lo and hi Hz in a 1 s trace sampled every 2 ms
+function bandOsc(a, lo, hi){
+  const n = a.length; let mean = 0;
+  for(const v of a) mean += v;
+  mean /= n;
+  let best = {amp:0, f:0};
+  for(let f=lo; f<=hi; f+=0.5){
+    let re = 0, im = 0;
+    for(let i=0;i<n;i++){ const ph = 2*Math.PI*f*i*0.002; re += (a[i]-mean)*Math.cos(ph); im += (a[i]-mean)*Math.sin(ph); }
+    const amp = 2*Math.hypot(re, im)/n;
+    if(amp > best.amp) best = {amp, f:Math.round(f)};
+  }
+  return best;
+}
+function beta(key, lo, hi){
+  const a = trace[IDX[key]], o = new Float64Array(TR_N);
+  for(let i=0;i<TR_N;i++) o[i] = a[(trp+i)%TR_N];
+  return bandOsc(o, lo, hi);
+}
+document.getElementById("cmd").addEventListener("click", () => {
+  if(cmdLeft > 0) return;
+  cmdPre = avg[IDX.THAL]; cmdPeak = 0; cmdMin = 1e9; cmdLeft = CMD_MS;
+  document.getElementById("cmd-out").textContent = "Command running…";
+});
+function reportCmd(){
+  const out = document.getElementById("cmd-out");
+  const rise = cmdPeak - cmdPre;
+  const h = healthyCmd - NODES.THAL.B;
+  let msg;
+  const relay = dbs.target && dbs.mode==="HFS" && ["GPI","STN","THAL"].includes(dbs.target);
+  if(relay && rise <= 0.5*h) msg = `Thalamus stayed near ${cmdPre.toFixed(1)} Hz: the stimulated output is a steady signal, so the command is not relayed through the basal ganglia. ` + (cmdPre >= 0.6*NODES.THAL.B ? "The brake is held at a steady, permissive level instead, so movement is no longer stopped by it — cortex has to do the rest." : "And the steady level is still a strong brake.");
+  else if(rise > 0.5*h) msg = `Thalamus rose from ${cmdPre.toFixed(1)} to ${cmdPeak.toFixed(1)} Hz: the command got through (healthy: ${NODES.THAL.B} → ${healthyCmd.toFixed(1)} Hz).`;
+  else if(rise > 1) msg = `Thalamus rose only from ${cmdPre.toFixed(1)} to ${cmdPeak.toFixed(1)} Hz: a weak, slow movement (healthy: ${NODES.THAL.B} → ${healthyCmd.toFixed(1)} Hz).`;
+  else msg = `Thalamus did not rise (${cmdPre.toFixed(1)} Hz before, fell to ${cmdMin.toFixed(1)} Hz): the command is blocked (healthy: ${NODES.THAL.B} → ${healthyCmd.toFixed(1)} Hz).`;
+  out.textContent = msg;
+}
+
+// ---------- rendering ----------
+const css = () => getComputedStyle(document.documentElement);
+function nodeFill(ratio){
+  const t = Math.max(-1, Math.min(1, Math.log2(Math.max(ratio,1e-3))/1.5));
+  const pct = Math.round(Math.abs(t)*70);
+  return `color-mix(in oklab, var(${t>=0?"--hi":"--lo"}) ${pct}%, var(--field))`;
+}
+function edgeRatio(e){
+  const g = gains(), DA = dopa(g), dac = Math.min(DA,2.5);
+  if(e[4]==="da") return DA;
+  let r = avg[IDX[e[0]]] / NODES[e[0]].B;
+  if(e[0]==="GPE" && e[1]==="STN") r *= 1 + CPL*Math.max(0,1-DA);
+  if(e[1]==="D1") r *= dac;
+  if(e[1]==="D2") r *= Math.max(0, 1-0.6*(dac-1));
+  return r;
+}
+function drawEdge(E, type, w){
+  const p = E.p;
+  if(!E.len) E.len = p.getTotalLength();
+  const len = E.len, tip = p.getPointAtLength(len), back = p.getPointAtLength(len-2);
+  let ux = tip.x-back.x, uy = tip.y-back.y; const n = Math.hypot(ux,uy) || 1; ux /= n; uy /= n;
+  const vx = -uy, vy = ux;
+  p.style.strokeWidth = w;
+  if(type==="da"){
+    const r = 3.5 + 0.55*w;
+    E.h.setAttribute("cx", tip.x - ux*r); E.h.setAttribute("cy", tip.y - uy*r); E.h.setAttribute("r", r);
+    return;
+  }
+  // stop the line where its head begins, so a thick line never covers the head
+  const L = type==="exc" ? 8 + 1.4*w : 3 + 0.5*w;
+  const H = 5 + 1.05*w;
+  p.style.strokeDasharray = `${Math.max(0, len - L + 0.5)} ${len + 20}`;
+  const bx = tip.x - ux*L, by = tip.y - uy*L, f = v => v.toFixed(1);
+  const pts = type==="exc"
+    ? [[tip.x,tip.y],[bx+vx*H,by+vy*H],[bx-vx*H,by-vy*H]]
+    : [[tip.x+vx*H,tip.y+vy*H],[tip.x-vx*H,tip.y-vy*H],[bx-vx*H,by-vy*H],[bx+vx*H,by+vy*H]];
+  E.h.setAttribute("points", pts.map(q => f(q[0])+","+f(q[1])).join(" "));
+}
+function render(){
+  EDGES.forEach((e,i) => {
+    const r = edgeRatio(e);
+    const w = Math.max(0.6, Math.min(11, 3*r));
+    drawEdge(edgeEls[i], e[4], w);
+    edgeEls[i].p.style.opacity = edgeEls[i].h.style.opacity = r < 0.05 ? 0.25 : 1;
+    edgeEls[i].t.textContent = Math.abs(Math.log(Math.max(r,1e-3))) > 0.1 ? "×"+(r<0.1? r.toFixed(2) : r.toFixed(1)) : "";
+    edgeEls[i].t.style.fill = `var(--${e[4]})`;
+  });
+  for(const k of ORDER){
+    const v = avg[IDX[k]], ratio = v/NODES[k].B;
+    nodeEls[k].r.style.fill = nodeFill(k==="SNC" ? s.SNC : ratio);
+    // when DBS alters what a nucleus sends on, show its cell bodies separately
+    const sm = avgSoma[IDX[k]] * s[k], gd = gains().dbs;
+    const altered = gd && (gd.a[IDX[k]] || gd.p[IDX[k]]) && k!=="SNC" && Math.abs(sm - v) > 2;
+    nodeEls[k].t2.textContent = k==="SNC" ? Math.round(s.SNC*100)+"% neurons" : altered ? `out ${v.toFixed(0)} · soma ${sm.toFixed(0)}` : v.toFixed(v<10?1:0)+" Hz";
+    nodeEls[k].t2.style.fontSize = altered ? "11px" : "";
+  }
+  const g = gains(), DA = dopa(g);
+  document.getElementById("f-da").textContent = Math.round(DA*100)+"%";
+  const gpi = avg[IDX.GPI], th = avg[IDX.THAL];
+  const pc = (v,b) => { const d = Math.round((v/b-1)*100); return (d>0?"+":"")+d+"%"; };
+  document.getElementById("f-gpi").textContent = gpi.toFixed(0)+" Hz";
+  document.getElementById("f-gpi-d").textContent = pc(gpi,NODES.GPI.B)+" vs healthy 70 Hz";
+  document.getElementById("f-th").textContent = th.toFixed(1)+" Hz";
+  document.getElementById("f-th-d").textContent = pc(th,NODES.THAL.B)+" vs healthy 15 Hz";
+  const b = beta("STN", 13, 30), osc = b.amp > 3;
+  const tq = beta("M1", 3, 10), trem = tq.amp > 2.5;
+  const dq = beta("THAL", 3, 10), dys = dq.amp > 3;
+  document.getElementById("f-dys").textContent = dys ? dq.f+" Hz" : "none";
+  document.getElementById("f-dys-d").textContent = dys ? `VA/VL swings ±${dq.amp.toFixed(0)} Hz` : "thalamus steady";
+  document.getElementById("f-trem").textContent = trem ? tq.f+" Hz" : "none";
+  document.getElementById("f-trem-d").textContent = trem ? `M1 swings ±${tq.amp.toFixed(0)} Hz` : "M1 steady";
+  document.getElementById("f-beta").textContent = osc ? b.f+" Hz" : "none";
+  document.getElementById("f-beta-d").textContent = osc ? `STN swings ±${b.amp.toFixed(0)} Hz` : "steady firing";
+  const nb = dbs.target ? noDbs() : null;
+  let cmp = "";
+  if(nb){
+    const bOsc = nb.beta.amp > 3, tOsc = nb.trem.amp > 2.5, dOsc = nb.dys.amp > 3;
+    document.getElementById("f-dys-d").textContent = `without DBS: ${dOsc ? nb.dys.f+" Hz" : "none"}`;
+    const rh = (on, f) => on ? f+" Hz" : "none";
+    const gs = avgSoma[IDX.GPI]*s.GPI;
+    document.getElementById("f-gpi-d").textContent = `without DBS: ${nb.mean.GPI.toFixed(0)} Hz` + (Math.abs(gs - gpi) > 2 ? ` · cell bodies ${gs.toFixed(0)} Hz` : "");
+    document.getElementById("f-th-d").textContent = `without DBS: ${nb.mean.THAL.toFixed(1)} Hz`;
+    document.getElementById("f-beta-d").textContent = `without DBS: ${rh(bOsc, nb.beta.f)}`;
+    document.getElementById("f-trem-d").textContent = `without DBS: ${rh(tOsc, nb.trem.f)}`;
+    cmp = `<b>Effect of ${tname(dbs.target)} ${dbs.mode} at ${Math.round(dbs.amp*100)}%:</b> GPi ${nb.mean.GPI.toFixed(0)} → ${gpi.toFixed(0)} Hz, VA/VL thalamus ${nb.mean.THAL.toFixed(1)} → ${th.toFixed(1)} Hz${(() => { if(Math.abs(NODES.THAL.B-nb.mean.THAL) <= 2) return ""; const pct = Math.round(100*(th-nb.mean.THAL)/(NODES.THAL.B-nb.mean.THAL)); return pct >= 0 ? ` (${pct}% of the way back to healthy)` : " (further from healthy)"; })()}, beta ${rh(bOsc, nb.beta.f)} → ${rh(osc, b.f)}, dystonic rhythm ${rh(dOsc, nb.dys.f)} → ${rh(dys, dq.f)}, tremor ${rh(tOsc, nb.trem.f)} → ${rh(trem, tq.f)}.`;
+  }
+  verdict(th/NODES.THAL.B, osc, b, DA, trem, tq, cmp, dys, dq);
+  drawDash({th, beta:b.amp, trem:tq.amp, dys:dq.amp},
+    nb ? {th:nb.mean.THAL, beta:nb.beta.amp, trem:nb.trem.amp, dys:nb.dys.amp} : null);
+  for(const k of ORDER){
+    const v = avg[IDX[k]], c = trow[k];
+    const fmt = x => k==="SNC" ? `${x.toFixed(1)} Hz × ${Math.round(s.SNC*100)}%` : x.toFixed(1)+" Hz";
+    c[3].textContent = nb ? fmt(nb.mean[k]) : "—";
+    c[4].textContent = fmt(v);
+    const ratio = k==="SNC" ? s.SNC : v/NODES[k].B;
+    const d = Math.round((ratio-1)*100);
+    c[5].textContent = Math.abs(d) < 3 ? "—" : (d>0?"▲ +":"▼ ")+d+"%";
+    c[5].className = "n "+(Math.abs(d)<3 ? "" : d>0 ? "up" : "down");
+  }
+}
+// ---------- symptom dashboard ----------
+const SYMPTOMS = [
+  ["slow",  "Slowness, akinesia",  "VA/VL below healthy", v => (NODES.THAL.B - v.th)/12],
+  ["rigid", "Rigidity",            "STN beta rhythm",     v => v.beta/18],
+  ["trem",  "Tremor",              "M1 4–10 Hz rhythm",   v => v.trem/15],
+  ["dyst",  "Dystonia",            "thalamic 4–10 Hz rhythm", v => v.dys/14],
+  ["hyper", "Involuntary movement","VA/VL above healthy", v => (v.th - NODES.THAL.B)/20]
+];
+const dashEls = {};
+(() => {
+  const box = document.getElementById("dash-rows");
+  box.style.display = "grid"; box.style.gap = "10px";
+  for(const [k, name, what] of SYMPTOMS){
+    const row = document.createElement("div"); row.className = "sym";
+    row.innerHTML = `<div class="nm">${name}<span>${what}</span></div><div class="track" role="meter" aria-label="${name}" aria-valuemin="0" aria-valuemax="100"><div class="fill"></div><div class="was" hidden></div><div class="now"></div></div><div class="sev"></div>`;
+    box.appendChild(row);
+    dashEls[k] = {track:row.querySelector(".track"), fill:row.querySelector(".fill"), now:row.querySelector(".now"), was:row.querySelector(".was"), sev:row.querySelector(".sev")};
+  }
+})();
+const clamp01 = x => Math.max(0, Math.min(1, x));
+const sevWord = x => x < 0.15 ? ["none","s0"] : x < 0.4 ? ["mild","s1"] : x < 0.7 ? ["moderate","s2"] : ["severe","s3"];
+function drawDash(v, w){
+  for(const [k, , , f] of SYMPTOMS){
+    const e = dashEls[k], x = clamp01(f(v)), [word, cls] = sevWord(x);
+    e.fill.style.width = (x*100)+"%"; e.now.style.left = (x*100)+"%";
+    e.track.setAttribute("aria-valuenow", Math.round(x*100));
+    if(w){ const y = clamp01(f(w)); e.was.hidden = false; e.was.style.left = (y*100)+"%";
+      e.sev.textContent = sevWord(y)[0] !== word ? `${sevWord(y)[0]} → ${word}` : word; }
+    else { e.was.hidden = true; e.sev.textContent = word; }
+    e.sev.className = "sev "+cls;
+  }
+}
+let lastV = "";
+function verdict(thr, osc, b, DA, trem, tq, cmp, dys, dq){
+  let main;
+  if(thr < 0.45) main = "<b>The thalamus is clamped.</b> GPi is firing far above normal and holds the motor thalamus down: movements are hard to start, slow and small — akinesia and bradykinesia.";
+  else if(thr < 0.75) main = "<b>The thalamus is held down.</b> Extra GPi output brakes the motor thalamus: movement is slowed (bradykinesia).";
+  else if(thr > 2) main = "<b>The brake is off.</b> GPi is nearly silent and the thalamus fires freely: unwanted movements break through — chorea, ballism, dyskinesia.";
+  else if(thr > 1.25) main = "<b>The brake is weak.</b> The thalamus is released more than normal: extra, involuntary movements become likely (hyperkinesia).";
+  else main = "<b>Thalamic drive is near normal.</b> The loop can release and brake movements as usual.";
+  let extra = "";
+  if(osc) extra = `STN and GPe are oscillating together at about ${b.f} Hz — the beta rhythm linked to rigidity and slowness.`;
+  else if(DA < 0.5) extra = "No beta rhythm right now, even though dopamine is low.";
+  if(dys) extra += (extra ? " " : "") + `<b>Dystonic rhythm:</b> the motor thalamus follows GPi's ${dq.f} Hz bursts and pauses and passes them to cortex — the pallidal pattern recorded in dystonia.`;
+  if(trem) extra += (extra ? " " : "") + `<b>Tremor:</b> the cerebellar loop (M1 → pons → Purkinje → dentate → Vim → M1) carries a ${tq.f} Hz rhythm to the motor output.`;
+  const html = `<p>${main}</p>${extra ? `<p class="muted">${extra}</p>` : ""}${cmp ? `<p>${cmp}</p>` : ""}`;
+  if(html !== lastV){ document.getElementById("verdict").innerHTML = html; lastV = html; }
+}
+
+const cv = document.getElementById("tr"), cx = cv.getContext("2d");
+const LANES = [["STN",0,120],["GPE",0,150],["GPI",0,220],["THAL",0,50],["M1",0,40]];
+function drawTraces(){
+  const dpr = window.devicePixelRatio || 1;
+  const W = cv.clientWidth, H = Math.max(300, Math.min(420, W*0.5));
+  if(cv.width !== Math.round(W*dpr) || cv.height !== Math.round(H*dpr)){ cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr); cv.style.height = H+"px"; }
+  cx.setTransform(dpr,0,0,dpr,0,0);
+  const c = css();
+  const ink = c.getPropertyValue("--ink"), dim = c.getPropertyValue("--dim"), line = c.getPropertyValue("--line"), grid = c.getPropertyValue("--grid");
+  const col = {STN:c.getPropertyValue("--exc"), GPE:c.getPropertyValue("--inh"), GPI:c.getPropertyValue("--inh"), THAL:c.getPropertyValue("--exc"), M1:c.getPropertyValue("--exc")};
+  cx.clearRect(0,0,W,H);
+  const L = 74, R = 10, laneH = (H-26)/LANES.length;
+  // command shading
+  cx.fillStyle = c.getPropertyValue("--sel"); cx.globalAlpha = 0.12;
+  for(let i=0;i<TR_N;i++) if(cmdTrace[(trp+i)%TR_N]) cx.fillRect(L + i/TR_N*(W-L-R), 0, (W-L-R)/TR_N+0.5, H-22);
+  cx.globalAlpha = 1;
+  cx.font = "500 12px 'IBM Plex Mono', monospace";
+  LANES.forEach(([k,lo,hi],li) => {
+    const y0 = 6 + li*laneH, h = laneH-10;
+    const Y = v => y0 + h - (Math.min(hi,Math.max(lo,v))-lo)/(hi-lo)*h;
+    cx.strokeStyle = grid; cx.lineWidth = 1; cx.setLineDash([]);
+    cx.beginPath(); cx.moveTo(L, y0+h+0.5); cx.lineTo(W-R, y0+h+0.5); cx.stroke();
+    cx.strokeStyle = dim; cx.setLineDash([4,4]);
+    cx.beginPath(); cx.moveTo(L, Y(NODES[k].B)); cx.lineTo(W-R, Y(NODES[k].B)); cx.stroke();
+    cx.setLineDash([]);
+    cx.fillStyle = ink; cx.fillText(NODES[k].short.split(" ")[0], 8, y0+16);
+    cx.fillStyle = dim; cx.fillText(hi+" Hz", 8, y0+32);
+    cx.strokeStyle = col[k]; cx.lineWidth = 1.8; cx.beginPath();
+    const a = trace[IDX[k]];
+    for(let i=0;i<TR_N;i++){
+      const x = L + i/(TR_N-1)*(W-L-R), y = Y(a[(trp+i)%TR_N]);
+      i ? cx.lineTo(x,y) : cx.moveTo(x,y);
+    }
+    cx.stroke();
+  });
+  cx.fillStyle = dim; cx.textAlign = "right"; cx.fillText("now", W-R, H-6);
+  cx.textAlign = "left"; cx.fillText("−1 s", L, H-6); cx.textAlign = "start";
+  cx.strokeStyle = line;
+}
+
+let last = performance.now(), lastUI = 0;
+function frame(now){
+  const ms = Math.min(50, now - last); last = now;
+  advance(ms);
+  drawTraces();
+  if(now - lastUI > 120){ render(); lastUI = now; }
+  requestAnimationFrame(frame);
+}
+applyPreset(PRESETS[location.hash.slice(1)] ? location.hash.slice(1) : "healthy", true);
+select("SNC", false);
+render();
+requestAnimationFrame(frame);
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "ed90c191314a4bd1b54a671616598fbd"}'></script>
+</body>
+</html>
