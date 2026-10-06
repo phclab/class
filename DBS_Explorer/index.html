@@ -266,7 +266,7 @@ footer a{color:inherit}
       <div class="dash" aria-labelledby="dash-l">
         <div class="dash-head"><span class="lab" id="dash-l">Symptoms · healthy ← → severe</span><span class="dash-key">▮ now · <span style="border:1.5px dashed var(--dim);padding:0 3px;border-radius:3px">┆</span> without DBS</span></div>
         <div id="dash-rows"></div>
-        <p class="dash-key">Each bar is read from the model: slowness from how far VA/VL falls below its healthy rate, rigidity from the STN beta rhythm, tremor from M1's 4–10 Hz rhythm, dystonia from the 4–10 Hz rhythm the thalamus passes to cortex, involuntary movement from how far VA/VL rises above healthy. The scales are illustrative, not clinical scores.</p>
+        <p class="dash-key">Each bar is read from the model: slowness from how far VA/VL falls below its healthy rate; rigidity from the beta rhythm leaving the basal ganglia in GPi's output (beta correlates with bradykinesia and rigidity and falls with levodopa and DBS); tremor from M1's 4–10 Hz rhythm; dystonia from the 4–10 Hz rhythm the thalamus passes to cortex; excess movement — chorea, ballism, dyskinesia, and the overflow of dystonia — from how far VA/VL rises above healthy. The scales are illustrative, not clinical scores, and Parkinsonian rest tremor is not modelled.</p>
       </div>
       <div class="sliders" id="sliders" aria-label="Neuron strength controls"></div>
     </div>
@@ -424,16 +424,16 @@ essential tremor: Purkinje input += 30 · ι · sin(2π · 7 Hz · t)   (ι = th
           <tr><td>✓</td><td>Parkinson's: GPi and STN rates rise, GPe falls (MPTP monkeys)</td><td class="n">GPi 70→121, STN 20→40, GPe 60→53 Hz</td></tr>
           <tr><td>✓</td><td>STN beta (13–30 Hz) only after severe dopamine loss; removed by levodopa and STN DBS</td><td class="n">17 Hz at 20% SNc, none at 50%</td></tr>
           <tr><td>✓</td><td>Excess levodopa → dyskinesia, with GPi rates falling</td><td class="n">GPi 3, VA/VL 45 Hz</td></tr>
-          <tr><td>✓</td><td>STN lesion relieves MPTP parkinsonism; STN stroke causes hemiballism</td><td class="n">VA/VL 3.7→6.8; 15→23.5 Hz</td></tr>
+          <tr><td>✓</td><td>STN lesion relieves MPTP parkinsonism; STN stroke causes hemiballism</td><td class="n">VA/VL 3.7→6.8; 15→26.4 Hz</td></tr>
           <tr><td>✓</td><td>STN DBS improves Parkinson's motor scores by about half</td><td class="n">52% of the way back; beta gone</td></tr>
           <tr><td>✓</td><td>During STN DBS, GPi and GPe neurons fire faster (Hashimoto et al., 2003)</td><td class="n">GPi cell bodies 121→160, GPe 52→63 Hz; GPi output to thalamus 87 Hz and pattern-free</td></tr>
           <tr><td>✓</td><td>GPi DBS improves Parkinson's</td><td class="n">72%</td></tr>
           <tr><td>✓</td><td>Vim DBS stops tremor but not slowness</td><td class="n">ET tremor gone; PD VA/VL unchanged</td></tr>
           <tr><td>✓</td><td>Striatal stimulation is not a treatment for movement symptoms</td><td class="n">4%</td></tr>
           <tr><td>✓</td><td>5–20 Hz STN or GPi stimulation worsens slowness</td><td class="n">VA/VL 3.7→1.3 Hz</td></tr>
-          <tr><td>✓</td><td>GPi (and STN) DBS treat dystonia; Vim does not</td><td class="n">thalamic 6 Hz swing ±13 → ±1 (GPi), ±2 (STN)</td></tr>
-          <tr><td>✓</td><td>Thalamic (Vo) DBS can help dystonia, less than GPi; only high frequency stops the rhythm</td><td class="n">HFS: thalamic 6 Hz ±13 → ±3; LFS: unchanged</td></tr>
-          <tr><td>✓</td><td>GPi DBS / pallidotomy treat hemiballism</td><td class="n">VA/VL 23.5→14.1 Hz</td></tr>
+          <tr><td>✓</td><td>GPi (and STN) DBS treat dystonia; Vim does not</td><td class="n">thalamic 6 Hz swing ±12 → ±1 (GPi), ±2 (STN)</td></tr>
+          <tr><td>✓</td><td>Thalamic (Vo) DBS can help dystonia, less than GPi; only high frequency stops the rhythm</td><td class="n">HFS: thalamic 6 Hz ±12 → ±2; LFS: unchanged</td></tr>
+          <tr><td>✓</td><td>GPi DBS / pallidotomy treat hemiballism</td><td class="n">VA/VL 26.4→14.2 Hz</td></tr>
           <tr><td>✓</td><td>Low-frequency Vim stimulation does not stop tremor; high-frequency does (Benabid et al., 1991)</td><td class="n">7 Hz tremor: 13.4 → 6.1 at 20 Hz, → 0 at 130 Hz</td></tr>
           <tr><td>—</td><td>Dystonia improves over weeks to months; 60 Hz STN DBS can help gait freezing</td><td class="n">not modelled (no plasticity, no gait)</td></tr>
         </tbody>
@@ -718,7 +718,7 @@ function select(k, focus){
 // ---------- presets ----------
 const PRESETS = {
   healthy:{}, pd:{SNC:.2}, ldopa:{SNC:.2, LD:.8}, dyskinesia:{SNC:.2, LD:1.3},
-  dbs:{SNC:.2, DBS:"STN", base:"pd"}, gpidbs:{SNC:.2, DBS:"GPI", base:"pd"}, pallidotomy:{SNC:.2, GPI:.3}, hemiballism:{STN:.2}, et:{DN:1.3, IO:1}, dystonia:{D1:1.5, D2:0.6, TH:1}, dystgpi:{D1:1.5, D2:0.6, TH:1, DBS:"GPI", base:"dystonia"}, etvim:{DN:1.3, IO:1, DBS:"VIM", base:"et"}
+  dbs:{SNC:.2, DBS:"STN", base:"pd"}, gpidbs:{SNC:.2, DBS:"GPI", base:"pd"}, pallidotomy:{SNC:.2, GPI:.3}, hemiballism:{STN:.05}, et:{DN:1.3, IO:1}, dystonia:{D1:1.2, D2:0.6, TH:1}, dystgpi:{D1:1.2, D2:0.6, TH:1, DBS:"GPI", base:"dystonia"}, etvim:{DN:1.3, IO:1, DBS:"VIM", base:"et"}
 };
 function markPreset(name){
   document.querySelectorAll("button[data-preset]").forEach(b => {
@@ -800,17 +800,17 @@ function noDbs(){
   if(key === baseKey) return base;
   const S = {r:ORDER.map(k=>NODES[k].B), hist:ORDER.map(k=>new Float64Array(HLEN).fill(NODES[k].B)), hp:0, t:0};
   const g = {...s}; g.ld = ldopa; g.th = theta; g.io = olive;
-  const T = 3000, keep = ["STN","M1","GPI"].map(k => []);
+  const T = 3000, keep = ["STN","M1","THAL","GPI"].map(k => []);
   const sum = new Float64Array(ORDER.length); let n = 0;
   for(let i=0;i<T/DT;i++){
     step(S, g, 0);
     if(S.t > T-1000 && i%20===0){
       n++; for(let j=0;j<ORDER.length;j++) sum[j] += S.hist[j][S.hp];
-      keep[0].push(S.hist[IDX.STN][S.hp]); keep[1].push(S.hist[IDX.M1][S.hp]); keep[2].push(S.hist[IDX.THAL][S.hp]);
+      keep[0].push(S.hist[IDX.STN][S.hp]); keep[1].push(S.hist[IDX.M1][S.hp]); keep[2].push(S.hist[IDX.THAL][S.hp]); keep[3].push(S.hist[IDX.GPI][S.hp]);
     }
   }
   const osc = (a, lo, hi) => bandOsc(a.slice(-500), lo, hi);
-  base = {mean:Object.fromEntries(ORDER.map((k,j)=>[k, sum[j]/n])), beta:osc(keep[0], 13, 30), trem:osc(keep[1], 3, 10), dys:osc(keep[2], 3, 10)};
+  base = {mean:Object.fromEntries(ORDER.map((k,j)=>[k, sum[j]/n])), beta:osc(keep[0], 13, 30), trem:osc(keep[1], 3, 10), dys:osc(keep[2], 3, 10), gpiBeta:osc(keep[3], 13, 30)};
   baseKey = key;
   return base;
 }
@@ -986,8 +986,9 @@ function render(){
     cmp = `<b>Effect of ${tname(dbs.target)} ${dbs.mode} at ${Math.round(dbs.amp*100)}%:</b> GPi ${nb.mean.GPI.toFixed(0)} → ${gpi.toFixed(0)} Hz, VA/VL thalamus ${nb.mean.THAL.toFixed(1)} → ${th.toFixed(1)} Hz${(() => { if(Math.abs(NODES.THAL.B-nb.mean.THAL) <= 2) return ""; const pct = Math.round(100*(th-nb.mean.THAL)/(NODES.THAL.B-nb.mean.THAL)); return pct >= 0 ? ` (${pct}% of the way back to healthy)` : " (further from healthy)"; })()}, beta ${rh(bOsc, nb.beta.f)} → ${rh(osc, b.f)}, dystonic rhythm ${rh(dOsc, nb.dys.f)} → ${rh(dys, dq.f)}, tremor ${rh(tOsc, nb.trem.f)} → ${rh(trem, tq.f)}.`;
   }
   verdict(th/NODES.THAL.B, osc, b, DA, trem, tq, cmp, dys, dq);
-  drawDash({th, beta:b.amp, trem:tq.amp, dys:dq.amp},
-    nb ? {th:nb.mean.THAL, beta:nb.beta.amp, trem:nb.trem.amp, dys:nb.dys.amp} : null);
+  // rigidity follows the beta that leaves the basal ganglia through GPi
+  drawDash({th, beta:beta("GPI", 13, 30).amp, trem:tq.amp, dys:dq.amp},
+    nb ? {th:nb.mean.THAL, beta:nb.gpiBeta.amp, trem:nb.trem.amp, dys:nb.dys.amp} : null);
   for(const k of ORDER){
     const v = avg[IDX[k]], c = trow[k];
     const fmt = x => k==="SNC" ? `${x.toFixed(1)} Hz × ${Math.round(s.SNC*100)}%` : x.toFixed(1)+" Hz";
@@ -1002,10 +1003,10 @@ function render(){
 // ---------- symptom dashboard ----------
 const SYMPTOMS = [
   ["slow",  "Slowness, akinesia",  "VA/VL below healthy", v => (NODES.THAL.B - v.th)/12],
-  ["rigid", "Rigidity",            "STN beta rhythm",     v => v.beta/18],
-  ["trem",  "Tremor",              "M1 4–10 Hz rhythm",   v => v.trem/15],
+  ["rigid", "Rigidity",            "beta rhythm in GPi output", v => v.beta/18],
+  ["trem",  "Tremor",              "M1 4–10 Hz rhythm (Parkinsonian rest tremor not modelled)", v => v.trem/15],
   ["dyst",  "Dystonia",            "thalamic 4–10 Hz rhythm", v => v.dys/14],
-  ["hyper", "Involuntary movement","VA/VL above healthy", v => (v.th - NODES.THAL.B)/20]
+  ["hyper", "Excess movement",     "hyperkinesia: VA/VL above healthy", v => (v.th - NODES.THAL.B)/14]
 ];
 const dashEls = {};
 (() => {
